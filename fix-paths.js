@@ -417,39 +417,37 @@ if (fs.existsSync(paykassaPath)) {
     const paykassa = new PaykassaIntegration('64135', 'sandbox_api_key', true);`
     );
     
-    // Asegurarse de que la función simulatePaykassaApiCall incluye rutas relativas
-    if (content.includes('simulatePaykassaApiCall') && !content.includes('window.location.origin')) {
-        content = content.replace(
-            /async simulatePaykassaApiCall\(transactionData\) \{[\s\S]+?return \{[\s\S]+?url: [`'"]([^`'"]+)[`'"][\s\S]+?\};/g,
-            `async simulatePaykassaApiCall(transactionData) {
-        // Simulación: en producción, esta llamada se haría desde el backend
-        console.log('Enviando datos a Paykassa:', transactionData);
-        
-        // Simular un tiempo de espera para la API
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Para pruebas locales, usar URLs relativas al origen actual
-        const baseUrl = window.location.origin;
-        
-        // Determinar la URL de redirección según la criptomoneda seleccionada
-        let redirectUrl;
-        if (transactionData.payment_system === 'BTC') {
-            redirectUrl = \`\${baseUrl}/success.html?transaction_id=\${transactionData.order_id}\`;
-        } else if (transactionData.payment_system === 'ETH') {
-            redirectUrl = \`\${baseUrl}/confirm-payment.html?status=pending&transaction_id=\${transactionData.order_id}\`;
-        } else {
-            redirectUrl = \`\${baseUrl}/failure.html?reason=test_transaction&transaction_id=\${transactionData.order_id}\`;
-        }
-        
-        return {
-            status: 'success',
-            url: redirectUrl
-        };`
-        );
-    }
-    
     fs.writeFileSync(paykassaPath, content, 'utf8');
     console.log(`✓ Corregido: paykassa.js con credenciales de prueba`);
+}
+
+// Asegurarse de que paykassa.js importe paykassa-config.js
+if (fs.existsSync(paykassaPath)) {
+    let content = fs.readFileSync(paykassaPath, 'utf8');
+    
+    // Si no tiene importación de config, añadirla al inicio
+    if (!content.includes('paykassa-config.js') && !content.includes('window.paykassaConfig')) {
+        const importStatement = `// Importar configuración
+// NOTA: Asegúrate de incluir paykassa-config.js antes de paykassa.js en tu HTML
+// <script src="tienda-web/js/paykassa-config.js"></script>
+// <script src="tienda-web/js/paykassa.js"></script>
+
+`;
+        content = importStatement + content;
+        
+        // Modificar el constructor para usar configuración global
+        content = content.replace(
+            /constructor\(shopId, secretKey, testMode = false\) {[\s\S]+?this\.testMode = testMode;/g,
+            `constructor(shopId, secretKey, testMode = false) {
+        // Usar configuración global si está disponible
+        this.shopId = shopId || (window.paykassaConfig ? window.paykassaConfig.merchantId : '64135');
+        this.secretKey = secretKey || 'sandbox_api_key';
+        this.testMode = testMode || (window.paykassaConfig ? window.paykassaConfig.testMode : false);`
+        );
+        
+        fs.writeFileSync(paykassaPath, content, 'utf8');
+        console.log(`✓ Mejorado paykassa.js para usar configuración global`);
+    }
 }
 
 // Añadir meta tags para GitHub Pages
@@ -578,5 +576,270 @@ pageFiles.forEach(file => {
         console.log(`✓ Copiado y ajustado ${file} a pages/${file}`);
     }
 });
+
+// Asegurar que todos los HTML tienen las conexiones de script correctas
+const htmlFiles = [
+    'index.html',
+    'checkout.html',
+    'success.html',
+    'failure.html',
+    'confirm-payment.html',
+    'cart.html',
+    'product.html',
+    'bank-transfer-instructions.html',
+    'pages/checkout.html',
+    'pages/success.html',
+    'pages/failure.html',
+    'pages/confirm-payment.html',
+    'pages/cart.html',
+    'pages/product.html',
+    'pages/bank-transfer-instructions.html'
+];
+
+console.log('Verificando y corrigiendo conexiones entre HTML y JS...');
+
+htmlFiles.forEach(filePath => {
+    const fullPath = path.join(__dirname, filePath);
+    if (fs.existsSync(fullPath)) {
+        let content = fs.readFileSync(fullPath, 'utf8');
+        let modified = false;
+        
+        // Obtener la ruta relativa para los scripts
+        const isInPages = filePath.startsWith('pages/');
+        const scriptPrefix = isInPages ? '../tienda-web/js/' : 'tienda-web/js/';
+        
+        // Asegurar que checkout.html tiene los scripts necesarios
+        if (filePath.includes('checkout')) {
+            if (!content.includes('paykassa.js')) {
+                const bodyEnd = content.lastIndexOf('</body>');
+                if (bodyEnd !== -1) {
+                    content = content.substring(0, bodyEnd) + 
+                        `\n    <!-- PayKassa Integration -->\n    <script src="${scriptPrefix}paykassa.js"></script>\n` + 
+                        content.substring(bodyEnd);
+                    modified = true;
+                }
+            }
+            
+            if (!content.includes('checkout.js')) {
+                const bodyEnd = content.lastIndexOf('</body>');
+                if (bodyEnd !== -1) {
+                    content = content.substring(0, bodyEnd) + 
+                        `\n    <!-- Checkout Script -->\n    <script src="${scriptPrefix}checkout.js"></script>\n` + 
+                        content.substring(bodyEnd);
+                    modified = true;
+                }
+            }
+            
+            // Asegurar que tiene el overlay de procesamiento
+            if (!content.includes('processing-overlay')) {
+                const bodyEnd = content.lastIndexOf('</body>');
+                if (bodyEnd !== -1) {
+                    const processingOverlay = `
+    <!-- Overlay de procesamiento -->
+    <div id="processing-overlay" style="display: none;">
+        <div class="processing-content">
+            <div class="spinner"></div>
+            <h3>Procesando tu pago</h3>
+            <p>Por favor espera mientras conectamos con Paykassa...</p>
+        </div>
+    </div>\n`;
+                    content = content.substring(0, bodyEnd) + processingOverlay + content.substring(bodyEnd);
+                    modified = true;
+                }
+            }
+        }
+        
+        // Asegurar que cart.html tiene el script cart.js
+        if (filePath.includes('cart')) {
+            if (!content.includes('cart.js')) {
+                const bodyEnd = content.lastIndexOf('</body>');
+                if (bodyEnd !== -1) {
+                    content = content.substring(0, bodyEnd) + 
+                        `\n    <!-- Cart Script -->\n    <script src="${scriptPrefix}cart.js"></script>\n` + 
+                        content.substring(bodyEnd);
+                    modified = true;
+                }
+            }
+        }
+        
+        // Asegurar que product.html tiene el script products.js
+        if (filePath.includes('product')) {
+            if (!content.includes('products.js')) {
+                const bodyEnd = content.lastIndexOf('</body>');
+                if (bodyEnd !== -1) {
+                    content = content.substring(0, bodyEnd) + 
+                        `\n    <!-- Products Script -->\n    <script src="${scriptPrefix}products.js"></script>\n` + 
+                        content.substring(bodyEnd);
+                    modified = true;
+                }
+            }
+        }
+        
+        // Asegurar que success.html y failure.html tienen un script para gestionar la respuesta
+        if (filePath.includes('success') || filePath.includes('failure')) {
+            if (!content.includes('<script')) {
+                const bodyEnd = content.lastIndexOf('</body>');
+                if (bodyEnd !== -1) {
+                    const responseHandlerScript = `
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Recuperar datos del pedido del localStorage
+            const orderData = JSON.parse(localStorage.getItem('pendingOrder') || '{}');
+            
+            // Actualizar elementos en la página con los datos del pedido
+            const orderElements = {
+                'order-id': orderData.order_id || 'ORD-12345',
+                'order-date': new Date().toLocaleDateString(),
+                'order-total': orderData.amount ? \`$\${orderData.amount.toFixed(2)}\` : '$0.00',
+                'payment-method': orderData.crypto ? \`Paykassa (\${orderData.crypto})\` : 'Paykassa'
+            };
+            
+            // Actualizar cada elemento si existe
+            Object.keys(orderElements).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = orderElements[id];
+                }
+            });
+            
+            ${filePath.includes('success') ? 
+                `// Si es página de éxito, limpiar el carrito
+                localStorage.removeItem('cartItems');` : ''}
+        });
+    </script>\n`;
+                    
+                    content = content.substring(0, bodyEnd) + responseHandlerScript + content.substring(bodyEnd);
+                    modified = true;
+                }
+            }
+        }
+        
+        // Asegurar que tienes FontAwesome para iconos
+        if (!content.includes('font-awesome')) {
+            const headEnd = content.indexOf('</head>');
+            if (headEnd !== -1) {
+                const fontAwesomeLink = 
+                    '\n    <!-- Font Awesome -->\n' + 
+                    '    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">\n';
+                content = content.substring(0, headEnd) + fontAwesomeLink + content.substring(headEnd);
+                modified = true;
+            }
+        }
+        
+        // Guardar cambios si se hicieron modificaciones
+        if (modified) {
+            fs.writeFileSync(fullPath, content, 'utf8');
+            console.log(`✓ Conectados scripts para: ${filePath}`);
+        } else {
+            console.log(`✓ Ya estaba correctamente configurado: ${filePath}`);
+        }
+    } else {
+        console.log(`✗ No encontrado: ${filePath}`);
+    }
+});
+
+// Verificar si existe el script paykassa-config.js y crearlo si no
+const paykassaConfigPath = path.join(__dirname, 'tienda-web/js/paykassa-config.js');
+if (!fs.existsSync(paykassaConfigPath)) {
+    const paykassaConfig = `// Configuración de PayKassa
+const paykassaConfig = {
+    merchantId: '64135', // ID para pruebas
+    testMode: true
+};
+
+// Exponer la configuración
+window.paykassaConfig = paykassaConfig;
+`;
+    fs.writeFileSync(paykassaConfigPath, paykassaConfig, 'utf8');
+    console.log(`✓ Creado archivo de configuración paykassa-config.js`);
+}
+
+// Añadir script para inicio rápido del proyecto
+const quickStartPath = path.join(__dirname, 'start-local-server.js');
+if (!fs.existsSync(quickStartPath)) {
+    const quickStartScript = `// Servidor local simple para desarrollo
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const PORT = 3000;
+
+const server = http.createServer((req, res) => {
+    let filePath = req.url;
+    
+    // Ruta por defecto
+    if (filePath === '/') {
+        filePath = '/index.html';
+    }
+    
+    // Ruta completa al archivo
+    filePath = path.join(__dirname, filePath);
+    
+    // Obtener la extensión del archivo
+    const extname = path.extname(filePath);
+    
+    // Tipo de contenido por defecto
+    let contentType = 'text/html';
+    
+    // Establecer el tipo de contenido según la extensión
+    switch (extname) {
+        case '.js':
+            contentType = 'text/javascript';
+            break;
+        case '.css':
+            contentType = 'text/css';
+            break;
+        case '.json':
+            contentType = 'application/json';
+            break;
+        case '.png':
+            contentType = 'image/png';
+            break;
+        case '.jpg':
+            contentType = 'image/jpg';
+            break;
+    }
+    
+    // Leer el archivo
+    fs.readFile(filePath, (err, content) => {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                // Si no se encuentra la página, intentar buscar en tienda-web
+                const fallbackPath = path.join(__dirname, 'tienda-web', req.url);
+                fs.readFile(fallbackPath, (fallbackErr, fallbackContent) => {
+                    if (fallbackErr) {
+                        res.writeHead(404);
+                        res.end('Archivo no encontrado');
+                    } else {
+                        res.writeHead(200, { 'Content-Type': contentType });
+                        res.end(fallbackContent, 'utf-8');
+                    }
+                });
+            } else {
+                // Error del servidor
+                res.writeHead(500);
+                res.end(\`Error del servidor: \${err.code}\`);
+            }
+        } else {
+            // Éxito
+            res.writeHead(200, { 'Content-Type': contentType });
+            res.end(content, 'utf-8');
+        }
+    });
+});
+
+server.listen(PORT, () => {
+    console.log(\`Servidor corriendo en http://localhost:\${PORT}/\`);
+    console.log('Para detener el servidor, presiona Ctrl+C');
+});
+`;
+    fs.writeFileSync(quickStartPath, quickStartScript, 'utf8');
+    console.log(`✓ Creado script de inicio rápido start-local-server.js`);
+}
+
+console.log('¡Todas las conexiones entre HTML y JS han sido verificadas y corregidas!');
+console.log('\nPara probar tu sitio localmente, ejecuta:');
+console.log('node start-local-server.js');
+console.log('Y luego abre http://localhost:3000 en tu navegador');
 
 console.log('¡Proceso completado!');

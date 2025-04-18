@@ -1,12 +1,18 @@
+// Importar configuración
+// NOTA: Asegúrate de incluir paykassa-config.js antes de paykassa.js en tu HTML
+// <script src="tienda-web/js/paykassa-config.js"></script>
+// <script src="tienda-web/js/paykassa.js"></script>
+
 /**
  * Integración con Paykassa para procesamiento de pagos
  */
 
 class PaykassaIntegration {
     constructor(shopId, secretKey, testMode = false) {
-        this.shopId = shopId;
-        this.secretKey = secretKey;
-        this.testMode = testMode;
+        // Usar configuración global si está disponible
+        this.shopId = shopId || (window.paykassaConfig ? window.paykassaConfig.merchantId : '64135');
+        this.secretKey = secretKey || 'sandbox_api_key';
+        this.testMode = testMode || (window.paykassaConfig ? window.paykassaConfig.testMode : false);
         this.apiUrl = 'https://api.paykassa.app/v1/';
     }
 
