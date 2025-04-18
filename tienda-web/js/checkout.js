@@ -5,6 +5,143 @@ document.addEventListener('DOMContentLoaded', function() {
     const cardNumber = document.getElementById('card-number');
     const expiryDate = document.getElementById('expiry-date');
     const cvv = document.getElementById('cvv');
+    const paymentMethods = document.querySelectorAll('input[name="payment-method"]');
+    const cardPaymentDetails = document.getElementById('card-payment-details');
+    
+    // Manejar cambios en el método de pago
+    paymentMethods.forEach(method => {
+        method.addEventListener('change', function() {
+            // Mostrar/ocultar los detalles de la tarjeta según el método seleccionado
+            if (this.value === 'card') {
+                cardPaymentDetails.style.display = 'block';
+            } else {
+                cardPaymentDetails.style.display = 'none';
+            }
+            
+            // Para otros métodos de pago, puedes añadir más lógica aquí
+            if (this.value === 'paykassa') {
+                // Por ejemplo, mostrar selector de criptomonedas
+                showCryptoOptions();
+            } else if (this.value === 'transfer') {
+                // Mostrar información de transferencia bancaria
+            }
+        });
+    });
+    
+    // Función para mostrar opciones de criptomoneda para Paykassa
+    function showCryptoOptions() {
+        // Si ya existe un contenedor de opciones crypto, no lo vuelvas a crear
+        if (document.getElementById('crypto-options')) return;
+        
+        const paykassaOption = document.querySelector('label[for="payment-paykassa"]').parentNode;
+        
+        // Crear el contenedor de opciones de criptomoneda
+        const cryptoOptions = document.createElement('div');
+        cryptoOptions.id = 'crypto-options';
+        cryptoOptions.className = 'crypto-options';
+        cryptoOptions.innerHTML = `
+            <h4>Selecciona una criptomoneda:</h4>
+            <div class="crypto-selection">
+                <div class="crypto-option">
+                    <input type="radio" id="crypto-btc" name="crypto-currency" value="BTC" checked>
+                    <label for="crypto-btc">
+                        <i class="fab fa-bitcoin"></i>
+                        <span>Bitcoin (BTC)</span>
+                    </label>
+                </div>
+                <div class="crypto-option">
+                    <input type="radio" id="crypto-eth" name="crypto-currency" value="ETH">
+                    <label for="crypto-eth">
+                        <i class="fab fa-ethereum"></i>
+                        <span>Ethereum (ETH)</span>
+                    </label>
+                </div>
+                <div class="crypto-option">
+                    <input type="radio" id="crypto-usdt" name="crypto-currency" value="USDT">
+                    <label for="crypto-usdt">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Tether (USDT)</span>
+                    </label>
+                </div>
+            </div>
+        `;
+        
+        // Insertar después de la opción Paykassa
+        paykassaOption.parentNode.insertBefore(cryptoOptions, paykassaOption.nextSibling);
+        
+        // Inicialmente oculto
+        cryptoOptions.style.display = 'none';
+        
+        // Mostrar opciones
+        cryptoOptions.style.display = 'block';
+    }
+    
+    // Inicializar la visualización correcta del método de pago seleccionado
+    const initialMethod = document.querySelector('input[name="payment-method"]:checked');
+    if (initialMethod) {
+        // Disparar el evento change para el método inicialmente seleccionado
+        const event = new Event('change');
+        initialMethod.dispatchEvent(event);
+    }
+    
+    // Manejar el envío del formulario
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+            
+            if (selectedPaymentMethod === 'paykassa') {
+                // Obtener la criptomoneda seleccionada
+                const selectedCrypto = document.querySelector('input[name="crypto-currency"]:checked');
+                const cryptoValue = selectedCrypto ? selectedCrypto.value : 'BTC';
+                
+                // Obtener datos del formulario
+                const formData = new FormData(checkoutForm);
+                const customerData = {
+                    name: formData.get('first-name') + ' ' + formData.get('last-name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    address: formData.get('address'),
+                    city: formData.get('city'),
+                    postalCode: formData.get('postal-code'),
+                    country: formData.get('country')
+                };
+                
+                // Mostrar overlay de procesamiento
+                document.getElementById('processing-overlay').style.display = 'flex';
+                
+                // Obtener instancia de PaykassaIntegration (asumiendo que ya está inicializada)
+                const paykassaInstance = window.paykassaInstance;
+                
+                if (paykassaInstance) {
+                    // Procesar pago con Paykassa
+                    paykassaInstance.processPayment(cryptoValue, customerData);
+                } else {
+                    // Fallback si la instancia no está disponible
+                    showError('No se pudo conectar con el procesador de pagos. Por favor, intenta nuevamente.');
+                    document.getElementById('processing-overlay').style.display = 'none';
+                }
+            } else if (selectedPaymentMethod === 'card') {
+                // Aquí iría la lógica para procesar pago con tarjeta
+                alert('Procesando pago con tarjeta...');
+            } else if (selectedPaymentMethod === 'paypal') {
+                // Lógica para PayPal
+                alert('Redirigiendo a PayPal...');
+            } else if (selectedPaymentMethod === 'transfer') {
+                // Lógica para transferencia bancaria
+                window.location.href = 'bank-transfer-instructions.html';
+            }
+        });
+    }
+    
+    // Configurar la opción "Usar la misma dirección para facturación"
+    const billingSameCheckbox = document.getElementById('billing-same');
+    if (billingSameCheckbox) {
+        billingSameCheckbox.addEventListener('change', function() {
+            // Aquí puedes añadir lógica para mostrar/ocultar campos de facturación
+        });
+    }
     
     // Agregar estilos para overlay de procesamiento
     const style = document.createElement('style');

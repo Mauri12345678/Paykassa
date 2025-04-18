@@ -485,6 +485,59 @@ header {
     color: var(--text-light);
 }
 
+/* Estilos para opciones de criptomoneda */
+.crypto-options {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: var(--bg-light);
+    border-radius: var(--radius-md);
+    transition: all 0.3s ease;
+}
+
+.crypto-options h4 {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.crypto-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.crypto-option {
+    display: flex;
+    align-items: center;
+}
+
+.crypto-option input[type="radio"] {
+    margin-right: 10px;
+}
+
+.crypto-option label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.crypto-option i {
+    margin-right: 8px;
+    font-size: 1.2rem;
+}
+
+.crypto-option .fa-bitcoin {
+    color: #f7931a;
+}
+
+.crypto-option .fa-ethereum {
+    color: #627eea;
+}
+
+.crypto-option .fa-dollar-sign {
+    color: #26a17b;
+}
+
 /* Estilos para Paykassa */
 .crypto-options {
     display: flex;

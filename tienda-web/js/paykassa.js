@@ -36,6 +36,9 @@ class PaykassaIntegration {
 
         // Crear div para los detalles de Paykassa
         this.createPaykassaDetailsSection();
+
+        // Guardar la instancia para acceso global
+        window.paykassaInstance = this;
     }
 
     /**
