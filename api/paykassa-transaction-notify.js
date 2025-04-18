@@ -1,3 +1,4 @@
+// Forzar redeploy en Vercel
 import PaykassaIntegration from 'paykassa-sdk';
 
 export default async function handler(req, res) {
