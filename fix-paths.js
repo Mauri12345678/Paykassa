@@ -129,6 +129,12 @@ files.forEach(file => {
         // Corregir enlaces entre páginas
         content = content.replace(/href="([^\.\/].*?)\.html"/g, 'href="$1.html"');
         
+        // Corregir enlaces a checkout.html en páginas/carpetas
+        content = content.replace(/href="pages\/checkout\.html"/g, 'href="checkout.html"');
+        content = content.replace(/href="checkout\.html"/g, 'href="checkout.html"');
+        // Para enlaces desde las páginas dentro de tienda-web/pages/
+        content = content.replace(/href="\.\.\/pages\/checkout\.html"/g, 'href="../checkout.html"');
+        
         // Asegurarse de tener CSS para el overlay de procesamiento
         if (file === 'checkout.html' && content.includes('processing-overlay')) {
             const cssLink = '<link rel="stylesheet" href="tienda-web/css/checkout.css">';
@@ -526,6 +532,21 @@ Mauri - [GitHub](https://github.com/Mauri12345678)
 `;
     fs.writeFileSync(readmePath, readme);
     console.log(`✓ Creado README.md para GitHub`);
+}
+
+// Crear una carpeta 'pages' en la raíz si no existe
+const rootPagesDir = path.join(__dirname, 'pages');
+if (!fs.existsSync(rootPagesDir)) {
+    fs.mkdirSync(rootPagesDir, { recursive: true });
+    console.log(`✓ Creada carpeta: pages/`);
+}
+
+// Copiar checkout.html a la carpeta pages/ en la raíz
+const rootCheckoutPath = path.join(__dirname, 'checkout.html');
+if (fs.existsSync(rootCheckoutPath)) {
+    let checkoutContent = fs.readFileSync(rootCheckoutPath, 'utf8');
+    fs.writeFileSync(path.join(rootPagesDir, 'checkout.html'), checkoutContent);
+    console.log(`✓ Copiado checkout.html a pages/checkout.html`);
 }
 
 console.log('¡Proceso completado!');
