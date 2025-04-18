@@ -34,4 +34,25 @@ files.forEach(file => {
     }
 });
 
+const filePath = path.join(__dirname, 'tienda-web/pages/checkout.html');
+
+if (fs.existsSync(filePath)) {
+    let content = fs.readFileSync(filePath, 'utf8');
+    
+    // Corregir rutas CSS, JS e imágenes - de formato tienda-web/... a ../...
+    content = content.replace(/href="tienda-web\/css\//g, 'href="../css/');
+    content = content.replace(/href="tienda-web\/images\//g, 'href="../images/');
+    content = content.replace(/src="tienda-web\/js\//g, 'src="../js/');
+    content = content.replace(/src="tienda-web\/images\//g, 'src="../images/');
+    content = content.replace(/src="tienda-web\/assets\//g, 'src="../assets/');
+    
+    // Corregir enlaces a páginas
+    content = content.replace(/href="index\.html"/g, 'href="../index.html"');
+    
+    fs.writeFileSync(filePath, content, 'utf8');
+    console.log(`✓ Corregido: checkout.html en tienda-web/pages/`);
+} else {
+    console.log(`✗ No encontrado: checkout.html en tienda-web/pages/`);
+}
+
 console.log('¡Proceso completado!');
