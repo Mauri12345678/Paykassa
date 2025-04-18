@@ -1,7 +1,13 @@
-# Crear archivo .gitignore
+# Crear el archivo .gitignore correcto
 echo "# Archivos y carpetas a ignorar" > .gitignore
 echo "node_modules/" >> .gitignore
 echo ".DS_Store" >> .gitignore
 echo ".env" >> .gitignore
 echo "*.log" >> .gitignore
 echo "dist/" >> .gitignore
+
+# Añadirlo al stage
+git add .gitignore
+
+# Hacer commit del cambio
+git commit -m "Corregir archivo .gitignore"
