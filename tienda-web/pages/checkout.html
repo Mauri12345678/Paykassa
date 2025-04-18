@@ -399,5 +399,90 @@
             paykassa.init();
         });
     </script>
+    <script>
+        // Script para corregir la funcionalidad de selección de método de pago
+        document.addEventListener('DOMContentLoaded', function() {
+            // Referencias a elementos del formulario
+            const paymentMethods = document.querySelectorAll('input[name="payment-method"]');
+            const cardPaymentDetails = document.getElementById('card-payment-details');
+            const cryptoOptions = document.getElementById('crypto-options');
+            
+            // Función para manejar cambios en el método de pago
+            function handlePaymentMethodChange() {
+                const selectedMethod = document.querySelector('input[name="payment-method"]:checked').value;
+                
+                // Mostrar/ocultar formulario de tarjeta
+                if (cardPaymentDetails) {
+                    cardPaymentDetails.style.display = selectedMethod === 'card' ? 'block' : 'none';
+                }
+                
+                // Mostrar/ocultar opciones de criptomoneda
+                if (cryptoOptions) {
+                    cryptoOptions.style.display = selectedMethod === 'paykassa' ? 'block' : 'none';
+                }
+            }
+            
+            // Añadir event listeners a los métodos de pago
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', handlePaymentMethodChange);
+            });
+            
+            // Ejecutar una vez para establecer el estado inicial
+            handlePaymentMethodChange();
+            
+            // Si no existe un contenedor para opciones crypto y se selecciona Paykassa, crearlo
+            const paykassaRadio = document.querySelector('input[value="paykassa"]');
+            if (paykassaRadio && !document.getElementById('crypto-options')) {
+                paykassaRadio.addEventListener('change', function() {
+                    if (this.checked && !document.getElementById('crypto-options')) {
+                        const paykassaOption = this.closest('.payment-option');
+                        
+                        // Crear el contenedor de opciones de criptomoneda
+                        const cryptoOptionsDiv = document.createElement('div');
+                        cryptoOptionsDiv.id = 'crypto-options';
+                        cryptoOptionsDiv.className = 'crypto-options';
+                        cryptoOptionsDiv.innerHTML = `
+                            <h4>Selecciona una criptomoneda:</h4>
+                            <div class="crypto-selection">
+                                <div class="crypto-option">
+                                    <input type="radio" id="crypto-btc" name="crypto-currency" value="BTC" checked>
+                                    <label for="crypto-btc">
+                                        <div class="crypto-logo">
+                                            <i class="fab fa-bitcoin"></i>
+                                        </div>
+                                        <span>Bitcoin (BTC)</span>
+                                    </label>
+                                </div>
+                                <div class="crypto-option">
+                                    <input type="radio" id="crypto-eth" name="crypto-currency" value="ETH">
+                                    <label for="crypto-eth">
+                                        <div class="crypto-logo">
+                                            <i class="fab fa-ethereum"></i>
+                                        </div>
+                                        <span>Ethereum (ETH)</span>
+                                    </label>
+                                </div>
+                                <div class="crypto-option">
+                                    <input type="radio" id="crypto-usdt" name="crypto-currency" value="USDT">
+                                    <label for="crypto-usdt">
+                                        <div class="crypto-logo">
+                                            <i class="fas fa-dollar-sign"></i>
+                                        </div>
+                                        <span>Tether (USDT)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Insertar después de la opción Paykassa
+                        const paymentMethods = document.querySelector('.payment-methods');
+                        if (paymentMethods) {
+                            paymentMethods.insertBefore(cryptoOptionsDiv, paykassaOption.nextSibling);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
