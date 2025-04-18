@@ -1,0 +1,7 @@
+# Crear archivo .gitignore
+echo "# Archivos y carpetas a ignorar" > .gitignore
+echo "node_modules/" >> .gitignore
+echo ".DS_Store" >> .gitignore
+echo ".env" >> .gitignore
+echo "*.log" >> .gitignore
+echo "dist/" >> .gitignore
