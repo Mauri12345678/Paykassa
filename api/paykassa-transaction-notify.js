@@ -1,14 +1,18 @@
 import PaykassaIntegration from 'paykassa-sdk';
 
 export default async function handler(req, res) {
-    const paykassa = new PaykassaIntegration('28415', '', false);
-
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Método no permitido' });
     }
 
+    // Obtén las credenciales desde las variables de entorno
+    const SHOP_ID = process.env.PAYKASSA_SHOP_ID;
+    const SECRET_KEY = process.env.PAYKASSA_SECRET_KEY;
+
     const notification = req.body;
     console.log('Notificación de transacción de Paykassa:', notification);
+
+    // Aquí puedes validar la notificación usando SHOP_ID y SECRET_KEY si lo deseas
 
     res.status(200).send('OK');
 }
