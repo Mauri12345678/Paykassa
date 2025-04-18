@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "name": "Camiseta de Algodón",
+        "price": 19.99,
+        "description": "Camiseta de algodón 100% suave y cómoda.",
+        "image": "assets/images/camiseta-algodon.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Pantalones Cortos",
+        "price": 24.99,
+        "description": "Pantalones cortos ligeros, perfectos para el verano.",
+        "image": "assets/images/pantalones-cortos.jpg"
+    },
+    {
+        "id": 3,
+        "name": "Zapatillas Deportivas",
+        "price": 49.99,
+        "description": "Zapatillas deportivas con gran soporte y comodidad.",
+        "image": "assets/images/zapatillas-deportivas.jpg"
+    },
+    {
+        "id": 4,
+        "name": "Gorra de Beisbol",
+        "price": 15.99,
+        "description": "Gorra de beisbol ajustable, ideal para el sol.",
+        "image": "assets/images/gorra-beisbol.jpg"
+    },
+    {
+        "id": 5,
+        "name": "Mochila de Viaje",
+        "price": 39.99,
+        "description": "Mochila espaciosa y resistente, perfecta para viajes.",
+        "image": "assets/images/mochila-viaje.jpg"
+    }
+]
