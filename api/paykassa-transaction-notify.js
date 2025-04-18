@@ -1,4 +1,8 @@
+import PaykassaIntegration from 'paykassa-sdk';
+
 export default async function handler(req, res) {
+    const paykassa = new PaykassaIntegration('28415', '', false);
+
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Método no permitido' });
     }
