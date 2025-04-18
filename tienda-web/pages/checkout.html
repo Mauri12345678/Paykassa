@@ -391,5 +391,13 @@
             <p>Por favor espera mientras conectamos con Paykassa...</p>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicialización para pruebas locales de Paykassa
+            const paykassa = new PaykassaIntegration('64135', 'sandbox_api_key', true);
+            paykassa.init();
+        });
+    </script>
 </body>
 </html>

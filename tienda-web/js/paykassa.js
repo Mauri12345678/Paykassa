@@ -361,8 +361,7 @@ class PaykassaIntegration {
 
 // Inicializar la integración cuando se cargue el documento
 document.addEventListener('DOMContentLoaded', () => {
-    // Reemplaza SHOP_ID_HERE y SECRET_KEY_HERE con tus credenciales reales
-    // que obtuviste en el panel de Paykassa
-    const paykassa = new PaykassaIntegration('TU_SHOP_ID', 'TU_SECRET_KEY', true);
+    // Credenciales de prueba para desarrollo local
+    const paykassa = new PaykassaIntegration('64135', 'sandbox_api_key', true);
     paykassa.init();
 });

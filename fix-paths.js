@@ -12,6 +12,101 @@ const files = [
     'bank-transfer-instructions.html'
 ];
 
+// Añadir CSS específico necesario para el procesamiento de overlay
+const processingCSS = `
+/* Estilos para overlay de procesamiento */
+#processing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.processing-content {
+    background-color: white;
+    padding: 40px;
+    border-radius: var(--radius-md);
+    text-align: center;
+    max-width: 400px;
+    box-shadow: var(--shadow-lg);
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(var(--primary-color-rgb), 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-container {
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+.error-message-box {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: rgba(var(--error-color), 0.1);
+    border-left: 4px solid var(--error-color);
+    border-radius: var(--radius-sm);
+    color: var(--error-color);
+    position: relative;
+}
+
+.error-message-box i {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.close-error {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--error-color);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.close-error:hover {
+    opacity: 1;
+}
+`;
+
+// Añadir script para cerrar mensaje de error
+const errorCloseScript = `
+// Script para cerrar mensajes de error
+document.addEventListener('DOMContentLoaded', function() {
+    const closeButtons = document.querySelectorAll('.close-error');
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const errorContainer = this.closest('.error-container');
+            if (errorContainer) {
+                errorContainer.style.display = 'none';
+            }
+        });
+    });
+});
+`;
+
+// Procesar cada archivo en la raíz
 files.forEach(file => {
     const filePath = path.join(__dirname, file);
     
@@ -34,6 +129,32 @@ files.forEach(file => {
         // Corregir enlaces entre páginas
         content = content.replace(/href="([^\.\/].*?)\.html"/g, 'href="$1.html"');
         
+        // Asegurarse de tener CSS para el overlay de procesamiento
+        if (file === 'checkout.html' && content.includes('processing-overlay')) {
+            const cssLink = '<link rel="stylesheet" href="tienda-web/css/checkout.css">';
+            if (!content.includes(cssLink) && !content.includes('id="processing-overlay-styles"')) {
+                const headEnd = content.indexOf('</head>');
+                if (headEnd !== -1) {
+                    const styleTag = `\n    <!-- Estilos de overlay de procesamiento -->\n    <style id="processing-overlay-styles">${processingCSS}</style>\n`;
+                    content = content.substring(0, headEnd) + styleTag + content.substring(headEnd);
+                }
+            }
+        }
+        
+        // Asegurarse de que todos los archivos tienen la estructura completa HTML5
+        if (!content.includes('<!DOCTYPE html>')) {
+            content = `<!DOCTYPE html>\n<html lang="es">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>${file.charAt(0).toUpperCase() + file.slice(1, -5)} | LuxMarket</title>\n    <link rel="stylesheet" href="tienda-web/css/style.css">\n</head>\n<body>\n` + content + `\n</body>\n</html>`;
+        }
+        
+        // Añadir script para cerrar mensajes de error si existe un elemento .error-container
+        if (content.includes('error-container') && !content.includes('close-error')) {
+            const bodyEnd = content.lastIndexOf('</body>');
+            if (bodyEnd !== -1) {
+                const script = `\n    <script>\n    ${errorCloseScript}\n    </script>\n`;
+                content = content.substring(0, bodyEnd) + script + content.substring(bodyEnd);
+            }
+        }
+        
         fs.writeFileSync(filePath, content, 'utf8');
         console.log(`✓ Corregido: ${file}`);
     } else {
@@ -41,7 +162,7 @@ files.forEach(file => {
     }
 });
 
-// Ahora corregir el checkout.html en la carpeta tienda-web/pages
+// Corregir el checkout.html en la carpeta tienda-web/pages
 const checkoutPath = path.join(__dirname, 'tienda-web/pages/checkout.html');
 
 if (fs.existsSync(checkoutPath)) {
@@ -97,13 +218,47 @@ if (fs.existsSync(checkoutPath)) {
         }
     }
     
+    // Añadir script para cerrar los mensajes de error
+    if (content.includes('error-container') && !content.includes('close-error')) {
+        const bodyEnd = content.lastIndexOf('</body>');
+        if (bodyEnd !== -1) {
+            const script = `
+    <script>
+    ${errorCloseScript}
+    </script>
+`;
+            content = content.substring(0, bodyEnd) + script + content.substring(bodyEnd);
+        }
+    }
+    
+    // Verificar si PaykassaIntegration está iniciado correctamente
+    if (content.includes('paykassa.js') && !content.includes('TU_SHOP_ID')) {
+        // Añadir inicialización para desarrollo
+        const bodyEnd = content.lastIndexOf('</body>');
+        if (bodyEnd !== -1) {
+            const initScript = `
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicialización para pruebas locales de Paykassa
+            const paykassa = new PaykassaIntegration('64135', 'sandbox_api_key', true);
+            paykassa.init();
+        });
+    </script>
+`;
+            // Solo añadir si no hay un script de inicialización de Paykassa
+            if (!content.includes('PaykassaIntegration(')) {
+                content = content.substring(0, bodyEnd) + initScript + content.substring(bodyEnd);
+            }
+        }
+    }
+    
     fs.writeFileSync(checkoutPath, content, 'utf8');
     console.log(`✓ Corregido: checkout.html en tienda-web/pages/`);
 } else {
     console.log(`✗ No encontrado: checkout.html en tienda-web/pages/`);
 }
 
-// También corregir success.html si existe en tienda-web/pages
+// Corregir success.html si existe en tienda-web/pages
 const successPath = path.join(__dirname, 'tienda-web/pages/success.html');
 
 if (fs.existsSync(successPath)) {
@@ -241,6 +396,136 @@ if (fs.existsSync(successPath)) {
     }
 } else {
     console.log(`✗ No encontrado: success.html en tienda-web/pages/`);
+}
+
+// Corregir archivo paykassa.js para usar credenciales de prueba
+const paykassaPath = path.join(__dirname, 'tienda-web/js/paykassa.js');
+if (fs.existsSync(paykassaPath)) {
+    let content = fs.readFileSync(paykassaPath, 'utf8');
+    
+    // Reemplazar la sección de inicialización con credenciales genéricas de prueba
+    content = content.replace(
+        /document\.addEventListener\('DOMContentLoaded', \(\) => \{[\s\S]+?const paykassa = new PaykassaIntegration\(['"](.*?)['"],\s*['"](.*?)['"],\s*(true|false)\);/g, 
+        `document.addEventListener('DOMContentLoaded', () => {
+    // Credenciales de prueba para desarrollo local
+    const paykassa = new PaykassaIntegration('64135', 'sandbox_api_key', true);`
+    );
+    
+    // Asegurarse de que la función simulatePaykassaApiCall incluye rutas relativas
+    if (content.includes('simulatePaykassaApiCall') && !content.includes('window.location.origin')) {
+        content = content.replace(
+            /async simulatePaykassaApiCall\(transactionData\) \{[\s\S]+?return \{[\s\S]+?url: [`'"]([^`'"]+)[`'"][\s\S]+?\};/g,
+            `async simulatePaykassaApiCall(transactionData) {
+        // Simulación: en producción, esta llamada se haría desde el backend
+        console.log('Enviando datos a Paykassa:', transactionData);
+        
+        // Simular un tiempo de espera para la API
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Para pruebas locales, usar URLs relativas al origen actual
+        const baseUrl = window.location.origin;
+        
+        // Determinar la URL de redirección según la criptomoneda seleccionada
+        let redirectUrl;
+        if (transactionData.payment_system === 'BTC') {
+            redirectUrl = \`\${baseUrl}/success.html?transaction_id=\${transactionData.order_id}\`;
+        } else if (transactionData.payment_system === 'ETH') {
+            redirectUrl = \`\${baseUrl}/confirm-payment.html?status=pending&transaction_id=\${transactionData.order_id}\`;
+        } else {
+            redirectUrl = \`\${baseUrl}/failure.html?reason=test_transaction&transaction_id=\${transactionData.order_id}\`;
+        }
+        
+        return {
+            status: 'success',
+            url: redirectUrl
+        };`
+        );
+    }
+    
+    fs.writeFileSync(paykassaPath, content, 'utf8');
+    console.log(`✓ Corregido: paykassa.js con credenciales de prueba`);
+}
+
+// Añadir meta tags para GitHub Pages
+const indexPath = path.join(__dirname, 'index.html');
+if (fs.existsSync(indexPath)) {
+    let content = fs.readFileSync(indexPath, 'utf8');
+    
+    // Añadir meta tags si no existen
+    if (!content.includes('<meta name="robots"')) {
+        const headEnd = content.indexOf('</head>');
+        if (headEnd !== -1) {
+            const metaTags = `
+    <!-- Meta tags para GitHub Pages -->
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="LuxMarket - Tu tienda online favorita con integración de pagos Paykassa">
+    <meta name="author" content="Mauri">
+    <meta property="og:title" content="LuxMarket | Tienda online con integración Paykassa">
+    <meta property="og:description" content="Explora nuestra tienda online con integración de criptomonedas mediante Paykassa">
+    <meta property="og:image" content="tienda-web/images/15.png">
+    <meta property="og:url" content="https://mauri12345678.github.io/Paykassa/">
+    <meta property="og:type" content="website">
+`;
+            content = content.substring(0, headEnd) + metaTags + content.substring(headEnd);
+            fs.writeFileSync(indexPath, content, 'utf8');
+            console.log(`✓ Añadidos meta tags para SEO en index.html`);
+        }
+    }
+}
+
+// Crear un README.md si no existe
+const readmePath = path.join(__dirname, 'README.md');
+if (!fs.existsSync(readmePath)) {
+    const readme = `# LuxMarket con Integración Paykassa
+
+Tienda online ejemplo con integración del sistema de pagos Paykassa para criptomonedas.
+
+## Características
+
+- Diseño moderno y responsive
+- Integración con sistema de pagos Paykassa
+- Soporte para múltiples criptomonedas
+- Flujo completo de checkout
+
+## Demo
+
+Visita la demo en vivo: [https://mauri12345678.github.io/Paykassa/](https://mauri12345678.github.io/Paykassa/)
+
+## Estructura del proyecto
+
+\`\`\`
+webwebpago/
+├── tienda-web/          # Código fuente original
+│   ├── css/             # Estilos CSS
+│   ├── js/              # Scripts JavaScript
+│   ├── images/          # Imágenes y recursos
+│   └── pages/           # Páginas internas
+├── index.html           # Página principal
+├── checkout.html        # Página de checkout
+├── success.html         # Página de pago exitoso
+├── failure.html         # Página de pago fallido
+└── confirm-payment.html # Página de confirmación
+\`\`\`
+
+## Instrucciones de desarrollo
+
+1. Clonar el repositorio
+2. Navegar al directorio del proyecto
+3. Abrir \`index.html\` en tu navegador
+
+## Tecnologías utilizadas
+
+- HTML5
+- CSS3
+- JavaScript (ES6+)
+- Paykassa API para procesamiento de pagos
+
+## Autor
+
+Mauri - [GitHub](https://github.com/Mauri12345678)
+`;
+    fs.writeFileSync(readmePath, readme);
+    console.log(`✓ Creado README.md para GitHub`);
 }
 
 console.log('¡Proceso completado!');
