@@ -541,12 +541,42 @@ if (!fs.existsSync(rootPagesDir)) {
     console.log(`✓ Creada carpeta: pages/`);
 }
 
-// Copiar checkout.html a la carpeta pages/ en la raíz
+// Copiar y ajustar checkout.html a la carpeta pages/ en la raíz
 const rootCheckoutPath = path.join(__dirname, 'checkout.html');
 if (fs.existsSync(rootCheckoutPath)) {
     let checkoutContent = fs.readFileSync(rootCheckoutPath, 'utf8');
+    
+    // Ajustar rutas para la versión en pages/checkout.html
+    // De "tienda-web/css/" a "../tienda-web/css/"
+    checkoutContent = checkoutContent.replace(/href="tienda-web\//g, 'href="../tienda-web/');
+    checkoutContent = checkoutContent.replace(/src="tienda-web\//g, 'src="../tienda-web/');
+    
+    // Ajustar enlaces internos
+    checkoutContent = checkoutContent.replace(/href="index.html"/g, 'href="../index.html"');
+    checkoutContent = checkoutContent.replace(/href="([^\/\.]+)\.html"/g, 'href="../$1.html"');
+    
     fs.writeFileSync(path.join(rootPagesDir, 'checkout.html'), checkoutContent);
-    console.log(`✓ Copiado checkout.html a pages/checkout.html`);
+    console.log(`✓ Copiado y ajustado checkout.html a pages/checkout.html`);
 }
+
+// Hacer lo mismo con otros archivos importantes
+const pageFiles = ['cart.html', 'product.html', 'failure.html', 'success.html', 'confirm-payment.html'];
+pageFiles.forEach(file => {
+    const filePath = path.join(__dirname, file);
+    if (fs.existsSync(filePath)) {
+        let content = fs.readFileSync(filePath, 'utf8');
+        
+        // Ajustar rutas
+        content = content.replace(/href="tienda-web\//g, 'href="../tienda-web/');
+        content = content.replace(/src="tienda-web\//g, 'src="../tienda-web/');
+        
+        // Ajustar enlaces internos
+        content = content.replace(/href="index.html"/g, 'href="../index.html"');
+        content = content.replace(/href="([^\/\.]+)\.html"/g, 'href="../$1.html"');
+        
+        fs.writeFileSync(path.join(rootPagesDir, file), content);
+        console.log(`✓ Copiado y ajustado ${file} a pages/${file}`);
+    }
+});
 
 console.log('¡Proceso completado!');

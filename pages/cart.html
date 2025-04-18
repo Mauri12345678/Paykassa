@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instrucciones de Transferencia | LuxMarket</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../tienda-web/css/style.css">
+    <link rel="stylesheet" href="../tienda-web/css/responsive.css">
+    <link rel="stylesheet" href="../tienda-web/css/checkout.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../tienda-web/images/15.png">
+    <style>
+        .bank-transfer-page {
+            padding: 60px 0;
+            background-color: var(--background-light);
+            min-height: calc(100vh - 300px);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .bank-transfer-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .bank-transfer-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .bank-transfer-container h1 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .bank-transfer-container p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+        
+        .bank-details {
+            background-color: var(--background-light);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+        }
+        
+        .bank-details h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .bank-details p {
+            margin-bottom: 0.7rem;
+            color: var(--text-color);
+            font-size: 1.05rem;
+        }
+        
+        .bank-details strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .order-reference {
+            margin: 2rem 0;
+            padding: 1rem;
+            background-color: #f7f9ff;
+            border: 2px dashed var(--primary-color);
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .order-reference h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .order-reference p {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-color);
+            margin-bottom: 0;
+        }
+        
+        .steps-container {
+            margin-top: 2rem;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-content h4 {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+        
+        .bank-transfer-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .bank-transfer-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .bank-transfer-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i>
+                <span>LuxMarket</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="../product.html"><i class="fas fa-store"></i> Productos</a></li>
+                    <li><a href="../cart.html"><i class="fas fa-shopping-cart"></i> Carrito</a></li>
+                    <li><a href="../checkout.html"><i class="fas fa-credit-card"></i> Checkout</a></li>
+                    <li><a href="../contact.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="bank-transfer-page">
+        <div class="container">
+            <div class="bank-transfer-container">
+                <div class="bank-transfer-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h1>Instrucciones de transferencia bancaria</h1>
+                <p>Por favor, realiza tu transferencia bancaria utilizando los siguientes datos. Tu pedido será procesado una vez que recibamos la confirmación de pago.</p>
+                
+                <div class="order-reference">
+                    <h3>Número de referencia (incluir en el concepto):</h3>
+                    <p id="order-id">Cargando...</p>
+                </div>
+                
+                <div class="bank-details">
+                    <h3>Datos bancarios:</h3>
+                    <p><strong>Banco:</strong> Banco Nacional</p>
+                    <p><strong>Titular:</strong> LuxMarket S.A.</p>
+                    <p><strong>Cuenta:</strong> 1234-5678-90-1234567890</p>
+                    <p><strong>IBAN:</strong> ES91 1234 5678 9012 3456 7890</p>
+                    <p><strong>BIC/SWIFT:</strong> BNPAESMMXXX</p>
+                    <p><strong>Importe a transferir:</strong> <span id="order-amount">Cargando...</span></p>
+                    <p><strong>Concepto:</strong> <span id="order-concept">Cargando...</span></p>
+                </div>
+                
+                <div class="steps-container">
+                    <h3>Pasos a seguir:</h3>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Realiza la transferencia</h4>
+                            <p>Utiliza tu banca online o acude a tu sucursal bancaria para realizar la transferencia con los datos proporcionados.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Envíanos el comprobante</h4>
+                            <p>Una vez realizada la transferencia, envíanos el comprobante por email a <strong>pagos@luxmarket.com</strong> indicando tu número de pedido.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Confirmaremos tu pago</h4>
+                            <p>Verificaremos el ingreso y procederemos a gestionar tu pedido en un plazo máximo de 24 horas laborables.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <p style="text-align:center; margin-top:30px;">Si tienes cualquier duda sobre el proceso de pago, no dudes en <a href="../contact.html">contactar con nuestro equipo</a>.</p>
+                
+                <div class="bank-transfer-actions">
+                    <a href="mailto:pagos@luxmarket.com?subject=Comprobante%20de%20pago%20-%20Pedido%20" id="email-link" class="btn btn-primary"><i class="fas fa-envelope"></i> Enviar comprobante</a>
+                    <a href="../index.html" class="btn btn-secondary"><i class="fas fa-home"></i> Volver a la tienda</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>LuxMarket</h3>
+                    <p>Tu destino para compras online de calidad. Productos selectos para ti.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Enlaces rápidos</h3>
+                    <ul>
+                        <li><a href="../index.html">Inicio</a></li>
+                        <li><a href="../product.html">Productos</a></li>
+                        <li><a href="../cart.html">Carrito</a></li>
+                        <li><a href="../checkout.html">Checkout</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Centro de ayuda</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Envíos y entregas</a></li>
+                        <li><a href="#">Devoluciones</a></li>
+                        <li><a href="../contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contacto</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> Calle Principal, 123, Ciudad</li>
+                        <li><i class="fas fa-phone"></i> +1 234 567 890</li>
+                        <li><i class="fas fa-envelope"></i> info@luxmarket.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LuxMarket. Todos los derechos reservados.</p>
+                <div class="payment-methods">
+                    <img src="../tienda-web/images/payment-methods.png" alt="Métodos de pago">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtener datos del pedido
+            const orderData = JSON.parse(localStorage.getItem('pendingOrder'));
+            
+            if (orderData) {
+                const orderId = orderData.id;
+                document.getElementById('order-id').textContent = orderId;
+                document.getElementById('order-amount').textContent = `$${orderData.total}`;
+                document.getElementById('order-concept').textContent = `Pedido ${orderId}`;
+                
+                // Actualizar el asunto del email
+                const emailLink = document.getElementById('email-link');
+                emailLink.href = `mailto:pagos@luxmarket.com?subject=Comprobante de pago - Pedido ${orderId}`;
+            } else {
+                // Redirigir si no hay datos de pedido
+                window.location.href = 'order-failed.html';
+            }
+        });
+    </script>
+</body>
+</html>
