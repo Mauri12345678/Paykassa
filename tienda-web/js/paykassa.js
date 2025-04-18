@@ -37,6 +37,21 @@ class PaykassaIntegration {
         // Crear div para los detalles de Paykassa
         this.createPaykassaDetailsSection();
 
+        // Asegurarse de que exista el elemento processing-overlay
+        if (!document.getElementById('processing-overlay')) {
+            const overlay = document.createElement('div');
+            overlay.id = 'processing-overlay';
+            overlay.style.display = 'none';
+            overlay.innerHTML = `
+                <div class="processing-content">
+                    <div class="spinner"></div>
+                    <h3>Procesando tu pago</h3>
+                    <p>Por favor espera mientras conectamos con Paykassa...</p>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
         // Guardar la instancia para acceso global
         window.paykassaInstance = this;
     }
@@ -106,25 +121,30 @@ class PaykassaIntegration {
     togglePaymentDetails() {
         const selectedMethod = document.querySelector('input[name="payment-method"]:checked').value;
         
-        // Ocultar todos los detalles de pago
-        document.getElementById('card-payment-details').style.display = 'none';
-        document.getElementById('paykassa-details').style.display = 'none';
-        document.getElementById('paypal-details').style.display = 'none';
-        document.getElementById('bank-transfer-details').style.display = 'none';
+        // Ocultar todos los detalles de pago que existan
+        const cardDetails = document.getElementById('card-payment-details');
+        const paykassaDetails = document.getElementById('paykassa-details');
+        const paypalDetails = document.getElementById('paypal-details');
+        const transferDetails = document.getElementById('bank-transfer-details');
+        
+        if (cardDetails) cardDetails.style.display = 'none';
+        if (paykassaDetails) paykassaDetails.style.display = 'none';
+        if (paypalDetails) paypalDetails.style.display = 'none';
+        if (transferDetails) transferDetails.style.display = 'none';
         
         // Mostrar los detalles correspondientes
         switch(selectedMethod) {
             case 'card':
-                document.getElementById('card-payment-details').style.display = 'block';
+                if (cardDetails) cardDetails.style.display = 'block';
                 break;
             case 'paykassa':
-                document.getElementById('paykassa-details').style.display = 'block';
+                if (paykassaDetails) paykassaDetails.style.display = 'block';
                 break;
             case 'paypal':
-                document.getElementById('paypal-details').style.display = 'block';
+                if (paypalDetails) paypalDetails.style.display = 'block';
                 break;
             case 'transfer':
-                document.getElementById('bank-transfer-details').style.display = 'block';
+                if (transferDetails) transferDetails.style.display = 'block';
                 break;
         }
     }
@@ -294,36 +314,25 @@ class PaykassaIntegration {
                     comment: `Pedido: ${orderData.order_id}`
                 }
             };
-            
-            // Aquí deberías hacer una llamada a tu backend para generar la firma
-            // y realizar la llamada a la API de Paykassa, ya que las claves secretas no deberían
-            // estar en el código del frontend
-            
-            // Simulación de respuesta para este ejemplo
-            const response = await this.simulatePaykassaApiCall(transactionData);
-            return response;
-            
+
+            // Aquí deberías hacer una llamada a TU BACKEND, no directamente a la API de Paykassa
+            // Ejemplo usando fetch a tu backend:
+            const response = await fetch('https://paykassa.vercel.app/api/paykassa', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(transactionData)
+            });
+            const data = await response.json();
+
+            if (data && data.url) {
+                return data;
+            } else {
+                throw new Error('No se recibió URL de pago');
+            }
         } catch (error) {
             console.error('Error al crear transacción:', error);
             throw error;
         }
-    }
-    
-    /**
-     * Esta es una función de simulación - en producción, esto se manejaría en el backend
-     */
-    async simulatePaykassaApiCall(transactionData) {
-        // Simulación: en producción, esta llamada se haría desde el backend
-        console.log('Enviando datos a Paykassa:', transactionData);
-        
-        // Simular un tiempo de espera para la API
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // URL de ejemplo - en producción, esta sería la URL real de pago devuelta por Paykassa
-        return {
-            status: 'success',
-            url: `https://paykassa.app/sci/${transactionData.shop_id}/payment/${transactionData.payment_system}/${transactionData.order_id}`
-        };
     }
 
     /**
@@ -370,7 +379,6 @@ class PaykassaIntegration {
 
 // Inicializar la integración cuando se cargue el documento
 document.addEventListener('DOMContentLoaded', () => {
-    // Credenciales de prueba para desarrollo local
-    const paykassa = new PaykassaIntegration('64135', 'sandbox_api_key', true);
+    const paykassa = new PaykassaIntegration('TU_SHOP_ID', 'TU_SECRET_KEY', false);
     paykassa.init();
 });
