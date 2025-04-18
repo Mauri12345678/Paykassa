@@ -379,6 +379,6 @@ class PaykassaIntegration {
 
 // Inicializar la integración cuando se cargue el documento
 document.addEventListener('DOMContentLoaded', () => {
-    const paykassa = new PaykassaIntegration('TU_SHOP_ID', 'TU_SECRET_KEY', false);
+    const paykassa = new PaykassaIntegration('AQUI_TU_SHOP_ID', '', false);
     paykassa.init();
 });
