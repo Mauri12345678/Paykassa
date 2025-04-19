@@ -164,7 +164,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             console.log("Validación exitosa");
             
-            // Resto de tu código...
+            // Verificar qué método de pago está seleccionado
+            const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
+            
+            if (!paymentMethod) {
+                showError('Por favor, selecciona un método de pago');
+                return;
+            }
+            
+            // Procesar según el método de pago seleccionado
+            if (paymentMethod.value === 'paykassa') {
+                processPayKassaPayment();
+            } else if (paymentMethod.value === 'card') {
+                // Procesar pago con tarjeta (si lo implementas)
+            } else if (paymentMethod.value === 'bank-transfer') {
+                processBankTransferPayment();
+            }
         });
     }
     
@@ -379,6 +394,14 @@ document.addEventListener('DOMContentLoaded', function() {
         showProcessingOverlay();
         
         try {
+            // Calcular total
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let subtotal = 0;
+            cart.forEach(item => subtotal += item.price * item.quantity);
+            const tax = subtotal * 0.10;
+            let discount = 0;
+            const total = subtotal + tax - discount; // Define total aquí
+            
             // Obtener datos del formulario y carrito
             const formData = new FormData(checkoutForm);
             
