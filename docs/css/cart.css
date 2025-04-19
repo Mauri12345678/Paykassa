@@ -160,6 +160,10 @@
     margin-bottom: 1.5rem;
 }
 
+#cart-empty.visible {
+  display: block !important;
+}
+
 /* Resumen del carrito */
 .cart-summary {
     background-color: #fff;

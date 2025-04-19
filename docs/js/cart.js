@@ -149,10 +149,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearCartButton = document.getElementById('clear-cart');
     if(clearCartButton) {
         clearCartButton.addEventListener('click', function() {
-            if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
-                cart = [];
-                updateCart();
-                showNotification('Se ha vaciado el carrito', 'warning');
+            if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
+                localStorage.removeItem('cart');
+                renderCart();
+                // Opcional: mostrar mensaje de éxito
+                alert('El carrito ha sido vaciado');
             }
         });
     }
