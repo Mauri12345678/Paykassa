@@ -284,7 +284,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Obtener datos del pedido
             const orderData = JSON.parse(localStorage.getItem('pendingOrder'));
-            
+            const cart = JSON.parse(localStorage.getItem('cart'));
+
+            if (!cart || cart.length === 0) {
+                window.location.href = 'order-failed.html';
+            }
+
             if (orderData) {
                 const orderId = orderData.id;
                 document.getElementById('order-id').textContent = orderId;
@@ -299,6 +304,15 @@
                 window.location.href = 'order-failed.html';
             }
         });
+
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartContainer = document.getElementById('cart-items');
+
+        if (!cart || cart.length === 0) {
+            cartContainer.innerHTML = '<p>El carrito está vacío.</p>';
+        } else {
+            // ...renderiza los productos del carrito...
+        }
     </script>
 
     <!-- Cart Script -->
