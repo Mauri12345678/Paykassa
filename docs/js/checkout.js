@@ -497,74 +497,151 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Función para procesar pago con transferencia bancaria
+    // Función para procesar pagos con tarjeta
+    function processCardPayment() {
+        // Mostrar overlay de procesamiento
+        showProcessingOverlay();
+        
+        // Simulación para desarrollo
+        setTimeout(() => {
+            // Obtener datos del formulario
+            const formData = new FormData(checkoutForm);
+            
+            // Crear datos de la orden
+            const orderId = generateOrderId();
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let subtotal = 0;
+            cart.forEach(item => subtotal += item.price * item.quantity);
+            const tax = subtotal * 0.10;
+            const total = subtotal + tax;
+            
+            // Guardar datos del pedido
+            localStorage.setItem('pendingOrder', JSON.stringify({
+                id: orderId,
+                date: new Date().toISOString(),
+                total: total.toFixed(2),
+                subtotal: subtotal.toFixed(2),
+                tax: tax.toFixed(2),
+                status: 'completed',
+                paymentMethod: 'card',
+                customer: {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone')
+                },
+                shipping: {
+                    address: formData.get('address'),
+                    city: formData.get('city'),
+                    postalCode: formData.get('postal-code'),
+                    state: formData.get('state'),
+                    country: formData.get('country')
+                },
+                items: cart
+            }));
+            
+            // Eliminar carrito
+            localStorage.removeItem('cart');
+            
+            // Redirigir a página de éxito
+            window.location.href = 'order-success.html';
+        }, 2000);
+    }
+    
+    // Función para procesar transferencias bancarias
     function processBankTransferPayment() {
         // Mostrar overlay de procesamiento
         showProcessingOverlay();
         
-        // Código similar al de PayKassa, pero redireccionando a la página de transferencia bancaria
-        // Obtener datos del formulario
-        const formData = new FormData(checkoutForm);
-        
-        // Obtener datos del carrito desde localStorage
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        
-        // Calcular el total del carrito (igual que en processPayKassaPayment)
-        let subtotal = 0;
-        cart.forEach(item => {
-            subtotal += item.price * item.quantity;
-        });
-        
-        // Calcular impuestos (10% del subtotal)
-        const tax = subtotal * 0.10;
-        
-        // Aplicar descuento (si existe)
-        let discount = 0;
-        const discountElement = document.querySelector('.summary-row.discount .value');
-        if (discountElement) {
-            const discountText = discountElement.textContent;
-            discount = parseFloat(discountText.replace('-$', '').trim()) || 0;
-        }
-        
-        // Calcular total
-        const total = subtotal + tax - discount;
-        
-        // Generar ID de orden único
-        const orderId = generateOrderId();
-        
-        // Guardar datos del pedido en localStorage (similar a PayKassa pero con método de pago diferente)
-        localStorage.setItem('pendingOrder', JSON.stringify({
-            id: orderId,
-            date: new Date().toISOString(),
-            total: total.toFixed(2),
-            subtotal: subtotal.toFixed(2),
-            tax: tax.toFixed(2),
-            discount: discount.toFixed(2),
-            status: 'pending',
-            paymentMethod: 'bank-transfer',
-            customer: {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                phone: formData.get('phone')
-            },
-            shipping: {
-                address: formData.get('address'),
-                city: formData.get('city'),
-                postalCode: formData.get('postal-code'),
-                state: formData.get('state'),
-                country: formData.get('country')
-            },
-            items: cart.map(item => ({
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity,
-                image: item.image
-            }))
-        }));
-        
-        // Redireccionar a la página de instrucciones de transferencia bancaria
         setTimeout(() => {
-            window.location.href = 'bank-transfer-instructions.html';
+            // Obtener datos del formulario
+            const formData = new FormData(checkoutForm);
+            
+            // Crear datos de la orden
+            const orderId = generateOrderId();
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let subtotal = 0;
+            cart.forEach(item => subtotal += item.price * item.quantity);
+            const tax = subtotal * 0.10;
+            const total = subtotal + tax;
+            
+            // Guardar datos del pedido
+            localStorage.setItem('pendingOrder', JSON.stringify({
+                id: orderId,
+                date: new Date().toISOString(),
+                total: total.toFixed(2),
+                subtotal: subtotal.toFixed(2),
+                tax: tax.toFixed(2),
+                status: 'pending',
+                paymentMethod: 'bank-transfer',
+                customer: {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone')
+                },
+                shipping: {
+                    address: formData.get('address'),
+                    city: formData.get('city'),
+                    postalCode: formData.get('postal-code'),
+                    state: formData.get('state'),
+                    country: formData.get('country')
+                },
+                items: cart
+            }));
+            
+            // Mostrar instrucciones de transferencia
+            document.querySelector('.processing-overlay').remove();
+            checkoutForm.style.display = 'none';
+            
+            const paymentInfo = document.getElementById('payment-info');
+            if (paymentInfo) {
+                paymentInfo.style.display = 'block';
+                paymentInfo.innerHTML = `
+                    <div class="payment-confirmation">
+                        <div class="payment-header">
+                            <i class="fas fa-university"></i>
+                            <h2>Instrucciones para transferencia bancaria</h2>
+                        </div>
+                        
+                        <div class="bank-details">
+                            <p>Por favor, realiza una transferencia bancaria con los siguientes datos:</p>
+                            
+                            <div class="bank-info">
+                                <div class="bank-row">
+                                    <span>Banco:</span>
+                                    <strong>Banco Internacional</strong>
+                                </div>
+                                <div class="bank-row">
+                                    <span>Beneficiario:</span>
+                                    <strong>LuxMarket Inc.</strong>
+                                </div>
+                                <div class="bank-row">
+                                    <span>Cuenta:</span>
+                                    <strong>ES12 3456 7890 1234 5678 9012</strong>
+                                </div>
+                                <div class="bank-row">
+                                    <span>Concepto:</span>
+                                    <strong>Pedido ${orderId}</strong>
+                                </div>
+                                <div class="bank-row">
+                                    <span>Importe:</span>
+                                    <strong>$${total.toFixed(2)}</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="bank-note">
+                                <p><i class="fas fa-info-circle"></i> Una vez realices la transferencia, tu pedido será procesado en 24-48 horas.</p>
+                                <p><i class="fas fa-envelope"></i> Recibirás un email de confirmación cuando recibamos tu pago.</p>
+                            </div>
+                            
+                            <div class="bank-actions">
+                                <a href="order-tracking.html" class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Seguimiento del pedido
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
         }, 1500);
     }
     
