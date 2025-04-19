@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const orderSummary = document.getElementById('order-summary');
     
+    // IMPORTANTE: Define checkoutForm al inicio de tu script
+    const checkoutForm = document.getElementById('checkout-form');
+    
     // Si no hay productos en el carrito, redirigir al carrito
     if (cart.length === 0) {
         alert('No hay productos en tu carrito');
@@ -53,7 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
     renderOrderSummary();
     
     // Obtener referencias a elementos del formulario
-    const checkoutForm = document.getElementById('checkout-form');
     const checkoutButton = document.getElementById('checkout-button');
     const cardNumber = document.getElementById('card-number');
     const expiryDate = document.getElementById('expiry-date');
@@ -154,28 +156,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (checkoutForm) {
         checkoutForm.addEventListener('submit', function(event) {
             event.preventDefault();
+            console.log("Formulario enviado");
             
-            // Validar el formulario
             if (!validateCheckoutForm()) {
+                console.log("Validación fallida");
                 return;
             }
+            console.log("Validación exitosa");
             
-            // Verificar qué método de pago está seleccionado
-            const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
-            
-            if (!paymentMethod) {
-                showError('Por favor, selecciona un método de pago');
-                return;
-            }
-            
-            // Procesar según el método de pago
-            if (paymentMethod === 'paykassa') {
-                processPayKassaPayment();
-            } else if (paymentMethod === 'card') {
-                processCardPayment();
-            } else if (paymentMethod === 'bank-transfer') {
-                processBankTransferPayment();
-            }
+            // Resto de tu código...
         });
     }
     
