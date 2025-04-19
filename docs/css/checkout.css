@@ -223,6 +223,10 @@ header {
     justify-content: center;
 }
 
+.form-section h3 i.fa-truck {
+    /* Cambiar este selector si existe */
+}
+
 /* Inputs mejorados y con efectos */
 .form-group {
     margin-bottom: 20px;
@@ -344,15 +348,6 @@ header {
     border-color: var(--primary-color);
     box-shadow: var(--shadow-sm);
     transform: translateY(-2px);
-}
-
-.shipping-option input[type="radio"] {
-    margin-top: 4px;
-    margin-right: 15px;
-    accent-color: var(--primary-color);
-    cursor: pointer;
-    width: 18px;
-    height: 18px;
 }
 
 .shipping-option-content {
