@@ -359,3 +359,90 @@ main .container {
         flex-direction: column;
     }
 }
+
+/* Footer moderno para la tienda */
+footer {
+    background: #1e88e5;
+    color: #fff;
+    padding: 2.5rem 0 1.2rem 0;
+    margin-top: 3rem;
+}
+
+footer .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-column {
+    flex: 1 1 220px;
+    min-width: 200px;
+}
+
+.footer-column h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.7rem;
+}
+
+.footer-column ul li a {
+    color: #bbdefb;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.footer-column ul li a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.footer-column .social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.7rem;
+}
+
+.footer-column .social-icons a {
+    color: #bbdefb;
+    font-size: 1.3rem;
+    transition: color 0.15s;
+}
+
+.footer-column .social-icons a:hover {
+    color: #fff;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 2rem;
+    color: #bbdefb;
+    font-size: 0.95rem;
+    border-top: 1px solid #2196f3;
+    padding-top: 1rem;
+}
+
+@media (max-width: 900px) {
+    footer .container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    .footer-column {
+        min-width: 0;
+        width: 100%;
+    }
+}
