@@ -78,9 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="cart-item-subtotal">
                     $${itemSubtotal.toFixed(2)}
                 </div>
-                <button class="remove-item-btn" data-index="${index}">
-                    <i class="fas fa-trash"></i>
-                </button>
+                <button class="cart-item-remove" data-id="${item.id}">Eliminar</button>
             `;
             
             cartContainer.appendChild(cartItemElement);
