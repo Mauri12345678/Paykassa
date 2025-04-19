@@ -361,9 +361,7 @@ header {
     justify-content: center;
 }
 
-.form-section h3 i.fa-truck {
-    /* Cambiar este selector si existe */
-}
+/* Removed empty ruleset for .form-section h3 i.fa-truck */
 
 /* Inputs mejorados y con efectos */
 .form-group {

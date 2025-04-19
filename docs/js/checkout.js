@@ -543,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem('cart');
             
             // Redirigir a página de éxito
-            window.location.href = 'order-success.html';
+            window.location.href = 'success.html';
         }, 2000);
     }
     
@@ -736,7 +736,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Redireccionar a la página de éxito después de un momento
                     setTimeout(() => {
-                        window.location.href = 'order-success.html';
+                        window.location.href = 'success.html';
                     }, 3000);
                     
                     // Limpiar intervalo
