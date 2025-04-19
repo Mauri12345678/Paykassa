@@ -162,5 +162,11 @@
         </div>
     </footer>
     <script src="js/cart.js"></script>
+    <script>
+        const orderData = JSON.parse(localStorage.getItem('pendingOrder'));
+        if (!orderData) {
+            window.location.href = 'order-failed.html';
+        }
+    </script>
 </body>
 </html>
