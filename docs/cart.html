@@ -283,12 +283,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Obtener datos del pedido
-            const orderData = JSON.parse(localStorage.getItem('pendingOrder'));
             const cart = JSON.parse(localStorage.getItem('cart'));
 
             if (!cart || cart.length === 0) {
-                window.location.href = 'order-failed.html';
+                // Mostrar mensaje de carrito vacío (esto ya lo tienes en el segundo script)
+                return;
             }
+
+            const orderData = JSON.parse(localStorage.getItem('pendingOrder'));
 
             if (orderData) {
                 const orderId = orderData.id;
