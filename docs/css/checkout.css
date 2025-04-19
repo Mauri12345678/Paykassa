@@ -159,16 +159,7 @@ header {
     max-height: 90vh;
     display: flex;
     flex-direction: column;
-    padding: 25px;
-}
-
-.checkout-summary h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 1.3rem;
-    color: var(--text-dark);
-    border-bottom: 1px solid var(--border-light);
-    padding-bottom: 15px;
+    padding: 30px; /* Aumentado de 25px */
 }
 
 /* Mejor espaciado interno para los items */
@@ -178,11 +169,11 @@ header {
 
 .order-item {
     display: flex;
-    padding: 15px 0;
-    align-items: flex-start;
-    gap: 12px;
-    width: 100%;
+    padding: 18px 0; /* Aumentado de 15px */
     border-bottom: 1px solid #e3e8ee;
+    align-items: center; /* Mejor alineación vertical */
+    gap: 16px; /* Aumentado de 12px */
+    width: 100%;
 }
 
 .order-item:last-child {
@@ -196,31 +187,44 @@ header {
 .order-item-details {
     min-width: 0; /* Permite comprimir el contenido si es necesario */
     overflow: hidden; /* Evita desbordamiento */
+    padding-right: 12px; /* Espacio adicional */
 }
 
 .order-item-name {
     white-space: normal; /* Permite saltos de línea */
     word-break: break-word; /* Rompe palabras largas si es necesario */
+    font-weight: 600; /* Más prominente */
+    margin-bottom: 0.4rem; /* Más espacio */
+    font-size: 1.05rem; /* Ligeramente más grande */
+}
+
+.order-item-price, .order-item-quantity {
+    font-size: 0.95rem; /* Ligeramente más grande */
+    margin-bottom: 0.3rem; /* Espacio entre ellos */
 }
 
 .order-item-total {
     flex-shrink: 0; /* Mantiene el tamaño del precio */
     margin-left: auto; /* Empuja a la derecha */
+    font-weight: 700; /* Más bold */
+    color: #1e88e5;
+    font-size: 1.1rem; /* Más grande */
+    padding-left: 15px; /* Crea separación */
 }
 
 /* Mejor espaciado para el resumen de totales */
 .order-summary-totals {
-    margin-top: 20px;
-    padding-top: 15px;
+    margin-top: 25px; /* Mayor separación */
+    padding-top: 20px; /* Más padding interno */
     border-top: 1px solid #e3e8ee;
 }
 
 .summary-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 0 5px;
-    font-size: 1rem;
+    margin-bottom: 12px; /* Aumentado de 10px */
+    padding: 0 8px; /* Padding lateral */
+    font-size: 1.05rem; /* Ligeramente más grande */
 }
 
 .summary-row span {
@@ -228,11 +232,12 @@ header {
 }
 
 .summary-row.total {
-    font-weight: 600;
-    font-size: 1.2rem;
-    margin-top: 15px;
-    padding-top: 15px;
+    font-weight: 700;
+    font-size: 1.25rem; /* Más grande */
+    margin-top: 18px; /* Más separación */
+    padding-top: 18px; /* Más padding */
     border-top: 1px dashed #e3e8ee;
+    color: #1565c0; /* Color más destacado */
 }
 
 /* Estilos para la sección de cupones */
