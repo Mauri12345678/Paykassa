@@ -145,23 +145,11 @@ header {
 
 /* El resumen va a la derecha */
 .checkout-summary {
-    background-color: #fff;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    position: sticky;
-    top: 20px;
-    overflow: hidden; /* Evita desbordamiento */
-    word-wrap: break-word; /* Permite que los textos largos se ajusten */
-    border: 1px solid var(--border-light);
-    transition: all var(--transition-normal);
-    animation: fadeIn 0.8s ease-out;
-    height: fit-content;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
     padding: 30px;
     margin-bottom: 25px;
-    padding: 0 15px; /* Padding horizontal para todo el resumen */
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    background-color: #fff;
 }
 
 /* Mejor espaciado interno para los items */
@@ -171,12 +159,10 @@ header {
 
 .order-item {
     display: flex;
-    padding: 18px 15px; /* Añadido padding horizontal de 15px */
+    padding: 20px 15px;
     border-bottom: 1px solid #e3e8ee;
-    align-items: center; /* Mejor alineación vertical */
-    gap: 16px; /* Aumentado de 12px */
-    width: 100%;
-    margin: 0 auto; /* Centrado horizontal */
+    align-items: flex-start;
+    gap: 16px;
 }
 
 .order-item:last-child {
@@ -184,13 +170,11 @@ header {
 }
 
 .order-item-image {
-    flex-shrink: 0; /* Evita que la imagen se comprima */
-    width: 70px; /* Tamaño fijo para la imagen */
+    flex-shrink: 0;
+    width: 70px;
     height: 70px;
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid var(--border-light);
-    box-shadow: var(--shadow-sm);
 }
 
 .order-item-image img {
@@ -200,77 +184,72 @@ header {
 }
 
 .order-item-details {
-    min-width: 0; /* Permite comprimir el contenido si es necesario */
-    overflow: hidden; /* Evita desbordamiento */
-    padding-right: 12px; /* Espacio adicional */
+    flex: 1;
+    min-width: 0;
 }
 
 .order-item-name {
-    white-space: normal; /* Permite saltos de línea */
-    word-break: break-word; /* Rompe palabras largas si es necesario */
-    font-weight: 600; /* Más prominente */
-    margin-bottom: 0.4rem; /* Más espacio */
-    font-size: 1.05rem; /* Ligeramente más grande */
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+    display: block;
 }
 
-.order-item-price, .order-item-quantity {
-    font-size: 0.95rem; /* Ligeramente más grande */
-    margin-bottom: 0.3rem; /* Espacio entre ellos */
+.order-item-price, 
+.order-item-quantity {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--text-medium);
+    margin-bottom: 5px;
 }
 
 .order-item-total {
-    flex-shrink: 0; /* Mantiene el tamaño del precio */
-    margin-left: auto; /* Empuja a la derecha */
-    font-weight: 700; /* Más bold */
+    font-weight: 700;
     color: #1e88e5;
-    font-size: 1.1rem; /* Más grande */
-    padding-left: 15px; /* Crea separación */
+    font-size: 1.1rem;
+    margin-left: auto;
+    align-self: center;
 }
 
 /* Mejor espaciado del resumen de pedido */
 .order-summary-totals {
     margin: 25px 15px 0;
-    padding: 20px;
-    border-top: 1px solid #e3e8ee;
+    padding: 25px;
     background-color: #f8fafc;
     border-radius: 8px;
+    border-top: 1px solid #e3e8ee;
 }
 
+/* Filas del resumen */
 .summary-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px; /* Aumentado de 12px */
-    padding: 0 15px; /* Aumentado de 10px */
-    font-size: 1.05rem;
-}
-
-.summary-row span {
-    white-space: nowrap; /* Evita saltos de línea */
+    padding: 10px 5px;
+    margin-bottom: 8px;
 }
 
 .summary-row span:first-child {
     color: var(--text-medium);
-    padding-right: 20px; /* Aumentado de 10px */
+    font-weight: 500;
 }
 
 .summary-row span:last-child {
-    font-weight: 500;
-    min-width: 80px; /* Asegura un ancho mínimo para los valores */
+    font-weight: 600;
     text-align: right;
+    min-width: 80px;
 }
 
+/* Destacar el total */
 .summary-row.total {
-    font-weight: 700;
-    font-size: 1.25rem;
-    margin-top: 20px;
-    padding-top: 20px;
+    margin-top: 15px;
+    padding-top: 15px;
     border-top: 1px dashed #e3e8ee;
-    color: #1565c0;
+    font-weight: 700;
+    font-size: 1.2rem;
 }
 
 .summary-row.total span:last-child {
     color: var(--primary-color);
-    font-weight: 700;
 }
 
 /* Estilos para la sección de cupones */
