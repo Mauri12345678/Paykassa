@@ -53,23 +53,6 @@
         </section>
 
         <div class="container">
-            <div class="checkout-progress">
-                <div class="progress-step active">
-                    <div class="step-number">1</div>
-                    <div class="step-text">Carrito</div>
-                </div>
-                <div class="progress-line active"></div>
-                <div class="progress-step active">
-                    <div class="step-number">2</div>
-                    <div class="step-text">Checkout</div>
-                </div>
-                <div class="progress-line"></div>
-                <div class="progress-step">
-                    <div class="step-number">3</div>
-                    <div class="step-text">Confirmación</div>
-                </div>
-            </div>
-
             <div class="checkout-container">
                 <div class="checkout-form-container">
                     <form id="checkout-form">
@@ -235,36 +218,17 @@
                     </div>
                 </div>
 
+                <div class="coupon-section">
+                    <h4>¿Tienes un cupón de descuento?</h4>
+                    <div class="coupon-form">
+                        <input type="text" id="coupon-code" placeholder="Introduce tu código">
+                        <button type="button" class="btn btn-sm" id="apply-coupon">Aplicar</button>
+                    </div>
+                </div>
 
-                    
-                    <div class="summary-items" id="checkout-items">
-                        <!-- Ejemplo de un elemento del carrito (se cargará dinámicamente desde JS) -->
-                        <div class="cart-item">
-                            <div class="item-image">
-                                <img src="images/products/reloj-lujo.jpg" alt="Reloj de lujo">
-                            </div>
-                            <div class="item-details">
-                                <h4>Reloj de lujo</h4>
-                                <p class="item-price">€299.99</p>
-                                <p class="item-quantity">Cantidad: 1</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-
-                    
-                    <div class="coupon-section">
-                        <h4>¿Tienes un cupón de descuento?</h4>
-                        <div class="coupon-form">
-                            <input type="text" id="coupon-code" placeholder="Introduce tu código">
-                            <button type="button" class="btn btn-sm" id="apply-coupon">Aplicar</button>
-                        </div>
-                    </div>
-                    
-                    <div class="order-notes">
-                        <p><i class="fas fa-shield-alt"></i> Pago seguro garantizado</p>
-                        <p><i class="fas fa-exchange-alt"></i> 30 días para devoluciones</p>
-                    </div>
+                <div class="order-notes">
+                    <p><i class="fas fa-shield-alt"></i> Pago seguro garantizado</p>
+                    <p><i class="fas fa-exchange-alt"></i> 30 días para devoluciones</p>
                 </div>
             </div>
         </div>
