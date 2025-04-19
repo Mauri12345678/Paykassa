@@ -91,11 +91,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
             
-            if (selectedPaymentMethod === 'paykassa') {
-                // Obtener la criptomoneda seleccionada
+            if (selectedPaymentMethod === 'paykassa' || selectedPaymentMethod === 'card') {
+                // Obtener la criptomoneda seleccionada (o por defecto BTC)
                 const selectedCrypto = document.querySelector('input[name="crypto-currency"]:checked');
                 const cryptoValue = selectedCrypto ? selectedCrypto.value : 'BTC';
-                
+
                 // Obtener datos del formulario
                 const formData = new FormData(checkoutForm);
                 const customerData = {
@@ -107,13 +107,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     postalCode: formData.get('postal-code'),
                     country: formData.get('country')
                 };
-                
+
                 // Mostrar overlay de procesamiento
                 document.getElementById('processing-overlay').style.display = 'flex';
-                
+
                 // Obtener instancia de PaykassaIntegration (asumiendo que ya está inicializada)
                 const paykassaInstance = window.paykassaInstance;
-                
+
                 if (paykassaInstance) {
                     // Procesar pago con Paykassa
                     paykassaInstance.processPayment(cryptoValue, customerData);
@@ -122,9 +122,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     showError('No se pudo conectar con el procesador de pagos. Por favor, intenta nuevamente.');
                     document.getElementById('processing-overlay').style.display = 'none';
                 }
-            } else if (selectedPaymentMethod === 'card') {
-                // Aquí iría la lógica para procesar pago con tarjeta
-                alert('Procesando pago con tarjeta...');
             } else if (selectedPaymentMethod === 'paypal') {
                 // Lógica para PayPal
                 alert('Redirigiendo a PayPal...');
