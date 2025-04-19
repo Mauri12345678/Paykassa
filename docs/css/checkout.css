@@ -150,7 +150,8 @@ header {
     box-shadow: var(--shadow-md);
     position: sticky;
     top: 20px;
-    overflow: hidden;
+    overflow: hidden; /* Evita desbordamiento */
+    word-wrap: break-word; /* Permite que los textos largos se ajusten */
     border: 1px solid var(--border-light);
     transition: all var(--transition-normal);
     animation: fadeIn 0.8s ease-out;
@@ -178,11 +179,33 @@ header {
 .order-item {
     display: flex;
     padding: 15px 0;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
     border-bottom: 1px solid #e3e8ee;
 }
 
 .order-item:last-child {
     border-bottom: none;
+}
+
+.order-item-image {
+    flex-shrink: 0; /* Evita que la imagen se comprima */
+}
+
+.order-item-details {
+    min-width: 0; /* Permite comprimir el contenido si es necesario */
+    overflow: hidden; /* Evita desbordamiento */
+}
+
+.order-item-name {
+    white-space: normal; /* Permite saltos de línea */
+    word-break: break-word; /* Rompe palabras largas si es necesario */
+}
+
+.order-item-total {
+    flex-shrink: 0; /* Mantiene el tamaño del precio */
+    margin-left: auto; /* Empuja a la derecha */
 }
 
 /* Mejor espaciado para el resumen de totales */
@@ -196,7 +219,12 @@ header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+    padding: 0 5px;
     font-size: 1rem;
+}
+
+.summary-row span {
+    white-space: nowrap; /* Evita saltos de línea en etiquetas y valores */
 }
 
 .summary-row.total {
