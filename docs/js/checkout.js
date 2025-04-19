@@ -378,109 +378,95 @@ document.addEventListener('DOMContentLoaded', function() {
         // Mostrar overlay de procesamiento
         showProcessingOverlay();
         
-        // Obtener datos del formulario
-        const formData = new FormData(checkoutForm);
-        
-        // Obtener datos del carrito desde localStorage
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        
-        // Calcular el total del carrito
-        let subtotal = 0;
-        cart.forEach(item => {
-            subtotal += item.price * item.quantity;
-        });
-        
-        // Calcular impuestos (10% del subtotal)
-        const tax = subtotal * 0.10;
-        
-        // Aplicar descuento (si existe)
-        let discount = 0;
-        const discountElement = document.querySelector('.summary-row.discount .value');
-        if (discountElement) {
-            const discountText = discountElement.textContent;
-            discount = parseFloat(discountText.replace('-$', '').trim()) || 0;
-        }
-        
-        // Calcular total
-        const total = subtotal + tax - discount;
-        
-        // Generar ID de orden único
-        const orderId = generateOrderId();
-        
-        // Determinar qué criptomoneda se seleccionó
-        const cryptoSelected = document.querySelector('input[name="crypto-currency"]:checked');
-        const paymentSystem = cryptoSelected ? cryptoSelected.value.toLowerCase() : 'bitcoin';
-        
-        // En lugar de redireccionar, llamar a tu API
         try {
-            // Ocultar el formulario para mostrar el pago
-            checkoutForm.style.display = 'none';
+            // Obtener datos del formulario y carrito
+            const formData = new FormData(checkoutForm);
             
-            const response = await fetch('/api/paykassa-create-invoice', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    amount: total.toFixed(2),
-                    currency: 'USD',
-                    order_id: orderId,
-                    payment_system: paymentSystem,
-                    email: formData.get('email')
-                })
-            });
+            // Simulación para desarrollo local (evita el error 404)
+            // En producción, esto usaría tu API real
+            const isLocalDevelopment = window.location.hostname === 'localhost' || 
+                                       window.location.hostname === '127.0.0.1';
             
-            // Eliminar overlay de procesamiento
-            document.querySelector('.processing-overlay').remove();
+            // Datos de compra para localStorage
+            const orderId = generateOrderId();
+            const orderData = {
+                id: orderId,
+                date: new Date().toISOString(),
+                total: total.toFixed(2),
+                items: cart
+                // ... otros datos de la orden
+            };
             
-            const data = await response.json();
+            // Guardar datos del pedido
+            localStorage.setItem('pendingOrder', JSON.stringify(orderData));
             
-            if (data.success) {
-                // Guardar datos del pedido en localStorage
-                localStorage.setItem('pendingOrder', JSON.stringify({
-                    id: orderId,
-                    date: new Date().toISOString(),
-                    total: total.toFixed(2),
-                    subtotal: subtotal.toFixed(2),
-                    tax: tax.toFixed(2),
-                    discount: discount.toFixed(2),
-                    status: 'pending',
-                    paymentMethod: 'paykassa',
-                    customer: {
-                        name: formData.get('name'),
-                        email: formData.get('email'),
-                        phone: formData.get('phone')
-                    },
-                    shipping: {
-                        address: formData.get('address'),
-                        city: formData.get('city'),
-                        postalCode: formData.get('postal-code'),
-                        state: formData.get('state'),
-                        country: formData.get('country')
-                    },
-                    items: cart.map(item => ({
-                        name: item.name,
-                        price: item.price,
-                        quantity: item.quantity,
-                        image: item.image
-                    }))
-                }));
-                
-                // Mostrar la información de pago en la página actual
-                const paymentInfoContainer = document.getElementById('payment-info');
-                paymentInfoContainer.style.display = 'block';
-                mostrarDatosDePago(data.data);
-                
-                // Desplazar a la información de pago
-                paymentInfoContainer.scrollIntoView({ behavior: 'smooth' });
-                
+            if (isLocalDevelopment) {
+                // Para desarrollo local: simular respuesta de PayKassa
+                setTimeout(() => {
+                    // Quitar overlay
+                    document.querySelector('.processing-overlay').remove();
+                    
+                    // Ocultar formulario
+                    checkoutForm.style.display = 'none';
+                    
+                    // Mostrar datos de pago simulados
+                    const paymentInfoContainer = document.getElementById('payment-info');
+                    if (paymentInfoContainer) {
+                        paymentInfoContainer.style.display = 'block';
+                        
+                        // Datos simulados para pruebas
+                        mostrarDatosDePago({
+                            qr_code: 'https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=bitcoin:1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+                            wallet: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+                            amount: total.toFixed(8),
+                            currency: 'BTC',
+                            order_id: orderId
+                        });
+                        
+                        // Desplazar a la información de pago
+                        paymentInfoContainer.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        console.error('No se encontró el contenedor de información de pago');
+                    }
+                }, 1500);
             } else {
-                // Volver a mostrar el formulario en caso de error
-                checkoutForm.style.display = 'block';
-                showError('Error al crear la factura de pago: ' + data.error);
+                // Para producción: hacer la petición real a la API
+                const response = await fetch('/api/paykassa-create-invoice', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: total.toFixed(2),
+                        currency: 'USD',
+                        order_id: orderId,
+                        payment_system: 'bitcoin',
+                        email: formData.get('email')
+                    })
+                });
+                
+                // Eliminar overlay
+                document.querySelector('.processing-overlay').remove();
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Ocultar formulario
+                    checkoutForm.style.display = 'none';
+                    
+                    // Mostrar información de pago
+                    const paymentInfoContainer = document.getElementById('payment-info');
+                    paymentInfoContainer.style.display = 'block';
+                    mostrarDatosDePago(data.data);
+                    paymentInfoContainer.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // Volver a mostrar el formulario en caso de error
+                    checkoutForm.style.display = 'block';
+                    showError('Error al crear la factura de pago: ' + data.error);
+                }
             }
         } catch (error) {
             // Volver a mostrar el formulario en caso de error
             checkoutForm.style.display = 'block';
-            document.querySelector('.processing-overlay').remove();
+            document.querySelector('.processing-overlay')?.remove();
             showError('Error al conectar con el servidor: ' + error.message);
         }
     }
