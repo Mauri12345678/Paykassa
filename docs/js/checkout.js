@@ -594,6 +594,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        console.log("Mostrando datos de pago:", datos);
+        
         // Estilo visual para la información de pago
         paymentInfo.innerHTML = `
             <div class="payment-confirmation">
@@ -604,7 +606,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 <div class="payment-details">
                     <div class="payment-qr">
-                        <img src="${datos.qr_code || datos.qr}" alt="Código QR para pago">
+                        <img src="${datos.qr_code}" alt="Código QR para pago">
                     </div>
                     
                     <div class="payment-instructions">
@@ -622,50 +624,18 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </button>
                             </div>
                         </div>
-                        
-                        <div class="payment-time">
-                            <span>Tiempo de espera:</span>
-                            <strong>30 minutos</strong>
-                        </div>
-                        
-                        <div class="payment-status">
-                            <div class="status-icon pending">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <span>Esperando confirmación de pago</span>
-                        </div>
                     </div>
-                </div>
-                
-                <div class="payment-notes">
-                    <p><i class="fas fa-info-circle"></i> Envía exactamente la cantidad indicada a la dirección mostrada.</p>
-                    <p><i class="fas fa-shield-alt"></i> Tu pedido será procesado automáticamente una vez confirmada la transacción.</p>
-                </div>
-                
-                <div class="payment-help">
-                    <h4>¿Necesitas ayuda?</h4>
-                    <p>Si tienes problemas con tu pago, contáctanos incluyendo el ID de tu orden: <strong>${datos.order_id}</strong></p>
                 </div>
             </div>
         `;
         
-        // Añadir la función para copiar al portapapeles
+        // Función para copiar al portapapeles
         window.copyToClipboard = function(elementId) {
             const element = document.getElementById(elementId);
             element.select();
             document.execCommand('copy');
-            
-            // Mostrar un mensaje de "copiado"
-            const copyButton = element.nextElementSibling;
-            const originalHTML = copyButton.innerHTML;
-            copyButton.innerHTML = '<i class="fas fa-check"></i>';
-            setTimeout(() => {
-                copyButton.innerHTML = originalHTML;
-            }, 2000);
+            alert('¡Copiado al portapapeles!');
         };
-        
-        // Comprobar estado de pago cada 30 segundos
-        checkPaymentStatus(datos.order_id);
     }
 
     // Función para comprobar el estado del pago

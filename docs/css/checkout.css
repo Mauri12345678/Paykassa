@@ -227,11 +227,50 @@ header {
     padding-left: 15px; /* Crea separación */
 }
 
-/* Mejor espaciado para el resumen de totales */
+/* Mejor espaciado del resumen de pedido */
 .order-summary-totals {
-    margin: 25px 15px 0; /* Margen horizontal además del superior */
-    padding: 20px 0 0;
+    margin: 25px 15px 0;
+    padding: 20px;
     border-top: 1px solid #e3e8ee;
+    background-color: #f8fafc;
+    border-radius: 8px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 10px;
+    font-size: 1.05rem;
+}
+
+.summary-row span {
+    white-space: nowrap; /* Evita saltos de línea */
+}
+
+.summary-row span:first-child {
+    color: var(--text-medium);
+    padding-right: 10px; /* Espacio entre texto y valor */
+}
+
+.summary-row span:last-child {
+    font-weight: 500;
+    color: var(--text-dark);
+    text-align: right;
+}
+
+.summary-row.total {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px dashed #e3e8ee;
+    color: #1565c0;
+}
+
+.summary-row.total span:last-child {
+    color: var(--primary-color);
+    font-weight: 700;
 }
 
 /* Estilos para la sección de cupones */
@@ -861,6 +900,35 @@ header {
 
 .btn:hover i.fa-arrow-left {
     transform: translateX(-2px);
+}
+
+/* Estilo específico para el botón de finalizar compra */
+#checkout-button {
+    width: 100%;
+    padding: 15px 24px;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, var(--primary-color), #6a8dff);
+    border: none;
+    box-shadow: 0 5px 15px rgba(var(--primary-color-rgb), 0.35);
+    color: white;
+    margin-top: 20px;
+    font-weight: 600;
+    transition: all var(--transition-normal);
+}
+
+#checkout-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(var(--primary-color-rgb), 0.45);
+    background: linear-gradient(135deg, #3a5bd0, var(--primary-color));
+}
+
+#checkout-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(var(--primary-color-rgb), 0.4);
+}
+
+#checkout-button i {
+    margin-right: 8px;
 }
 
 /* Resumen de pedido con diseño premium - CORREGIDO */
