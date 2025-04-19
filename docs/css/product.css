@@ -2,8 +2,9 @@
 
 /* Layout de la página de productos */
 main .container {
-    display: grid;
-    grid-template-columns: 250px 1fr;
+    display: block;
+    /* o si quieres centrar: */
+    /* display: flex; flex-direction: column; align-items: center; */
     gap: 2rem;
 }
 
