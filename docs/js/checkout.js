@@ -130,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     alert('No se pudo conectar con el procesador de pagos.');
                     document.getElementById('processing-overlay').style.display = 'none';
+                    window.location.href = 'failure.html';
                 }
                 return;
             }
@@ -414,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // URLs de redirección
         const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.indexOf('/pages/'));
         params.append('success_url', `${baseUrl}/pages/order-success.html`);
-        params.append('fail_url', `${baseUrl}/pages/order-failed.html`);
+        params.append('fail_url', `${baseUrl}/failure.html`);
         
         const paymentUrl = `${paykassaUrl}?${params.toString()}`;
         
