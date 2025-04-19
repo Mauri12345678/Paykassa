@@ -39,77 +39,37 @@
             </nav>
         </div>
     </header>
-    <main class="bank-transfer-page">
+    <main>
         <div class="container">
-            <div class="bank-transfer-container">
-                <div class="bank-transfer-icon">
-                    <i class="fas fa-university"></i>
-                </div>
-                <h1>Instrucciones de transferencia bancaria</h1>
-                <p>Por favor, realiza tu transferencia bancaria utilizando los siguientes datos. Tu pedido será procesado una vez que recibamos la confirmación de pago.</p>
-                
-                <div class="order-reference">
-                    <h3>Número de referencia (incluir en el concepto):</h3>
-                    <p id="order-id">Cargando...</p>
-                </div>
-                
-                <div class="bank-details">
-                    <h3>Datos bancarios:</h3>
-                    <p><strong>Banco:</strong> Banco Nacional</p>
-                    <p><strong>Titular:</strong> LuxMarket S.A.</p>
-                    <p><strong>Cuenta:</strong> 1234-5678-90-1234567890</p>
-                    <p><strong>IBAN:</strong> ES91 1234 5678 9012 3456 7890</p>
-                    <p><strong>BIC/SWIFT:</strong> BNPAESMMXXX</p>
-                    <p><strong>Importe a transferir:</strong> <span id="order-amount">Cargando...</span></p>
-                    <p><strong>Concepto:</strong> <span id="order-concept">Cargando...</span></p>
-                </div>
-                
-                <div class="steps-container">
-                    <h3>Pasos a seguir:</h3>
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h4>Realiza la transferencia</h4>
-                            <p>Utiliza tu banca online o acude a tu sucursal bancaria para realizar la transferencia con los datos proporcionados.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h4>Envíanos el comprobante</h4>
-                            <p>Una vez realizada la transferencia, envíanos el comprobante por email a <strong>pagos@luxmarket.com</strong> indicando tu número de pedido.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h4>Confirmaremos tu pago</h4>
-                            <p>Verificaremos el ingreso y procederemos a gestionar tu pedido en un plazo máximo de 24 horas laborables.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <p style="text-align:center; margin-top:30px;">Si tienes cualquier duda sobre el proceso de pago, no dudes en <a href="contact.html">contactar con nuestro equipo</a>.</p>
-                
+            <h1>Tu carrito</h1>
+            <div class="cart-container">
                 <div class="cart-items">
+                    <h2>Productos en tu carrito</h2>
                     <div id="cart-empty" style="display:none;">
                         <i class="fas fa-shopping-cart"></i>
                         <h3>El carrito está vacío</h3>
                         <p>Agrega productos para verlos aquí.</p>
                     </div>
                     <div id="cart-list"></div>
-
-                    <div class="cart-summary">
-                        <div>Subtotal: <span id="subtotal">$0.00</span></div>
-                        <div>Total: <span id="total">$0.00</span></div>
+                </div>
+                
+                <div class="cart-summary">
+                    <h2>Resumen de compra</h2>
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="total">$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="checkout-actions">
                         <button id="checkout-button" class="btn btn-primary">Finalizar compra</button>
                         <button id="clear-cart" class="btn btn-secondary">Vaciar carrito</button>
                     </div>
-                </div>
-                
-                <div class="bank-transfer-actions">
-                    <a href="mailto:pagos@luxmarket.com?subject=Comprobante%20de%20pago%20-%20Pedido%20" id="email-link" class="btn btn-primary"><i class="fas fa-envelope"></i> Enviar comprobante</a>
-                    <a href="index.html" class="btn btn-secondary"><i class="fas fa-home"></i> Volver a la tienda</a>
                 </div>
             </div>
         </div>
