@@ -385,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Función para procesar pago con PayKassa
-    function processPayKassaPayment() {
+    async function processPayKassaPayment() {
         // Mostrar overlay de procesamiento
         showProcessingOverlay();
         
@@ -418,64 +418,82 @@ document.addEventListener('DOMContentLoaded', function() {
         // Generar ID de orden único
         const orderId = generateOrderId();
         
-        // Usar el merchantId del archivo de configuración
-        const merchantId = window.paykassaConfig ? window.paykassaConfig.merchantId : 'f87e10f5-3d44-4235-a069-5f8963fbac1a';
+        // Determinar qué criptomoneda se seleccionó
+        const cryptoSelected = document.querySelector('input[name="crypto-currency"]:checked');
+        const paymentSystem = cryptoSelected ? cryptoSelected.value.toLowerCase() : 'bitcoin';
         
-        // Construir URL para redirección a PayKassa
-        const paykassaUrl = 'https://paykassa.app/sci/index.php';
-        const params = new URLSearchParams();
-        
-        params.append('merchant_id', merchantId);
-        params.append('order_id', orderId);
-        params.append('amount', total.toFixed(2));
-        params.append('currency', 'USD');
-        params.append('desc', `Pedido en LuxMarket #${orderId}`);
-        
-        // Datos del cliente
-        params.append('email', formData.get('email'));
-        
-        // URLs de redirección
-        const baseUrl = window.location.origin;  // Simplificado
-        params.append('success_url', `${baseUrl}/order-success.html`);
-        params.append('fail_url', `${baseUrl}/failure.html`);
-        
-        const paymentUrl = `${paykassaUrl}?${params.toString()}`;
-        
-        // Guardar datos del pedido en localStorage
-        localStorage.setItem('pendingOrder', JSON.stringify({
-            id: orderId,
-            date: new Date().toISOString(),
-            total: total.toFixed(2),
-            subtotal: subtotal.toFixed(2),
-            tax: tax.toFixed(2),
-            discount: discount.toFixed(2),
-            status: 'pending',
-            paymentMethod: 'paykassa',
-            customer: {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                phone: formData.get('phone')
-            },
-            shipping: {
-                address: formData.get('address'),
-                city: formData.get('city'),
-                postalCode: formData.get('postal-code'),
-                state: formData.get('state'),
-                country: formData.get('country')
-            },
-            items: cart.map(item => ({
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity,
-                image: item.image
-            }))
-        }));
-        
-        // Redireccionar a PayKassa después de un breve retraso
-        setTimeout(() => {
-            console.log('Redirigiendo a PayKassa:', paymentUrl);
-            window.location.href = paymentUrl;  // Corregido: window.location.href en lugar de window.href
-        }, 1500);
+        // En lugar de redireccionar, llamar a tu API
+        try {
+            // Ocultar el formulario para mostrar el pago
+            checkoutForm.style.display = 'none';
+            
+            const response = await fetch('/api/paykassa-create-invoice', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: total.toFixed(2),
+                    currency: 'USD',
+                    order_id: orderId,
+                    payment_system: paymentSystem,
+                    email: formData.get('email')
+                })
+            });
+            
+            // Eliminar overlay de procesamiento
+            document.querySelector('.processing-overlay').remove();
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Guardar datos del pedido en localStorage
+                localStorage.setItem('pendingOrder', JSON.stringify({
+                    id: orderId,
+                    date: new Date().toISOString(),
+                    total: total.toFixed(2),
+                    subtotal: subtotal.toFixed(2),
+                    tax: tax.toFixed(2),
+                    discount: discount.toFixed(2),
+                    status: 'pending',
+                    paymentMethod: 'paykassa',
+                    customer: {
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        phone: formData.get('phone')
+                    },
+                    shipping: {
+                        address: formData.get('address'),
+                        city: formData.get('city'),
+                        postalCode: formData.get('postal-code'),
+                        state: formData.get('state'),
+                        country: formData.get('country')
+                    },
+                    items: cart.map(item => ({
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity,
+                        image: item.image
+                    }))
+                }));
+                
+                // Mostrar la información de pago en la página actual
+                const paymentInfoContainer = document.getElementById('payment-info');
+                paymentInfoContainer.style.display = 'block';
+                mostrarDatosDePago(data.data);
+                
+                // Desplazar a la información de pago
+                paymentInfoContainer.scrollIntoView({ behavior: 'smooth' });
+                
+            } else {
+                // Volver a mostrar el formulario en caso de error
+                checkoutForm.style.display = 'block';
+                showError('Error al crear la factura de pago: ' + data.error);
+            }
+        } catch (error) {
+            // Volver a mostrar el formulario en caso de error
+            checkoutForm.style.display = 'block';
+            document.querySelector('.processing-overlay').remove();
+            showError('Error al conectar con el servidor: ' + error.message);
+        }
     }
     
     // Función para procesar pago con transferencia bancaria
@@ -571,14 +589,115 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function mostrarDatosDePago(datos) {
-        // Ejemplo: muestra dirección, QR, monto, etc.
-        document.getElementById('payment-info').innerHTML = `
-            <h3>Realiza tu pago</h3>
-            <p>Monto: ${datos.amount} ${datos.currency}</p>
-            <p>Dirección: ${datos.wallet}</p>
-            <img src="${datos.qr}" alt="QR de pago">
-            <p>Cuando se confirme el pago, recibirás la confirmación automáticamente.</p>
+        const paymentInfo = document.getElementById('payment-info');
+        
+        if (!paymentInfo) {
+            console.error('No se encontró el contenedor para la información de pago');
+            return;
+        }
+        
+        // Estilo visual para la información de pago
+        paymentInfo.innerHTML = `
+            <div class="payment-confirmation">
+                <div class="payment-header">
+                    <i class="fas fa-wallet"></i>
+                    <h2>Realiza tu pago en criptomoneda</h2>
+                </div>
+                
+                <div class="payment-details">
+                    <div class="payment-qr">
+                        <img src="${datos.qr_code || datos.qr}" alt="Código QR para pago">
+                    </div>
+                    
+                    <div class="payment-instructions">
+                        <div class="payment-amount">
+                            <span>Monto exacto a pagar:</span>
+                            <strong>${datos.amount} ${datos.currency}</strong>
+                        </div>
+                        
+                        <div class="payment-address">
+                            <span>Dirección de pago:</span>
+                            <div class="copy-field">
+                                <input type="text" readonly value="${datos.wallet}" id="wallet-address">
+                                <button type="button" class="btn-copy" onclick="copyToClipboard('wallet-address')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-time">
+                            <span>Tiempo de espera:</span>
+                            <strong>30 minutos</strong>
+                        </div>
+                        
+                        <div class="payment-status">
+                            <div class="status-icon pending">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <span>Esperando confirmación de pago</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-notes">
+                    <p><i class="fas fa-info-circle"></i> Envía exactamente la cantidad indicada a la dirección mostrada.</p>
+                    <p><i class="fas fa-shield-alt"></i> Tu pedido será procesado automáticamente una vez confirmada la transacción.</p>
+                </div>
+                
+                <div class="payment-help">
+                    <h4>¿Necesitas ayuda?</h4>
+                    <p>Si tienes problemas con tu pago, contáctanos incluyendo el ID de tu orden: <strong>${datos.order_id}</strong></p>
+                </div>
+            </div>
         `;
+        
+        // Añadir la función para copiar al portapapeles
+        window.copyToClipboard = function(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+            
+            // Mostrar un mensaje de "copiado"
+            const copyButton = element.nextElementSibling;
+            const originalHTML = copyButton.innerHTML;
+            copyButton.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                copyButton.innerHTML = originalHTML;
+            }, 2000);
+        };
+        
+        // Comprobar estado de pago cada 30 segundos
+        checkPaymentStatus(datos.order_id);
+    }
+
+    // Función para comprobar el estado del pago
+    function checkPaymentStatus(orderId) {
+        const statusCheck = setInterval(async () => {
+            try {
+                const response = await fetch(`/api/paykassa-transaction-notify?order_id=${orderId}`);
+                const data = await response.json();
+                
+                if (data.status === 'completed') {
+                    // Actualizar UI para mostrar pago completado
+                    document.querySelector('.payment-status').innerHTML = `
+                        <div class="status-icon completed">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <span>¡Pago confirmado!</span>
+                    `;
+                    
+                    // Redireccionar a la página de éxito después de un momento
+                    setTimeout(() => {
+                        window.location.href = 'order-success.html';
+                    }, 3000);
+                    
+                    // Limpiar intervalo
+                    clearInterval(statusCheck);
+                }
+            } catch (error) {
+                console.log('Error al comprobar estado de pago:', error);
+            }
+        }, 30000); // Comprobar cada 30 segundos
     }
     
     // Funciones auxiliares
