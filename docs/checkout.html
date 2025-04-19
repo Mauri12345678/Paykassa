@@ -119,87 +119,63 @@
                         </div>
 
                         <div class="form-section">
-                            <h3><i class="fas fa-credit-card"></i> Método de Pago</h3>
+                            <h3><i class="fas fa-credit-card"></i> Método de pago</h3>
+                            
                             <div class="payment-methods">
+                                <!-- PayPal -->
                                 <div class="payment-option">
-                                    <input type="radio" id="payment-card" name="payment-method" value="card" checked>
-                                    <label for="payment-card">
-                                        <div class="payment-logo">
-                                            <i class="fas fa-credit-card"></i>
-                                        </div>
-                                        <div class="payment-info">
-                                            <h4>Tarjeta de Crédito/Débito</h4>
-                                            <p>Visa, Mastercard, American Express</p>
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="payment-option">
-                                    <input type="radio" id="payment-paypal" name="payment-method" value="paypal">
-                                    <label for="payment-paypal">
+                                    <input type="radio" id="paypal" name="payment-method" value="paypal">
+                                    <label for="paypal">
                                         <div class="payment-logo">
                                             <i class="fab fa-paypal"></i>
                                         </div>
-                                        <div class="payment-info">
+                                        <div class="payment-method-info">
                                             <h4>PayPal</h4>
-                                            <p>Pago rápido y seguro</p>
+                                            <p>Pago seguro con tu cuenta PayPal</p>
                                         </div>
                                     </label>
                                 </div>
+
+                                <!-- Tarjeta de crédito -->
                                 <div class="payment-option">
-                                    <input type="radio" id="payment-transfer" name="payment-method" value="transfer">
-                                    <label for="payment-transfer">
+                                    <input type="radio" id="card" name="payment-method" value="card">
+                                    <label for="card">
+                                        <div class="payment-logo">
+                                            <i class="far fa-credit-card"></i>
+                                        </div>
+                                        <div class="payment-method-info">
+                                            <h4>Tarjeta de crédito</h4>
+                                            <p>Visa, MasterCard, American Express</p>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <!-- Transferencia bancaria -->
+                                <div class="payment-option">
+                                    <input type="radio" id="bank-transfer" name="payment-method" value="bank-transfer">
+                                    <label for="bank-transfer">
                                         <div class="payment-logo">
                                             <i class="fas fa-university"></i>
                                         </div>
-                                        <div class="payment-info">
+                                        <div class="payment-method-info">
                                             <h4>Transferencia bancaria</h4>
-                                            <p>Pago por transferencia a nuestra cuenta</p>
+                                            <p>Pago mediante transferencia bancaria</p>
                                         </div>
                                     </label>
                                 </div>
-                                <div class="payment-option">
-                                    <input type="radio" id="payment-paykassa" name="payment-method" value="paykassa">
-                                    <label for="payment-paykassa">
-                                        <div class="payment-logo">
-                                            <i class="fas fa-wallet"></i> <!-- O usar una imagen de Paykassa -->
-                                        </div>
-                                        <div class="payment-info">
-                                            <h4>Paykassa</h4>
-                                            <p>Pago con criptomonedas y múltiples métodos</p>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
 
-                            <div id="card-payment-details">
-                                <div class="card-icons">
-                                    <i class="fab fa-cc-visa"></i>
-                                    <i class="fab fa-cc-mastercard"></i>
-                                    <i class="fab fa-cc-amex"></i>
-                                </div>
-                                <div class="form-group">
-                                    <label for="card-number">Número de tarjeta</label>
-                                    <div class="card-input-wrapper">
-                                        <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456">
-                                        <i class="fas fa-credit-card"></i>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="expiry-date">Fecha de caducidad</label>
-                                        <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/AA">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cvv">Código de seguridad</label>
-                                        <div class="cvv-input-wrapper">
-                                            <input type="text" id="cvv" name="cvv" placeholder="123">
-                                            <i class="fas fa-question-circle"></i>
+                                <!-- Criptomonedas -->
+                                <div class="payment-option">
+                                    <input type="radio" id="paykassa" name="payment-method" value="paykassa" checked>
+                                    <label for="paykassa">
+                                        <div class="payment-logo">
+                                            <i class="fab fa-bitcoin"></i>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="card-name">Titular de la tarjeta</label>
-                                    <input type="text" id="card-name" name="card-name" placeholder="NOMBRE COMO APARECE EN LA TARJETA">
+                                        <div class="payment-method-info">
+                                            <h4>Criptomonedas</h4>
+                                            <p>Bitcoin, Ethereum, USDT</p>
+                                        </div>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -213,28 +189,29 @@
                     </form>
                 </div>
 
-                <div class="checkout-summary">
-                    <h2>Resumen de tu pedido</h2>
-                    <div id="order-summary" class="order-summary">
-                        <!-- El JS colocará aquí los productos -->
+                <!-- Columna derecha: Resumen -->
+                <div class="checkout-summary-column">
+                    <div class="checkout-summary">
+                        <h2>Resumen de tu pedido</h2>
+                        
+                        <div id="order-summary" class="order-summary">
+                            <!-- El JS colocará aquí los productos -->
+                        </div>
+                        
+                        <!-- Cupón dentro del resumen -->
+                        <div class="coupon-section">
+                            <h4>¿Tienes un cupón de descuento?</h4>
+                            <div class="coupon-form">
+                                <input type="text" id="coupon-code" placeholder="Introduce tu código">
+                                <button type="button" class="btn btn-sm" id="apply-coupon">Aplicar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="order-notes">
+                            <p><i class="fas fa-shield-alt"></i> Pago seguro garantizado</p>
+                            <p><i class="fas fa-exchange-alt"></i> 30 días para devoluciones</p>
+                        </div>
                     </div>
-                </div>
-
-                <div class="coupon-section">
-                    <h4>¿Tienes un cupón de descuento?</h4>
-                    <div class="coupon-form">
-                        <input type="text" id="coupon-code" placeholder="Introduce tu código">
-                        <button type="button" class="btn btn-sm" id="apply-coupon">Aplicar</button>
-                    </div>
-                </div>
-
-                <div id="payment-info" class="payment-info" style="display:none;">
-                    <!-- Aquí se mostrarán los datos de pago -->
-                </div>
-
-                <div class="order-notes">
-                    <p><i class="fas fa-shield-alt"></i> Pago seguro garantizado</p>
-                    <p><i class="fas fa-exchange-alt"></i> 30 días para devoluciones</p>
                 </div>
             </div>
         </div>
@@ -242,73 +219,23 @@
 
     <footer class="checkout-footer">
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <div class="footer-logo">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span>LuxMarket</span>
-                    </div>
-                    <p>Tu destino premium para compras de lujo. Productos exclusivos seleccionados para clientes exigentes.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-links">
-                    <h3>Enlaces rápidos</h3>
-                    <ul>
-                        <li><a href="../index.html">Inicio</a></li>
-                        <li><a href="../product.html">Productos</a></li>
-                        <li><a href="../cart.html">Carrito</a></li>
-                        <li><a href="../checkout.html">Checkout</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-links">
-                    <h3>Ayuda</h3>
-                    <ul>
-                        <li><a href="#">Preguntas frecuentes</a></li>
-                        <li><a href="#">Políticas de devolución</a></li>
-                        <li><a href="../contact.html">Contáctanos</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-contact">
-                    <h3>Contacto</h3>
-                    <ul>
-                        <li>
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Calle Principal 123, Ciudad</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-phone"></i>
-                            <span>+34 123 456 789</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <span>info@luxmarket.com</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-clock"></i>
-                            <span>Lun-Vie: 9AM - 8PM</span>
-                        </li>
-                    </ul>
-                </div>
+            <div class="accepted-payment-methods">
+                <i class="fab fa-cc-visa"></i>
+                <i class="fab fa-cc-mastercard"></i>
+                <i class="fab fa-cc-amex"></i>
+                <i class="fab fa-bitcoin"></i>
+                <i class="fab fa-ethereum"></i>
             </div>
             
-            <div class="footer-bottom">
-                <p>&copy; 2025 LuxMarket. Todos los derechos reservados.</p>
-                <div class="accepted-payment-methods">
-                    <i class="fab fa-cc-visa"></i>
-                    <i class="fab fa-cc-mastercard"></i>
-                    <i class="fab fa-cc-amex"></i>
-                    <i class="fab fa-bitcoin"></i>
-                    <i class="fab fa-ethereum"></i>
-                </div>
+            <p>Pago seguro y verificado para todas tus compras</p>
+            
+            <div class="footer-links">
+                <a href="privacy.html">Política de Privacidad</a>
+                <a href="terms.html">Términos y Condiciones</a>
+                <a href="contact.html">Contacto</a>
             </div>
+            
+            <p>© 2025 LuxMarket. Todos los derechos reservados.</p>
         </div>
     </footer>
     <script src="js/paykassa.js"></script>
@@ -323,3 +250,23 @@
     </div>
 </body>
 </html>
+<style>
+/* Mejora para los métodos de pago */
+.payment-info {
+    flex: 1;
+    min-width: 0;
+    padding-right: 10px;
+}
+
+.payment-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.05rem;
+    color: var(--text-dark);
+}
+
+.payment-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-medium);
+}
+</style>

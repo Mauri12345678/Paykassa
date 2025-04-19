@@ -162,26 +162,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log("Validación fallida");
                 return;
             }
-            console.log("Validación exitosa");
             
-            // Añadir justo después de "Validación exitosa"
+            console.log("Validación exitosa");
             console.log("Procesando método de pago...");
-
+            
             // Verificar qué método de pago está seleccionado
             const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
-
+            
             if (!paymentMethod) {
                 showError('Por favor, selecciona un método de pago');
                 return;
             }
-
-            // Procesar según el método de pago seleccionado
-            if (paymentMethod.value === 'paykassa') {
-                processPayKassaPayment();
-            } else if (paymentMethod.value === 'card') {
-                processCardPayment();
-            } else if (paymentMethod.value === 'bank-transfer') {
-                processBankTransferPayment();
+            
+            // Procesar según el método de pago
+            switch(paymentMethod.value) {
+                case 'paypal':
+                    processPayPalPayment();
+                    break;
+                case 'card':
+                    // Cambia esta línea para probar con API o sin API
+                    processCardPayment(); // Versión simulada
+                    // processCardPaymentAPI(); // Versión con API real
+                    break;
+                case 'bank-transfer':
+                    processBankTransferPayment();
+                    break;
+                case 'paykassa':
+                    processPayKassaPayment();
+                    break;
+                default:
+                    showError('Método de pago no válido');
             }
         });
     }
@@ -497,13 +507,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Función para procesar pagos con tarjeta
-    function processCardPayment() {
-        // Mostrar overlay de procesamiento
+    // Función para procesar pagos con tarjeta usando API
+    async function processCardPaymentAPI() {
         showProcessingOverlay();
         
-        // Simulación para desarrollo
-        setTimeout(() => {
+        try {
             // Obtener datos del formulario
             const formData = new FormData(checkoutForm);
             
@@ -515,6 +523,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const tax = subtotal * 0.10;
             const total = subtotal + tax;
             
+            // Llamar a tu API de procesamiento de pagos
+            const response = await fetch('/api/process-card-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: total.toFixed(2),
+                    currency: 'USD',
+                    order_id: orderId,
+                    card_number: formData.get('card-number').replace(/\s/g, ''),
+                    expiry_date: formData.get('expiry-date'),
+                    cvv: formData.get('cvv'),
+                    name: formData.get('name'),
+                    email: formData.get('email')
+                })
+            });
+            
+            const data = await response.json();
+            
             // Guardar datos del pedido
             localStorage.setItem('pendingOrder', JSON.stringify({
                 id: orderId,
@@ -522,29 +548,58 @@ document.addEventListener('DOMContentLoaded', function() {
                 total: total.toFixed(2),
                 subtotal: subtotal.toFixed(2),
                 tax: tax.toFixed(2),
-                status: 'completed',
+                status: data.success ? 'completed' : 'failed',
                 paymentMethod: 'card',
                 customer: {
                     name: formData.get('name'),
                     email: formData.get('email'),
                     phone: formData.get('phone')
                 },
-                shipping: {
-                    address: formData.get('address'),
-                    city: formData.get('city'),
-                    postalCode: formData.get('postal-code'),
-                    state: formData.get('state'),
-                    country: formData.get('country')
-                },
                 items: cart
             }));
             
-            // Eliminar carrito
-            localStorage.removeItem('cart');
+            // Eliminar overlay
+            document.querySelector('.processing-overlay').remove();
             
-            // Redirigir a página de éxito
-            window.location.href = 'success.html';
-        }, 2000);
+            if (data.success) {
+                // Redirigir a página de éxito
+                window.location.href = 'success.html';
+            } else {
+                // Mostrar error
+                showError('Error en el pago: ' + (data.message || 'Intente nuevamente'));
+            }
+        } catch (error) {
+            document.querySelector('.processing-overlay')?.remove();
+            showError('Error en la conexión: ' + error.message);
+        }
+    }
+    
+    // Función para procesar pagos con PayPal
+    function processPayPalPayment() {
+        showProcessingOverlay();
+        
+        setTimeout(() => {
+            // Simulación para desarrollo
+            const orderId = generateOrderId();
+            const total = calculateTotal();
+            
+            // Redirigir a PayPal
+            const paypalForm = document.createElement('form');
+            paypalForm.method = 'post';
+            paypalForm.action = 'https://www.paypal.com/cgi-bin/webscr';
+            paypalForm.innerHTML = `
+                <input type="hidden" name="cmd" value="_xclick">
+                <input type="hidden" name="business" value="tu_correo_paypal@example.com">
+                <input type="hidden" name="item_name" value="Pedido ${orderId}">
+                <input type="hidden" name="amount" value="${total.toFixed(2)}">
+                <input type="hidden" name="currency_code" value="USD">
+                <input type="hidden" name="return" value="${window.location.origin}/success.html">
+                <input type="hidden" name="cancel_return" value="${window.location.origin}/checkout.html">
+            `;
+            
+            document.body.appendChild(paypalForm);
+            paypalForm.submit();
+        }, 1500);
     }
     
     // Función para procesar transferencias bancarias
