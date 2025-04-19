@@ -272,6 +272,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Obtenemos referencia al botón de checkout
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', function() {
+            // Verificamos si hay productos en el carrito
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            if (cart.length === 0) {
+                // Opcional: mostrar mensaje si el carrito está vacío
+                alert('Tu carrito está vacío. Añade productos antes de continuar.');
+                return;
+            }
+            
+            // Redirigir a la página de checkout
+            window.location.href = 'checkout.html';
+        });
+    }
     
     // Función para mostrar notificación
     function showNotification(message, type = 'info') {

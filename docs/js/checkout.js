@@ -1,4 +1,57 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Carga los datos del carrito en checkout
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const orderSummary = document.getElementById('order-summary');
+    
+    // Si no hay productos en el carrito, redirigir al carrito
+    if (cart.length === 0) {
+        alert('No hay productos en tu carrito');
+        window.location.href = 'cart.html';
+        return;
+    }
+    
+    // Función para renderizar el resumen de productos
+    function renderOrderSummary() {
+        if (!orderSummary) return;
+        
+        let html = '';
+        let subtotal = 0;
+        
+        cart.forEach(item => {
+            subtotal += item.price * item.quantity;
+            html += `
+                <div class="order-item">
+                    <div class="order-item-image">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div class="order-item-details">
+                        <div class="order-item-name">${item.name}</div>
+                        <div class="order-item-price">$${item.price.toFixed(2)}</div>
+                        <div class="order-item-quantity">Cantidad: ${item.quantity}</div>
+                    </div>
+                    <div class="order-item-total">$${(item.price * item.quantity).toFixed(2)}</div>
+                </div>
+            `;
+        });
+        
+        const tax = subtotal * 0.10; // 10% de impuesto
+        const total = subtotal + tax;
+        
+        // Añade el resumen de totales
+        html += `
+            <div class="order-summary-totals">
+                <div class="summary-row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
+                <div class="summary-row"><span>Impuestos (10%)</span><span>$${tax.toFixed(2)}</span></div>
+                <div class="summary-row total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
+            </div>
+        `;
+        
+        orderSummary.innerHTML = html;
+    }
+    
+    // Renderizar el resumen
+    renderOrderSummary();
+    
     // Obtener referencias a elementos del formulario
     const checkoutForm = document.getElementById('checkout-form');
     const checkoutButton = document.getElementById('checkout-button');
@@ -101,41 +154,52 @@ document.addEventListener('DOMContentLoaded', function() {
     if (checkoutForm) {
         checkoutForm.addEventListener('submit', function(event) {
             event.preventDefault();
-
-            const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
-
-            if (selectedPaymentMethod === 'paykassa' || selectedPaymentMethod === 'card') {
-                // Obtener la criptomoneda seleccionada (o por defecto BTC)
-                const selectedCrypto = document.querySelector('input[name="crypto-currency"]:checked');
-                const cryptoValue = selectedCrypto ? selectedCrypto.value : 'BTC';
-
-                // Obtener datos del formulario
-                const formData = new FormData(checkoutForm);
-                const customerData = {
-                    name: formData.get('first-name') + ' ' + formData.get('last-name'),
+            
+            // Obtener datos del formulario
+            const formData = new FormData(this);
+            
+            // Procesar el pago según el método seleccionado
+            const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+            
+            // Crear el objeto de pedido
+            const orderData = {
+                id: generateOrderId(),
+                date: new Date().toISOString(),
+                customer: {
+                    name: formData.get('name'),
                     email: formData.get('email'),
-                    phone: formData.get('phone'),
+                    phone: formData.get('phone')
+                },
+                shipping: {
                     address: formData.get('address'),
                     city: formData.get('city'),
+                    state: formData.get('state'),
                     postalCode: formData.get('postal-code'),
                     country: formData.get('country')
-                };
-
-                // Mostrar overlay de procesamiento
-                document.getElementById('processing-overlay').style.display = 'flex';
-
-                // Procesar pago con Paykassa
-                if (window.paykassaInstance) {
-                    window.paykassaInstance.processPayment(cryptoValue, customerData);
-                } else {
-                    alert('No se pudo conectar con el procesador de pagos.');
-                    document.getElementById('processing-overlay').style.display = 'none';
-                    window.location.href = 'failure.html';
-                }
-                return;
+                },
+                items: cart,
+                payment: {
+                    method: paymentMethod,
+                    // Otros detalles de pago aquí
+                },
+                // Calcular totales
+                subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                tax: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) * 0.10,
+                // Otros cálculos como descuentos, etc.
+            };
+            
+            // Guardar el pedido en localStorage
+            localStorage.setItem('pendingOrder', JSON.stringify(orderData));
+            
+            // Procesar según el método de pago
+            if (paymentMethod === 'paykassa') {
+                processPayKassaPayment();
+            } else if (paymentMethod === 'card') {
+                processCardPayment();
+            } else if (paymentMethod === 'bank-transfer') {
+                // Redirigir a página de transferencia bancaria
+                window.location.href = 'bank-transfer.html';
             }
-
-            // ...otros métodos de pago...
         });
     }
     
