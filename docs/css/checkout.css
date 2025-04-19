@@ -159,7 +159,7 @@ header {
     max-height: 90vh;
     display: flex;
     flex-direction: column;
-    padding: 30px; /* Aumentado de 25px */
+    padding: 30px;
     margin-bottom: 25px;
     padding: 0 15px; /* Padding horizontal para todo el resumen */
 }
@@ -239,8 +239,8 @@ header {
 .summary-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 12px;
-    padding: 0 10px;
+    margin-bottom: 15px; /* Aumentado de 12px */
+    padding: 0 15px; /* Aumentado de 10px */
     font-size: 1.05rem;
 }
 
@@ -250,20 +250,20 @@ header {
 
 .summary-row span:first-child {
     color: var(--text-medium);
-    padding-right: 10px; /* Espacio entre texto y valor */
+    padding-right: 20px; /* Aumentado de 10px */
 }
 
 .summary-row span:last-child {
     font-weight: 500;
-    color: var(--text-dark);
+    min-width: 80px; /* Asegura un ancho mínimo para los valores */
     text-align: right;
 }
 
 .summary-row.total {
     font-weight: 700;
     font-size: 1.25rem;
-    margin-top: 18px;
-    padding-top: 18px;
+    margin-top: 20px;
+    padding-top: 20px;
     border-top: 1px dashed #e3e8ee;
     color: #1565c0;
 }
