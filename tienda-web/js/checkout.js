@@ -13,11 +13,25 @@ document.addEventListener('DOMContentLoaded', function() {
         method.addEventListener('change', function() {
             // Mostrar/ocultar los detalles de la tarjeta según el método seleccionado
             if (this.value === 'card') {
+                // Solo mostrar si quieres que el usuario vea el formulario (opcional)
                 cardPaymentDetails.style.display = 'block';
             } else {
                 cardPaymentDetails.style.display = 'none';
             }
-            
+
+            // Si el método es "card" o "paykassa", muestra un mensaje aclaratorio
+            const paykassaNotice = document.getElementById('paykassa-notice');
+            if (this.value === 'card' || this.value === 'paykassa') {
+                cardPaymentDetails.style.display = 'none';
+                if (paykassaNotice) {
+                    paykassaNotice.style.display = 'block';
+                }
+            } else {
+                if (paykassaNotice) {
+                    paykassaNotice.style.display = 'none';
+                }
+            }
+
             // Para otros métodos de pago, puedes añadir más lógica aquí
             if (this.value === 'paykassa') {
                 // Por ejemplo, mostrar selector de criptomonedas
@@ -88,9 +102,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (checkoutForm) {
         checkoutForm.addEventListener('submit', function(event) {
             event.preventDefault();
-            
+
             const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
-            
+
             if (selectedPaymentMethod === 'paykassa' || selectedPaymentMethod === 'card') {
                 // Obtener la criptomoneda seleccionada (o por defecto BTC)
                 const selectedCrypto = document.querySelector('input[name="crypto-currency"]:checked');
@@ -111,24 +125,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Mostrar overlay de procesamiento
                 document.getElementById('processing-overlay').style.display = 'flex';
 
-                // Obtener instancia de PaykassaIntegration (asumiendo que ya está inicializada)
-                const paykassaInstance = window.paykassaInstance;
-
-                if (paykassaInstance) {
-                    // Procesar pago con Paykassa
-                    paykassaInstance.processPayment(cryptoValue, customerData);
+                // Procesar pago con Paykassa
+                if (window.paykassaInstance) {
+                    window.paykassaInstance.processPayment(cryptoValue, customerData);
                 } else {
-                    // Fallback si la instancia no está disponible
-                    showError('No se pudo conectar con el procesador de pagos. Por favor, intenta nuevamente.');
+                    alert('No se pudo conectar con el procesador de pagos.');
                     document.getElementById('processing-overlay').style.display = 'none';
                 }
-            } else if (selectedPaymentMethod === 'paypal') {
-                // Lógica para PayPal
-                alert('Redirigiendo a PayPal...');
-            } else if (selectedPaymentMethod === 'transfer') {
-                // Lógica para transferencia bancaria
-                window.location.href = 'bank-transfer-instructions.html';
+                return;
             }
+
+            // ...otros métodos de pago...
         });
     }
     
