@@ -164,19 +164,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             console.log("Validación exitosa");
             
+            // Añadir justo después de "Validación exitosa"
+            console.log("Procesando método de pago...");
+
             // Verificar qué método de pago está seleccionado
             const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
-            
+
             if (!paymentMethod) {
                 showError('Por favor, selecciona un método de pago');
                 return;
             }
-            
+
             // Procesar según el método de pago seleccionado
             if (paymentMethod.value === 'paykassa') {
                 processPayKassaPayment();
             } else if (paymentMethod.value === 'card') {
-                // Procesar pago con tarjeta (si lo implementas)
+                processCardPayment();
             } else if (paymentMethod.value === 'bank-transfer') {
                 processBankTransferPayment();
             }
