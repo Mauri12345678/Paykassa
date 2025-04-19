@@ -13,13 +13,12 @@ document.addEventListener('DOMContentLoaded', function() {
         method.addEventListener('change', function() {
             // Mostrar/ocultar los detalles de la tarjeta según el método seleccionado
             if (this.value === 'card') {
-                // Solo mostrar si quieres que el usuario vea el formulario (opcional)
                 cardPaymentDetails.style.display = 'block';
             } else {
                 cardPaymentDetails.style.display = 'none';
             }
 
-            // Si el método es "card" o "paykassa", muestra un mensaje aclaratorio
+            // Mostrar mensaje aclaratorio y ocultar formulario de tarjeta si es card o paykassa
             const paykassaNotice = document.getElementById('paykassa-notice');
             if (this.value === 'card' || this.value === 'paykassa') {
                 cardPaymentDetails.style.display = 'none';
