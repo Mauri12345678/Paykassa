@@ -176,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     state: formData.get('state'),
                     postalCode: formData.get('postal-code'),
                     country: formData.get('country')
+                    // No incluir método o costo de envío
                 },
                 items: cart,
                 payment: {
