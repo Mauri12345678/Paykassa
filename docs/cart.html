@@ -305,14 +305,46 @@
             }
         });
 
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const cartContainer = document.getElementById('cart-items');
+        document.addEventListener('DOMContentLoaded', function() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartContainer = document.querySelector('.cart-items'); // o el id que uses
 
-        if (!cart || cart.length === 0) {
-            cartContainer.innerHTML = '<p>El carrito está vacío.</p>';
-        } else {
-            // ...renderiza los productos del carrito...
-        }
+            if (!cartContainer) return;
+
+            if (!cart.length) {
+                cartContainer.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>El carrito está vacío</h3>
+                        <p>Agrega productos para verlos aquí.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="cart-list">';
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-image">
+                            <img src="${item.image}" alt="${item.name}">
+                        </div>
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                            <div class="cart-quantity">
+                                Cantidad: ${item.quantity}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            html += `<div class="cart-summary"><strong>Total: $${total.toFixed(2)}</strong></div>`;
+            cartContainer.innerHTML = html;
+        });
     </script>
 
     <!-- Cart Script -->
