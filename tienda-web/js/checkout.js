@@ -526,6 +526,38 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1500);
     }
     
+    // Función para pagar con Paykassa directo
+    async function pagarConPaykassaDirecto(orderData) {
+        try {
+            const response = await fetch('/api/paykassa-create-invoice', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            });
+            const data = await response.json();
+
+            if (data.success && data.data) {
+                // Muestra los datos de pago en tu página
+                mostrarDatosDePago(data.data);
+            } else {
+                alert(data.error || 'No se pudo crear la factura.');
+            }
+        } catch (error) {
+            alert('Error al conectar con el servidor.');
+        }
+    }
+
+    function mostrarDatosDePago(datos) {
+        // Ejemplo: muestra dirección, QR, monto, etc.
+        document.getElementById('payment-info').innerHTML = `
+            <h3>Realiza tu pago</h3>
+            <p>Monto: ${datos.amount} ${datos.currency}</p>
+            <p>Dirección: ${datos.wallet}</p>
+            <img src="${datos.qr}" alt="QR de pago">
+            <p>Cuando se confirme el pago, recibirás la confirmación automáticamente.</p>
+        `;
+    }
+    
     // Funciones auxiliares
     function generateOrderId() {
         const timestamp = new Date().getTime();
