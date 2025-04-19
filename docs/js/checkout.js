@@ -155,42 +155,18 @@ document.addEventListener('DOMContentLoaded', function() {
         checkoutForm.addEventListener('submit', function(event) {
             event.preventDefault();
             
-            // Obtener datos del formulario
-            const formData = new FormData(this);
+            // Validar el formulario
+            if (!validateCheckoutForm()) {
+                return;
+            }
             
-            // Procesar el pago según el método seleccionado
+            // Verificar qué método de pago está seleccionado
             const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
             
-            // Crear el objeto de pedido
-            const orderData = {
-                id: generateOrderId(),
-                date: new Date().toISOString(),
-                customer: {
-                    name: formData.get('name'),
-                    email: formData.get('email'),
-                    phone: formData.get('phone')
-                },
-                shipping: {
-                    address: formData.get('address'),
-                    city: formData.get('city'),
-                    state: formData.get('state'),
-                    postalCode: formData.get('postal-code'),
-                    country: formData.get('country')
-                    // No incluir método o costo de envío
-                },
-                items: cart,
-                payment: {
-                    method: paymentMethod,
-                    // Otros detalles de pago aquí
-                },
-                // Calcular totales
-                subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                tax: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) * 0.10,
-                // Otros cálculos como descuentos, etc.
-            };
-            
-            // Guardar el pedido en localStorage
-            localStorage.setItem('pendingOrder', JSON.stringify(orderData));
+            if (!paymentMethod) {
+                showError('Por favor, selecciona un método de pago');
+                return;
+            }
             
             // Procesar según el método de pago
             if (paymentMethod === 'paykassa') {
@@ -198,8 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (paymentMethod === 'card') {
                 processCardPayment();
             } else if (paymentMethod === 'bank-transfer') {
-                // Redirigir a página de transferencia bancaria
-                window.location.href = 'bank-transfer.html';
+                processBankTransferPayment();
             }
         });
     }
@@ -367,30 +342,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Manejar el evento de clic en botón de finalizar compra
-    if (checkoutButton) {
-        checkoutButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Validar el formulario
-            if (!validateCheckoutForm()) {
-                return;
-            }
-            
-            // Verificar qué método de pago está seleccionado
-            const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked');
-            
-            if (!selectedPaymentMethod) {
-                showError('Por favor, selecciona un método de pago');
-                return;
-            }
-            
-            if (selectedPaymentMethod.id === 'paykassa') {
-                processPayKassaPayment();
-            } else if (selectedPaymentMethod.id === 'bank-transfer') {
-                processBankTransferPayment();
-            }
-        });
-    }
+    // if (checkoutButton) {
+    //     checkoutButton.addEventListener('click', function(e) {
+    //         e.preventDefault();
+    //         ...
+    //     });
+    // }
     
     // Función para validar el formulario
     function validateCheckoutForm() {
@@ -478,8 +435,8 @@ document.addEventListener('DOMContentLoaded', function() {
         params.append('email', formData.get('email'));
         
         // URLs de redirección
-        const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.indexOf('/pages/'));
-        params.append('success_url', `${baseUrl}/pages/order-success.html`);
+        const baseUrl = window.location.origin;  // Simplificado
+        params.append('success_url', `${baseUrl}/order-success.html`);
         params.append('fail_url', `${baseUrl}/failure.html`);
         
         const paymentUrl = `${paykassaUrl}?${params.toString()}`;
@@ -517,7 +474,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Redireccionar a PayKassa después de un breve retraso
         setTimeout(() => {
             console.log('Redirigiendo a PayKassa:', paymentUrl);
-            window.location.href = paymentUrl;
+            window.location.href = paymentUrl;  // Corregido: window.location.href en lugar de window.href
         }, 1500);
     }
     
