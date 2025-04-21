@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAuthListeners(); // Esta línea falta en tu código
 });
 
+// Llamar a la función al inicio
+syncAuthSystems();
+
 // Comprobar estado de autenticación al cargar cada página
 function checkAuthState() {
     const currentUser = getCurrentUser();
@@ -262,5 +265,32 @@ function checkAuthManually() {
     } catch (e) {
         console.error("Error verificando autenticación:", e);
         return false;
+    }
+}
+
+// Función para sincronizar sistemas de autenticación
+function syncAuthSystems() {
+    // Verificar si hay sesión de UserSystem
+    const userSession = localStorage.getItem('userSession');
+    if (userSession) {
+        try {
+            const sessionData = JSON.parse(userSession);
+            const userData = sessionData.user;
+            
+            // Crear/actualizar currentUser con formato compatible
+            const unifiedUser = {
+                id: userData.id,
+                email: userData.email,
+                displayName: userData.name,
+                isAdmin: userData.role === 'admin',
+                lastLogin: new Date().toISOString()
+            };
+            
+            // Actualizar currentUser para auth.js
+            localStorage.setItem('currentUser', JSON.stringify(unifiedUser));
+            console.log("🔄 Sistemas de autenticación sincronizados");
+        } catch (e) {
+            console.error("Error sincronizando sistemas de auth:", e);
+        }
     }
 }

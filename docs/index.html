@@ -493,13 +493,32 @@
                     console.log("Mostrando:", el.outerHTML.substring(0, 50) + "...");
                 });
                 
-                // Actualizar nombre de usuario
+                // Parsear usuario para mostrar nombre
                 try {
                     const user = JSON.parse(userJSON);
+                    
+                    // Intentar obtener el nombre de diferentes fuentes
+                    let displayName = user.displayName;
+                    
+                    // Si no hay displayName, intentar obtenerlo de userSession
+                    if (!displayName) {
+                        const userSession = localStorage.getItem('userSession');
+                        if (userSession) {
+                            const sessionData = JSON.parse(userSession);
+                            displayName = sessionData.user.name;
+                        }
+                    }
+                    
+                    // Si aún no hay nombre, usar email
+                    if (!displayName) {
+                        displayName = user.email.split('@')[0];
+                    }
+                    
                     document.querySelectorAll('.user-name').forEach(el => {
-                        el.textContent = user.displayName || user.email.split('@')[0];
+                        el.textContent = displayName;
                     });
-                    console.log("✅ Nombre actualizado:", user.displayName || user.email);
+                    
+                    console.log("✅ Nombre de usuario actualizado:", displayName);
                 } catch (e) {
                     console.error("❌ Error procesando usuario:", e);
                 }

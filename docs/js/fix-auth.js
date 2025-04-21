@@ -9,6 +9,7 @@
             
             // Eliminar sesión
             localStorage.removeItem('currentUser');
+            localStorage.removeItem('userSession');
             alert("Sesión cerrada correctamente");
             
             // Recargar para actualizar UI
@@ -74,4 +75,49 @@
             console.error("Error procesando usuario:", e);
         }
     }
+
+    // Cuando la página carga, verificar si hay un usuario en localStorage
+    window.addEventListener('load', function() {
+        const userJSON = localStorage.getItem('currentUser');
+        const userSessionJSON = localStorage.getItem('userSession');
+        
+        // Si hay un usuario en localStorage pero no tiene nombre correcto
+        if (userJSON && !userSessionJSON) {
+            try {
+                // Intentar recuperar el usuario completo desde 'users'
+                const user = JSON.parse(userJSON);
+                const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
+                
+                // Buscar este usuario por email en la lista completa
+                const fullUserInfo = allUsers.find(u => u.email === user.email);
+                
+                if (fullUserInfo) {
+                    // Actualizar el objeto de usuario con el nombre correcto
+                    user.displayName = fullUserInfo.name;
+                    console.log("✅ Nombre de usuario recuperado:", fullUserInfo.name);
+                    
+                    // Guardar usuario actualizado
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    
+                    // También crear sesión en formato UserSystem
+                    localStorage.setItem('userSession', JSON.stringify({
+                        user: {
+                            id: fullUserInfo.id,
+                            name: fullUserInfo.name,
+                            email: fullUserInfo.email,
+                            role: fullUserInfo.role || 'user'
+                        },
+                        timestamp: Date.now()
+                    }));
+                }
+                
+                // Actualizar nombre en la UI
+                document.querySelectorAll('.user-name').forEach(el => {
+                    el.textContent = user.displayName || fullUserInfo?.name || user.email.split('@')[0];
+                });
+            } catch (e) {
+                console.error("Error recuperando información completa del usuario:", e);
+            }
+        }
+    });
 })();
