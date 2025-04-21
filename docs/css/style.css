@@ -167,7 +167,7 @@ nav ul li.dropdown {
     display: block;
     opacity: 1;
     transform: translateY(0);
-    pointer-events: auto;
+    pointer-events: auto !important;
 }
 
 /* Mejorar comportamiento de los enlaces del dropdown */
@@ -175,6 +175,8 @@ nav ul li.dropdown {
     padding: 0.8rem 1rem;
     margin-bottom: 2px;
     border-radius: 6px;
+    pointer-events: auto !important;
+    cursor: pointer;
 }
 
 /* Darle más espacio al hover */
@@ -999,4 +1001,14 @@ footer {
 .cart-notification.show {
     transform: translateY(0);
     opacity: 1;
+}
+
+/* Estilo específico para el botón de logout */
+.logout-btn {
+    color: #e74c3c !important;
+    font-weight: 500 !important;
+}
+
+.logout-btn:hover {
+    background-color: rgba(231, 76, 60, 0.1) !important;
 }
