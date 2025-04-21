@@ -1,16 +1,16 @@
 :root {
   /* Colores principales */
-  --primary: #3d66f5;
-  --primary-dark: #2850d5;
-  --secondary: #ff6b35;
-  --text: #2d3748;
-  --text-light: #718096;
+  --primary: #0a4d68;         /* Azul marino */
+  --primary-dark: #05384e;    /* Azul marino oscuro */
+  --secondary: #00b8a9;       /* Turquesa - complemento del azul marino */
+  --text: #1e293b;
+  --text-light: #64748b;
   --bg-light: #f8fafc;
   --bg-white: #ffffff;
   --border: #e2e8f0;
-  --success: #38b2ac;
-  --error: #e53e3e;
-  --warning: #f6ad55;
+  --success: #4ade80;
+  --error: #f43f5e;
+  --warning: #fb923c;
   
   /* Sombras */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -126,12 +126,12 @@ nav ul li a {
 
 nav ul li a:hover {
   color: var(--primary);
-  background-color: rgba(61, 102, 245, 0.06);
+  background-color: rgba(10, 77, 104, 0.06);
 }
 
 nav ul li a.active {
   color: var(--primary);
-  background-color: rgba(61, 102, 245, 0.1);
+  background-color: rgba(10, 77, 104, 0.1);
   font-weight: 600;
 }
 
@@ -202,7 +202,7 @@ nav ul li a i {
 }
 
 .dropdown-content a:hover {
-  background-color: rgba(61, 102, 245, 0.05);
+  background-color: rgba(10, 77, 104, 0.05);
   color: var(--primary);
 }
 
@@ -220,7 +220,7 @@ nav ul li a i {
 }
 
 .logout-btn:hover {
-  background-color: rgba(229, 62, 62, 0.05) !important;
+  background-color: rgba(244, 63, 94, 0.05) !important;
 }
 
 /* Control de visibilidad */
@@ -266,7 +266,7 @@ html.user-logged-out .logged-in-only {
 }
 
 .notification-icon {
-  background-color: rgba(61, 102, 245, 0.1);
+  background-color: rgba(10, 77, 104, 0.1);
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -277,12 +277,12 @@ html.user-logged-out .logged-in-only {
 }
 
 .notification.success .notification-icon {
-  background-color: rgba(56, 178, 172, 0.1);
+  background-color: rgba(74, 222, 128, 0.1);
   color: var(--success);
 }
 
 .notification.error .notification-icon {
-  background-color: rgba(229, 62, 62, 0.1);
+  background-color: rgba(244, 63, 94, 0.1);
   color: var(--error);
 }
 
@@ -306,16 +306,30 @@ html.user-logged-out .logged-in-only {
   to { opacity: 1; transform: translateX(0); }
 }
 
-/* Hero */
+/* Hero con Video de Fondo - Tamaño aumentado para aprovechar el video */
 .hero {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3)), url('../images/bmwx6.jpg');
-  background-size: cover;
-  background-position: center;
-  color: white;
-  padding: 7rem 0;
   position: relative;
+  color: white;
+  padding: 0; /* Eliminamos el padding para maximizar espacio */
+  overflow: hidden;
+  height: 100vh; /* Altura completa de la pantalla */
+  min-height: 700px; /* Altura mínima mayor */
+  display: flex;
+  align-items: center;
 }
 
+/* Video de fondo con mejor posicionamiento */
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Overlay más sutil para apreciar mejor el video */
 .hero::before {
   content: '';
   position: absolute;
@@ -323,40 +337,44 @@ html.user-logged-out .logged-in-only {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3));
   z-index: 1;
 }
 
+/* Mejorar diseño del contenido */
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 650px;
+  max-width: 700px; /* Un poco más ancho */
   margin: 0 auto;
   text-align: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.3); /* Fondo sutil para mejorar legibilidad */
+  border-radius: 10px;
+  backdrop-filter: blur(5px); /* Efecto de desenfoque para mejor contraste */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos más grandes */
+.hero h1 {
+  font-size: 3.5rem; /* Texto más grande */
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
 }
 
 .hero-subtitle {
-  display: inline-block;
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 0.4rem 1rem;
-  border-radius: 100px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 1.5rem;
+  font-size: 1.4rem; /* Subtítulo más grande */
 }
 
-.hero h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 1.5rem;
-}
-
-.hero h1 .highlight {
-  color: var(--secondary);
-  position: relative;
-}
-
+/* Versión responsive para dispositivos móviles */
+@media (max-width: 768px) {
+  .hero {
+    min-height: 600px;
+    height: 90vh;
+  }
+  
+  .hero-content {
+    max-width: 90%;
 .hero p {
   font-size: 1.1rem;
   margin-bottom: 2rem;
@@ -412,12 +430,12 @@ html.user-logged-out .logged-in-only {
 }
 
 .btn-secondary {
-  background-color: rgba(61, 102, 245, 0.1);
+  background-color: rgba(10, 77, 104, 0.1);
   color: var(--primary);
 }
 
 .btn-secondary:hover {
-  background-color: rgba(61, 102, 245, 0.2);
+  background-color: rgba(10, 77, 104, 0.2);
 }
 
 .btn-light {
@@ -479,7 +497,7 @@ section {
 
 .section-tag {
   display: inline-block;
-  background-color: rgba(61, 102, 245, 0.1);
+  background-color: rgba(10, 77, 104, 0.1);
   color: var(--primary);
   padding: 0.4rem 1rem;
   border-radius: 100px;
@@ -722,19 +740,50 @@ section {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
+  position: relative;
 }
 
+#testimonials {
+  margin-bottom: 120px; /* Mayor espacio antes del footer */
+  position: relative;
+  z-index: 10;
+  padding: 4rem 0;
+}
+
+/* Mejoras sutiles para las tarjetas de testimonios */
 .testimonial-card {
   background-color: var(--bg-white);
   border-radius: var(--radius-lg);
   padding: 1.8rem;
-  box-shadow: var(--shadow);
-  transition: var(--transition);
+  /* Sombra mejorada con múltiples capas para más profundidad */
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -2px rgba(0, 0, 0, 0.03),
+    0 0 0 1px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Efecto hover mejorado */
 .testimonial-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-5px);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.06),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(0, 0, 0, 0.02);
+}
+
+/* Brillo sutil en la parte superior */
+.testimonial-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, var(--secondary), var(--primary));
+  opacity: 0.7;
 }
 
 .testimonial-rating {
@@ -762,6 +811,9 @@ section {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
+  /* Borde sutil alrededor de la imagen */
+  border: 2px solid white;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
 }
 
 .testimonial-author h4 {
@@ -774,277 +826,22 @@ section {
   color: var(--text-light);
 }
 
-/* ==========================================================================
-   Footer Styles
-   ========================================================================== */
-
-footer {
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-    color: #fff;
-    padding: 4rem 0 1.5rem 0;
-    margin-top: 5rem;
-    position: relative;
-    z-index: 1;
+/* Asegurar que el contenedor principal se expanda correctamente */
+main, .main-content {
+  flex: 1 0 auto; /* Esto ayuda con el layout flex */
+  position: relative;
+  z-index: 5; /* Por encima del footer */
 }
 
-/* Decoración de onda superior para el footer */
-footer::before {
-    content: '';
-    position: absolute;
-    top: -70px;
-    left: 0;
-    width: 100%;
-    height: 70px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z' fill='%234361ee'%3E%3C/path%3E%3C/svg%3E");
-    background-size: cover;
-    background-position: center;
-    z-index: -1;
+/* Añadir justo antes del footer en tu HTML */
+.footer-spacer {
+  height: 50px; /* Espaciador para separar contenido del footer */
 }
 
-footer .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 3rem;
-    padding: 0 1.5rem;
-    max-width: 1280px;
-    margin: 0 auto;
+.footer {
+  background-color: var(--bg-light);
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--text-light);
 }
 
-.footer-column {
-    display: flex;
-    flex-direction: column;
-}
-
-.footer-column h3 {
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    position: relative;
-    padding-bottom: 0.8rem;
-}
-
-.footer-column h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 40px;
-    height: 3px;
-    background-color: var(--secondary);
-    border-radius: 3px;
-}
-
-.footer-column .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: white;
-    margin-bottom: 1.5rem;
-    text-decoration: none;
-}
-
-.footer-column .logo i {
-    color: var(--secondary);
-}
-
-.footer-column p {
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.7;
-    margin-bottom: 2rem;
-}
-
-.footer-column ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-column ul li {
-    margin-bottom: 1rem;
-}
-
-.footer-column ul li a {
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    transition: all 0.2s ease;
-}
-
-.footer-column ul li a:hover {
-    color: white;
-    transform: translateX(5px);
-}
-
-.footer-column ul li a i {
-    margin-right: 10px;
-    font-size: 0.8rem;
-}
-
-.footer-column ul li i {
-    margin-right: 10px;
-    color: var(--secondary);
-}
-
-.social-icons {
-    display: flex;
-    gap: 15px;
-}
-
-.social-icons a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.social-icons a:hover {
-    background-color: var(--secondary);
-    transform: translateY(-3px);
-}
-
-.footer-bottom {
-    text-align: center;
-    margin-top: 4rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9rem;
-}
-
-.payment-methods {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.payment-methods img {
-    height: 30px;
-    background-color: white;
-    padding: 5px;
-    border-radius: 5px;
-}
-
-@media (max-width: 768px) {
-    footer {
-        padding: 3rem 0 1.5rem 0;
-        margin-top: 3rem;
-    }
-    
-    footer::before {
-        height: 50px;
-        top: -50px;
-    }
-    
-    footer .container {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-    
-    .footer-column h3::after {
-        left: 0;
-        transform: none;
-    }
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-  .hero h1 {
-    font-size: 2.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  header {
-    height: auto;
-  }
-  
-  header .container {
-    padding: 1rem 2rem;
-    height: auto;
-  }
-  
-  .menu-toggle {
-    display: block;
-  }
-  
-  nav {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: var(--bg-white);
-    padding: 1rem;
-    border-top: 1px solid var(--border);
-    box-shadow: var(--shadow-md);
-    display: none;
-  }
-  
-  nav.active {
-    display: block;
-  }
-  
-  nav ul {
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: stretch;
-  }
-  
-  nav ul li {
-    width: 100%;
-  }
-  
-  nav ul li a {
-    width: 100%;
-  }
-  
-  .dropdown-content {
-    position: static;
-    box-shadow: none;
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-    margin-top: 0.5rem;
-    border: none;
-    border-left: 3px solid var(--border);
-    padding-left: 1rem;
-    display: none;
-  }
-  
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
-  
-  .hero {
-    padding: 4rem 0;
-  }
-  
-  .hero h1 {
-    font-size: 2rem;
-  }
-  
-  .hero-buttons {
-    flex-direction: column;
-  }
-  
-  .products-container, 
-  .categories-container,
-  .testimonials-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .footer-bottom {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-}
