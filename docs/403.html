@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Denegado - LuxMarket</title>
+    <meta name="description" content="Acceso denegado - No tienes permisos para esta página">
+    
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/error.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/15.png">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i>
+                <span>LuxMarket</span>
+            </a>
+            <nav>
+                <ul>
+                    <!-- Para usuarios no autenticados -->
+                    <li class="logged-out-only"><a href="login.html"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
+                    <li class="logged-out-only"><a href="register.html"><i class="fas fa-user-plus"></i> Registrarse</a></li>
+
+                    <!-- Para usuarios autenticados -->
+                    <li class="logged-in-only dropdown">
+                        <a href="#"><i class="fas fa-user"></i> <span class="user-name">Usuario</span></a>
+                        <div class="dropdown-content">
+                            <a href="profile.html"><i class="fas fa-user-circle"></i> Mi Perfil</a>
+                            <a href="orders.html"><i class="fas fa-shopping-bag"></i> Mis Pedidos</a>
+                            <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+                        </div>
+                    </li>
+
+                    <!-- Solo para administradores -->
+                    <li class="admin-only">
+                        <a href="admin/dashboard.html"><i class="fas fa-cog"></i> Admin</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="error-container">
+                <div class="error-icon">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <h1>403 - Acceso Denegado</h1>
+                <p>No tienes permisos para acceder a esta página.</p>
+                <p class="error-message">Esta sección está reservada para administradores.</p>
+                <div class="error-actions">
+                    <a href="index.html" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Ir al Inicio
+                    </a>
+                    <a href="login.html" class="btn btn-light">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <!-- Tu footer existente -->
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/logs.js"></script>
+    <script src="js/users.js"></script>
+    <script src="js/cart-counter.js"></script>
+    <!-- Añadir justo antes del cierre del body -->
+    <script src="js/auth.js"></script>
+
+</body>
+</html>

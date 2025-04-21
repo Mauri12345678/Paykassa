@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - LuxMarket</title>
+    <meta name="description" content="Panel de control administrativo de LuxMarket">
+    
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../images/15.png">
+</head>
+<body class="admin-panel">
+    <header class="admin-header">
+        <div class="container">
+            <a href="../index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i>
+                <span>LuxMarket Admin</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Tienda</a></li>
+                    <li class="logged-in-only dropdown">
+                        <a href="#"><i class="fas fa-user"></i> <span class="user-name">Admin</span></a>
+                        <div class="dropdown-content">
+                            <a href="../profile.html"><i class="fas fa-id-card"></i> Mi Perfil</a>
+                            <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-user">
+                <div class="admin-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="admin-user-info">
+                    <div class="user-name">Admin</div>
+                    <div class="user-role">Administrador</div>
+                </div>
+            </div>
+            
+            <nav class="admin-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html" class="active">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="products.html">
+                            <i class="fas fa-box"></i>
+                            <span>Productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="orders.html">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Pedidos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="users.html">
+                            <i class="fas fa-users"></i>
+                            <span>Usuarios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="logs.html">
+                            <i class="fas fa-list-alt"></i>
+                            <span>Logs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="settings.html">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="admin-content">
+            <div class="admin-page-header">
+                <h1>Dashboard</h1>
+                <div class="admin-breadcrumb">
+                    <a href="dashboard.html">Admin</a> /
+                    <span>Dashboard</span>
+                </div>
+            </div>
+            
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-card-icon orange">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">354</div>
+                        <div class="stat-card-title">Total de Pedidos</div>
+                    </div>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> 12.5%
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon blue">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">$25,841</div>
+                        <div class="stat-card-title">Ingresos</div>
+                    </div>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> 8.2%
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon green">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">128</div>
+                        <div class="stat-card-title">Nuevos Usuarios</div>
+                    </div>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> 15.3%
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-icon purple">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="stat-card-info">
+                        <div class="stat-card-value">56</div>
+                        <div class="stat-card-title">Productos</div>
+                    </div>
+                    <div class="stat-card-change negative">
+                        <i class="fas fa-arrow-down"></i> 3.7%
+                    </div>
+                </div>
+            </div>
+            
+            <div class="admin-cards">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h2>Pedidos recientes</h2>
+                        <a href="orders.html" class="btn btn-sm">Ver todos</a>
+                    </div>
+                    <div class="admin-card-body">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#ORD-1234</td>
+                                    <td>Juan Pérez</td>
+                                    <td>21/04/2023</td>
+                                    <td>$285.00</td>
+                                    <td><span class="status completed">Completado</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-1235</td>
+                                    <td>María García</td>
+                                    <td>20/04/2023</td>
+                                    <td>$124.50</td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-1236</td>
+                                    <td>Carlos López</td>
+                                    <td>19/04/2023</td>
+                                    <td>$435.20</td>
+                                    <td><span class="status processing">En proceso</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-1237</td>
+                                    <td>Ana Martínez</td>
+                                    <td>18/04/2023</td>
+                                    <td>$95.00</td>
+                                    <td><span class="status completed">Completado</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-1238</td>
+                                    <td>Roberto Sánchez</td>
+                                    <td>17/04/2023</td>
+                                    <td>$310.75</td>
+                                    <td><span class="status cancelled">Cancelado</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h2>Actividad reciente</h2>
+                        <a href="logs.html" class="btn btn-sm">Ver todos</a>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon blue">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <div class="activity-text">Nuevo usuario registrado</div>
+                                    <div class="activity-time">Hace 15 minutos</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon green">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <div class="activity-text">Nuevo pedido #ORD-1239</div>
+                                    <div class="activity-time">Hace 45 minutos</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon orange">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <div class="activity-text">Producto actualizado: Reloj Elegante</div>
+                                    <div class="activity-time">Hace 1 hora</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon red">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <div class="activity-text">Intento de acceso no autorizado</div>
+                                    <div class="activity-time">Hace 3 horas</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon purple">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <div class="activity-text">Nueva categoría añadida: Accesorios Premium</div>
+                                    <div class="activity-time">Hace 5 horas</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/logs.js"></script>
+    <script src="../js/users.js"></script>
+</body>
+</html>

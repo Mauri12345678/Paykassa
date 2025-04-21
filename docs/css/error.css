@@ -1,0 +1,65 @@
+/* Estilos para páginas de error */
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5rem 0;
+    min-height: calc(100vh - 400px);
+}
+
+.error-icon {
+    font-size: 6rem;
+    color: #dd2c00;
+    margin-bottom: 2rem;
+    animation: pulse 2s infinite;
+}
+
+.error-container h1 {
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.error-container p {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    max-width: 600px;
+}
+
+.error-message {
+    background-color: #ffebee;
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
+    margin: 2rem 0;
+    color: #c62828;
+    font-weight: 500;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 576px) {
+    .error-container h1 {
+        font-size: 2rem;
+    }
+    
+    .error-icon {
+        font-size: 5rem;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+    }
+}

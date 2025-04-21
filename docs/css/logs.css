@@ -319,6 +319,28 @@ body.logs-page footer {
     border-top-right-radius: 24px;
 }
 
+body.logs-page .footer-columns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+}
+
+body.logs-page .footer-column {
+    flex: 1 1 250px;
+    min-width: 250px;
+}
+
+body.logs-page .footer-column h3 {
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 0.8rem;
+}
+
 body.logs-page .footer-column h3::after {
     content: "";
     position: absolute;
@@ -328,6 +350,36 @@ body.logs-page .footer-column h3::after {
     height: 3px;
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 3px;
+}
+
+body.logs-page .footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+body.logs-page .footer-column ul li {
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+}
+
+body.logs-page .footer-column ul li i {
+    margin-right: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    width: 16px;
+    text-align: center;
+}
+
+body.logs-page .footer-column a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+body.logs-page .footer-column a:hover {
+    color: #fff;
+    text-decoration: none;
 }
 
 body.logs-page .social-icons {

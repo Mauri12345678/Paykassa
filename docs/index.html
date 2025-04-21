@@ -85,6 +85,29 @@
     <meta property="og:image" content="images/15.png">
     <meta property="og:url" content="https://mauri12345678.github.io/Paykassa/">
     <meta property="og:type" content="website">
+
+    <!-- Script de prevención de parpadeo de autenticación -->
+    <script>
+        // Comprobar autenticación inmediatamente antes de que el DOM se cargue
+        (function() {
+            // Intentar obtener el usuario actual
+            try {
+                const currentUser = localStorage.getItem('currentUser') ? 
+                    JSON.parse(localStorage.getItem('currentUser')) : null;
+                
+                // Aplicar clase al body según el estado de autenticación
+                document.documentElement.classList.add(currentUser ? 'user-logged-in' : 'user-logged-out');
+                
+                // Si hay un usuario autenticado y es administrador
+                if (currentUser && currentUser.isAdmin) {
+                    document.documentElement.classList.add('user-admin');
+                }
+            } catch (e) {
+                console.error('Error verificando autenticación inicial', e);
+                document.documentElement.classList.add('user-logged-out');
+            }
+        })();
+    </script>
 </head>
 <body>
     <header>
@@ -94,16 +117,22 @@
             </a>
             <nav>
                 <ul>
-                    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-                    <li><a href="product.html"><i class="fas fa-tags"></i> Productos</a></li>
+                    <!-- Elementos siempre visibles -->
+                    <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="product.html"><i class="fas fa-store"></i> Productos</a></li>
                     <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Carrito <span class="cart-count">0</span></a></li>
-                    <li><a href="checkout.html"><i class="fas fa-credit-card"></i> Checkout</a></li>
-
-                    <li class="dropdown">
-                        <a href="#"><i class="fas fa-user"></i> Mi Cuenta</a>
+                    
+                    <!-- Solo para usuarios NO autenticados -->
+                    <li class="logged-out-only"><a href="login.html"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
+                    <li class="logged-out-only"><a href="register.html"><i class="fas fa-user-plus"></i> Registrarse</a></li>
+                    
+                    <!-- Solo para usuarios autenticados -->
+                    <li class="logged-in-only dropdown">
+                        <a href="#"><i class="fas fa-user"></i> <span class="user-name">Usuario</span></a>
                         <div class="dropdown-content">
-                            <a href="logs.html"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
-                            <a href="register.html"><i class="fas fa-user-plus"></i> Registrarse</a>
+                            <a href="profile.html"><i class="fas fa-id-card"></i> Mi Perfil</a>
+                            <a href="orders.html"><i class="fas fa-shopping-bag"></i> Mis Pedidos</a>
+                            <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
                         </div>
                     </li>
                 </ul>
@@ -396,5 +425,6 @@
     <script src="js/main.js"></script>
     <!-- Script común para el contador del carrito -->
     <script src="js/cart-counter.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>
