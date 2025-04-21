@@ -1060,4 +1060,51 @@ html.user-logged-out .logged-out-only {
     display: block;
 }
 
+/* Configuración específica para elementos de navegación */
+nav ul li.logged-in-only {
+    display: none;
+}
+
+nav ul li.logged-out-only {
+    display: list-item;
+}
+
+/* Cuando el usuario está autenticado */
+html.user-logged-in nav ul li.logged-in-only {
+    display: list-item !important;
+}
+
+html.user-logged-in nav ul li.logged-out-only {
+    display: none !important;
+}
+
+/* Cuando el usuario NO está autenticado */
+html.user-logged-out nav ul li.logged-in-only {
+    display: none !important;
+}
+
+html.user-logged-out nav ul li.logged-out-only {
+    display: list-item !important;
+}
+
+/* Control de visibilidad para navegación según autenticación */
+nav ul li.logged-in-only,
+nav ul li.logged-out-only {
+    display: none !important;
+}
+
+html.user-logged-in nav ul li.logged-in-only {
+    display: list-item !important;
+}
+html.user-logged-in nav ul li.logged-out-only {
+    display: none !important;
+}
+
+html.user-logged-out nav ul li.logged-in-only {
+    display: none !important;
+}
+html.user-logged-out nav ul li.logged-out-only {
+    display: list-item !important;
+}
+
 

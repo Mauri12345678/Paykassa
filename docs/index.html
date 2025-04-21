@@ -122,11 +122,10 @@
                     <li><a href="product.html"><i class="fas fa-store"></i> Productos</a></li>
                     <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Carrito <span class="cart-count">0</span></a></li>
                     
-                    <!-- Solo para usuarios NO autenticados -->
+                    <!-- IMPORTANTE: Asegurarse que estas clases estén en el <li>, no en el <a> -->
                     <li class="logged-out-only"><a href="login.html"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
                     <li class="logged-out-only"><a href="register.html"><i class="fas fa-user-plus"></i> Registrarse</a></li>
                     
-                    <!-- Solo para usuarios autenticados -->
                     <li class="logged-in-only dropdown">
                         <a href="#"><i class="fas fa-user"></i> <span class="user-name">Usuario</span></a>
                         <div class="dropdown-content">

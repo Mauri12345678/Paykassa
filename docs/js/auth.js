@@ -8,6 +8,7 @@ const ADMIN_EMAIL = "admin@luxmarket.com"; // Cambia a tu correo de administrado
 
 document.addEventListener('DOMContentLoaded', () => {
     checkAuthState();
+    setupAuthListeners(); // Esta línea falta en tu código
 });
 
 // Comprobar estado de autenticación al cargar cada página
@@ -18,22 +19,44 @@ function checkAuthState() {
     // Depuración
     console.log('Estado de autenticación:', currentUser ? 'Autenticado' : 'No autenticado');
     console.log('Clases en <html>:', document.documentElement.className);
+
+    // Verificación extra para detectar problemas
+    setTimeout(() => {
+        const currentUser = getCurrentUser();
+        const isLoggedIn = !!currentUser;
+        
+        console.group('DIAGNÓSTICO DE NAV');
+        console.log('Estado login:', isLoggedIn ? 'LOGUEADO' : 'NO LOGUEADO');
+        console.log('Clase HTML:', document.documentElement.className);
+        
+        // Verificar elementos visibles que no deberían estarlo
+        const visibleLoggedOut = Array.from(document.querySelectorAll('.logged-out-only'))
+            .filter(el => window.getComputedStyle(el).display !== 'none');
+        const visibleLoggedIn = Array.from(document.querySelectorAll('.logged-in-only'))
+            .filter(el => window.getComputedStyle(el).display !== 'none');
+        
+        if (isLoggedIn && visibleLoggedOut.length > 0) {
+            console.error('ERROR: Elementos de logged-out visibles cuando deberían estar ocultos:', visibleLoggedOut);
+        }
+        
+        if (!isLoggedIn && visibleLoggedIn.length > 0) {
+            console.error('ERROR: Elementos de logged-in visibles cuando deberían estar ocultos:', visibleLoggedIn);
+        }
+        
+        console.groupEnd();
+    }, 500);
 }
 
 // Actualizar la interfaz de navegación basada en el estado de autenticación
 function updateNavigationUI(user) {
     if (user) {
-        // Usuario autenticado
         document.documentElement.classList.add('user-logged-in');
         document.documentElement.classList.remove('user-logged-out');
-        
         // Actualizar el nombre del usuario en el menú
-        const userNameElements = document.querySelectorAll('.user-name');
-        userNameElements.forEach(el => {
+        document.querySelectorAll('.user-name').forEach(el => {
             el.textContent = user.displayName || user.email.split('@')[0];
         });
     } else {
-        // Usuario no autenticado
         document.documentElement.classList.add('user-logged-out');
         document.documentElement.classList.remove('user-logged-in');
     }
