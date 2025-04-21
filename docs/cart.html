@@ -1,25 +1,22 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="user-logged-out">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instrucciones de Transferencia | LuxMarket</title>
+    <title>Carrito de Compras | LuxMarket</title>
+    
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/checkout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Principal -->
+    <link rel="stylesheet" href="css/luxmarket.css">
     <link rel="stylesheet" href="css/cart.css">
+    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/15.png">
-    <style>
-        /* ...tu CSS inline aquí si lo necesitas... */
-    </style>
 </head>
 <body>
     <header>
@@ -28,12 +25,16 @@
                 <i class="fas fa-shopping-bag"></i>
                 <span>LuxMarket</span>
             </a>
+            
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
             <nav>
                 <ul>
                     <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
                     <li><a href="product.html"><i class="fas fa-store"></i> Productos</a></li>
-                    <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Carrito <span class="cart-count">0</span></a></li>
-                    <li><a href="checkout.html"><i class="fas fa-credit-card"></i> Checkout</a></li>
+                    <li><a href="cart.html" class="active"><i class="fas fa-shopping-cart"></i> Carrito <span class="cart-count">0</span></a></li>
                     
                     <!-- Para usuarios no autenticados -->
                     <li class="logged-out-only"><a href="login.html"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
@@ -41,9 +42,9 @@
 
                     <!-- Para usuarios autenticados -->
                     <li class="logged-in-only dropdown">
-                        <a href="#"><i class="fas fa-user"></i> <span class="user-name">Usuario</span></a>
+                        <a href="#"><i class="fas fa-user-circle"></i> <span class="user-name">Usuario</span></a>
                         <div class="dropdown-content">
-                            <a href="profile.html"><i class="fas fa-user-circle"></i> Mi Perfil</a>
+                            <a href="profile.html"><i class="fas fa-id-card"></i> Mi Perfil</a>
                             <a href="orders.html"><i class="fas fa-shopping-bag"></i> Mis Pedidos</a>
                             <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
                         </div>
@@ -57,94 +58,289 @@
             </nav>
         </div>
     </header>
+
+    <section class="cart-hero">
+        <div class="container">
+            <div class="cart-hero-content">
+                <h1>Tu carrito de compras</h1>
+                <div class="cart-progress">
+                    <div class="progress-step active">
+                        <span class="step-number">1</span>
+                        <span class="step-name">Carrito</span>
+                    </div>
+                    <div class="progress-bar"></div>
+                    <div class="progress-step">
+                        <span class="step-number">2</span>
+                        <span class="step-name">Envío</span>
+                    </div>
+                    <div class="progress-bar"></div>
+                    <div class="progress-step">
+                        <span class="step-number">3</span>
+                        <span class="step-name">Pago</span>
+                    </div>
+                    <div class="progress-bar"></div>
+                    <div class="progress-step">
+                        <span class="step-number">4</span>
+                        <span class="step-name">Confirmación</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <main>
         <div class="container">
-            <h1>Tu carrito</h1>
             <div class="cart-container">
                 <div class="cart-items">
-                    <h2>Productos en tu carrito</h2>
-                    <div id="cart-empty" style="display:none;">
-                        <i class="fas fa-shopping-cart"></i>
-                        <h3>El carrito está vacío</h3>
-                        <p>Agrega productos para verlos aquí.</p>
+                    <div class="cart-header">
+                        <h2>Productos en tu carrito</h2>
+                        <button id="clear-cart" class="btn btn-text">
+                            <i class="fas fa-trash-alt"></i> Vaciar carrito
+                        </button>
                     </div>
-                    <div id="cart-list"></div>
+                    
+                    <div id="cart-empty" class="cart-empty">
+                        <div class="cart-empty-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h3>Tu carrito está vacío</h3>
+                        <p>Parece que aún no has añadido productos a tu carrito.</p>
+                        <a href="product.html" class="btn btn-primary">Explorar productos</a>
+                    </div>
+                    
+                    <div id="cart-list">
+                        <!-- Ejemplo de producto en carrito 1 -->
+                        <div class="cart-item" data-id="1">
+                            <div class="item-image">
+                                <img src="images/products/headphones.jpg" alt="Auriculares">
+                            </div>
+                            <div class="item-details">
+                                <h3 class="item-name">Auriculares Bluetooth Sony WH-1000XM4</h3>
+                                <div class="item-meta">
+                                    <span class="item-category">Audio</span>
+                                    <span class="item-sku">SKU: AUD-SON-X4</span>
+                                </div>
+                                <div class="item-price">
+                                    <span class="current-price">$299.99</span>
+                                    <span class="original-price">$349.99</span>
+                                </div>
+                                <div class="item-actions desktop">
+                                    <button class="remove-item"><i class="fas fa-trash"></i> Eliminar</button>
+                                    <button class="save-for-later"><i class="far fa-heart"></i> Guardar</button>
+                                </div>
+                            </div>
+                            <div class="item-quantity">
+                                <button class="quantity-btn minus"><i class="fas fa-minus"></i></button>
+                                <input type="number" class="quantity-input" value="1" min="1" max="10">
+                                <button class="quantity-btn plus"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="item-total">
+                                <span>$299.99</span>
+                            </div>
+                            <div class="item-actions mobile">
+                                <button class="remove-item"><i class="fas fa-trash"></i></button>
+                                <button class="save-for-later"><i class="far fa-heart"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Ejemplo de producto en carrito 2 -->
+                        <div class="cart-item" data-id="2">
+                            <div class="item-image">
+                                <img src="images/products/smartwatch.jpg" alt="Smartwatch">
+                            </div>
+                            <div class="item-details">
+                                <h3 class="item-name">Smartwatch Galaxy Watch4 Classic</h3>
+                                <div class="item-meta">
+                                    <span class="item-category">Relojes</span>
+                                    <span class="item-sku">SKU: WAT-SAM-W4C</span>
+                                </div>
+                                <div class="item-price">
+                                    <span class="current-price">$199.99</span>
+                                    <span class="original-price">$249.99</span>
+                                </div>
+                                <div class="item-actions desktop">
+                                    <button class="remove-item"><i class="fas fa-trash"></i> Eliminar</button>
+                                    <button class="save-for-later"><i class="far fa-heart"></i> Guardar</button>
+                                </div>
+                            </div>
+                            <div class="item-quantity">
+                                <button class="quantity-btn minus"><i class="fas fa-minus"></i></button>
+                                <input type="number" class="quantity-input" value="2" min="1" max="10">
+                                <button class="quantity-btn plus"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="item-total">
+                                <span>$399.98</span>
+                            </div>
+                            <div class="item-actions mobile">
+                                <button class="remove-item"><i class="fas fa-trash"></i></button>
+                                <button class="save-for-later"><i class="far fa-heart"></i></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="cart-summary">
-                    <h2>Resumen de compra</h2>
-                    <div class="summary-details">
+                <div class="cart-sidebar">
+                    <div class="order-summary">
+                        <h2>Resumen del pedido</h2>
                         <div class="summary-row">
-                            <span>Subtotal</span>
-                            <span id="subtotal">$0.00</span>
+                            <span>Subtotal (3 productos)</span>
+                            <span id="subtotal">$699.97</span>
                         </div>
+                        <div class="summary-row">
+                            <span>Descuento</span>
+                            <span id="discount" class="discount">-$99.98</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Envío estimado</span>
+                            <span id="shipping">$15.00</span>
+                        </div>
+                        <div class="summary-divider"></div>
                         <div class="summary-row total">
-                            <span>Total</span>
-                            <span id="total">$0.00</span>
+                            <span>Total (IVA incluido)</span>
+                            <span id="total">$614.99</span>
+                        </div>
+                        <button id="checkout-button" class="btn btn-primary btn-block">
+                            Proceder al checkout
+                        </button>
+                        <div class="checkout-secure">
+                            <i class="fas fa-lock"></i> Pago 100% seguro
                         </div>
                     </div>
                     
-                    <div class="checkout-actions">
-                        <button id="checkout-button" class="btn btn-primary">Finalizar compra</button>
-                        <button id="clear-cart" class="btn btn-secondary">Vaciar carrito</button>
+                    <div class="promo-code-section">
+                        <h3>Código promocional</h3>
+                        <form class="promo-form">
+                            <input type="text" placeholder="Ingresa tu código" class="promo-input">
+                            <button type="submit" class="btn btn-outline">Aplicar</button>
+                        </form>
+                    </div>
+                    
+                    <div class="payment-methods-accepted">
+                        <p>Aceptamos</p>
+                        <div class="payment-icons">
+                            <img src="images/payment/visa.png" alt="Visa">
+                            <img src="images/payment/mastercard.png" alt="Mastercard">
+                            <img src="images/payment/amex.png" alt="American Express">
+                            <img src="images/payment/paypal.png" alt="PayPal">
+                        </div>
+                    </div>
+                    
+                    <div class="need-help">
+                        <h3>¿Necesitas ayuda?</h3>
+                        <p>Nuestro equipo de atención al cliente está disponible 24/7.</p>
+                        <a href="#" class="help-link"><i class="fas fa-headset"></i> Contactar soporte</a>
                     </div>
                 </div>
             </div>
+            
+            <section class="recommended-products">
+                <h2>También te podría interesar</h2>
+                <div class="products-slider">
+                    <!-- Producto recomendado 1 -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="images/products/camera.jpg" alt="Cámara">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Cámara Mirrorless Sony Alpha a7 III</h3>
+                            <div class="product-price">$1,999.99</div>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Añadir</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Producto recomendado 2 -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="images/products/speaker.jpg" alt="Altavoz">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Altavoz Bluetooth Sonos Move</h3>
+                            <div class="product-price">$399.99</div>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Añadir</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Producto recomendado 3 -->
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="images/products/tablet.jpg" alt="Tablet">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">iPad Pro 12.9" (2023)</h3>
+                            <div class="product-price">$1,099.99</div>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Añadir</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
+
     <footer>
         <div class="container">
-            <div class="footer-columns">
-                <div class="footer-column">
-                    <h3>LuxMarket</h3>
-                    <p>Tu destino para compras online de calidad. Productos selectos para ti.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Enlaces rápidos</h3>
-                    <ul>
-                        <li><a href="index.html">Inicio</a></li>
-                        <li><a href="product.html">Productos</a></li>
-                        <li><a href="cart.html">Carrito</a></li>
-                        <li><a href="checkout.html">Checkout</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Centro de ayuda</h3>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Devoluciones</a></li>
-                        <li><a href="contact.html">Contacto</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Contacto</h3>
-                    <ul class="contact-info">
-                        <li><i class="fas fa-map-marker-alt"></i> Calle Principal, 123, Ciudad</li>
-                        <li><i class="fas fa-phone"></i> +1 234 567 890</li>
-                        <li><i class="fas fa-envelope"></i> info@luxmarket.com</li>
-                    </ul>
+            <div class="footer-column">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>LuxMarket</span>
+                </a>
+                <p>Ofrecemos productos de alta calidad a precios competitivos. Tu satisfacción es nuestra prioridad.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 LuxMarket. Todos los derechos reservados.</p>
-                <div class="payment-methods">
-                    <img src="images/payment-methods.png" alt="Métodos de pago">
-                </div>
+            
+            <div class="footer-column">
+                <h3>Enlaces rápidos</h3>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+                    <li><a href="product.html"><i class="fas fa-chevron-right"></i> Productos</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Sobre nosotros</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Contacto</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Información</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Envíos y entregas</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Devoluciones</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Política de privacidad</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Términos y condiciones</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Av. Corrientes 1234, CABA</li>
+                    <li><i class="fas fa-phone-alt"></i> +54 11 1234-5678</li>
+                    <li><i class="fas fa-envelope"></i> info@luxmarket.com</li>
+                    <li><i class="fas fa-clock"></i> Lun-Vie: 9am - 6pm</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 LuxMarket. Todos los derechos reservados.</p>
+            <div class="payment-methods">
+                <img src="images/payment/visa.png" alt="Visa">
+                <img src="images/payment/mastercard.png" alt="Mastercard">
+                <img src="images/payment/paypal.png" alt="PayPal">
+                <img src="images/payment/amex.png" alt="American Express">
             </div>
         </div>
     </footer>
+
+    <!-- Scripts -->
+    <script src="js/notifications.js"></script>
     <script src="js/cart.js"></script>
-    <!-- Script común para el contador del carrito -->
     <script src="js/cart-counter.js"></script>
-    <!-- Añadir justo antes del cierre del body -->
-    <script src="js/auth.js"></script>
-    <script src="js/analytics.js"></script>
+    <script src="js/auth-manager.js"></script>
     <script src="js/logout-fix.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
