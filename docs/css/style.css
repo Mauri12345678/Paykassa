@@ -193,6 +193,26 @@ nav ul li.dropdown {
     border-bottom: 8px solid var(--primary-color);
 }
 
+/* Control de visibilidad para navegación según autenticación */
+nav ul li.logged-in-only,
+nav ul li.logged-out-only {
+    display: none !important;
+}
+
+html.user-logged-in nav ul li.logged-in-only {
+    display: list-item !important;
+}
+html.user-logged-in nav ul li.logged-out-only {
+    display: none !important;
+}
+
+html.user-logged-out nav ul li.logged-in-only {
+    display: none !important;
+}
+html.user-logged-out nav ul li.logged-out-only {
+    display: list-item !important;
+}
+
 /* Asegura que no haya superposición en las secciones */
 section {
   position: relative;

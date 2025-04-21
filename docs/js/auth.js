@@ -138,11 +138,11 @@ function handleLogin(e) {
     
     // Guardar sesión en localStorage
     localStorage.setItem('currentUser', JSON.stringify(sessionUser));
-    console.log("Usuario autenticado exitosamente:", sessionUser);
+    console.log("Usuario autenticado:", sessionUser);
     
-    // Redirigir (con recarga completa)
-    const redirectURL = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
-    window.location.replace(redirectURL);
+    // Redirigir con recarga completa
+    const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
+    window.location.replace(redirectUrl);
 }
 
 // Manejar envío de formulario de registro

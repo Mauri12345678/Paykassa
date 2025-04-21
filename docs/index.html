@@ -106,6 +106,13 @@
                 console.error('Error verificando autenticación inicial', e);
                 document.documentElement.classList.add('user-logged-out');
             }
+
+            console.log("Estado de autenticación:", {
+                isLoggedIn: !!localStorage.getItem('currentUser'),
+                htmlClasses: document.documentElement.className,
+                loggedInElements: document.querySelectorAll('.logged-in-only').length,
+                loggedOutElements: document.querySelectorAll('.logged-out-only').length
+            });
         })();
     </script>
 </head>
@@ -123,13 +130,13 @@
                     <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Carrito <span class="cart-count">0</span></a></li>
                     
                     <!-- IMPORTANTE: Asegurarse que estas clases estén en el <li>, no en el <a> -->
-                    <li class="logged-out-only"><a href="login.html"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
-                    <li class="logged-out-only"><a href="register.html"><i class="fas fa-user-plus"></i> Registrarse</a></li>
+                    <li class="logged-out-only"><a href="login.html">Iniciar Sesión</a></li>
+                    <li class="logged-out-only"><a href="register.html">Registrarse</a></li>
                     
                     <li class="logged-in-only dropdown">
                         <a href="#"><i class="fas fa-user"></i> <span class="user-name">Usuario</span></a>
                         <div class="dropdown-content">
-                            <a href="profile.html"><i class="fas fa-id-card"></i> Mi Perfil</a>
+                            <a href="profile.html"><i class="fas fa-user-circle"></i> Mi Perfil</a>
                             <a href="orders.html"><i class="fas fa-shopping-bag"></i> Mis Pedidos</a>
                             <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
                         </div>
