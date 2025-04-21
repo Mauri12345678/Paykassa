@@ -12,7 +12,10 @@
 /* 1. Variables & Base Styles
    ========================================================================== */
 :root {
-  --primary-color: #1e88e5;
+  /* Actualizar paleta de colores */
+  --primary-color: #4361ee;
+  --secondary-color: #f72585;
+  --accent-color: #4cc9f0;
   --primary-dark: #1976d2;
   --primary-light: #bbdefb;
   --text-color: #222;
@@ -26,6 +29,73 @@
   --transition: all 0.2s ease;
   --container-max-width: 1200px;
   --card-width: 320px;
+}
+
+/* Header modernizado */
+header {
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+header .logo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+}
+
+header .logo i {
+    color: var(--secondary-color);
+    font-size: 1.2rem;
+    margin-right: 5px;
+}
+
+/* Corrige los estilos del nav */
+nav ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  margin-left: 1.5rem;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+nav ul li a i {
+  margin-right: 5px;
+}
+
+nav ul li a:hover, 
+nav ul li a.active {
+  background-color: rgba(67, 97, 238, 0.1);
+  color: var(--primary-color);
 }
 
 body {

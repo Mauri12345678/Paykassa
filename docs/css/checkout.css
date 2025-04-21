@@ -43,6 +43,125 @@ body {
     scroll-behavior: smooth;
 }
 
+/* Header modernizado */
+header {
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    flex-wrap: nowrap !important;
+}
+
+/* Eliminar la hamburguesa del nav en checkout */
+
+/* Eliminar el botón de menú hamburguesa si existe */
+.menu-toggle,
+.hamburger-icon,
+.navbar-toggle,
+.mobile-menu-button,
+.nav-toggle {
+    display: none !important;
+}
+
+/* Asegurar que el menú de navegación siempre sea visible */
+.main-navigation,
+.nav-items,
+.nav-menu,
+.main-menu {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    position: static !important;
+}
+
+/* Corregir los estilos del nav para mantenerlos visibles */
+nav ul {
+    display: flex !important;
+    position: static !important;
+    background: none !important;
+    box-shadow: none !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+nav ul {
+  display: flex !important;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: static;
+  width: auto;
+  background: transparent;
+}
+
+nav ul li {
+  margin-left: 1.5rem;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+nav ul li a i {
+  margin-right: 5px;
+}
+
+nav ul li a:hover, 
+nav ul li a.active {
+  background-color: rgba(67, 97, 238, 0.1);
+  color: var(--primary-color);
+}
+
+/* Eliminar cualquier efecto de superposición para menú móvil */
+.menu-overlay,
+.mobile-overlay {
+    display: none !important;
+}
+
+/* Eliminar estilos específicos de hamburguesa */
+[class*="hamburger"],
+[id*="hamburger"],
+[class*="menu-icon"],
+[id*="menu-icon"] {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    /* Asegurarse que en mobile también se quita la hamburguesa */
+    .mobile-menu-toggle,
+    .menu-icon,
+    .nav-icon {
+        display: none !important;
+    }
+    
+    /* Siempre mostrar links en móvil */
+    nav ul {
+        display: flex !important;
+        flex-direction: row;
+        position: static;
+        width: auto;
+        background: transparent;
+    }
+}
+
 /* Layout */
 .checkout-container {
     display: grid;

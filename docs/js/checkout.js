@@ -885,4 +885,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicializar al cargar la página
     loadCartItems();
+
+    // Función para añadir al carrito
+    function addToCart(productId) {
+        // Tu código para añadir al carrito
+        
+        // Después actualizar el contador
+        updateCartCount();
+    }
 });

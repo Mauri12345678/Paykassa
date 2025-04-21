@@ -532,3 +532,42 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(style);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateCartCount();
+    loadCartItems();
+    setupEventListeners();
+    
+    // Escuchar cambios en localStorage de otras pestañas
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'cartItems') {
+            updateCartCount();
+            loadCartItems();
+        }
+    });
+});
+
+function updateCartCount() {
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const cartCountElements = document.querySelectorAll('.cart-count');
+    
+    // Actualizamos todos los elementos con clase .cart-count en la página
+    cartCountElements.forEach(cartCount => {
+        if (cartItems.length > 0) {
+            cartCount.textContent = cartItems.length;
+            cartCount.style.display = 'inline-flex';
+        } else {
+            cartCount.textContent = '0';
+            cartCount.style.display = 'none';
+        }
+    });
+}
+
+function addToCart(productId) {
+    // Tu código para añadir al carrito
+    
+    // Después actualizar el contador
+    updateCartCount();
+}
+
+// Resto de tu código cart.js...

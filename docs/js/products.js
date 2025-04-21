@@ -58,15 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.classList.contains('add-to-cart') || e.target.closest('.add-to-cart')) {
             const btn = e.target.closest('.add-to-cart');
             const id = parseInt(btn.getAttribute('data-id'));
-            const product = products.find(p => p.id === id);
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const existing = cart.find(item => item.id === id);
-            if (existing) {
-                existing.quantity += 1;
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
-            localStorage.setItem('cart', JSON.stringify(cart));
+            addToCart(id);
             // Feedback visual
             btn.classList.add('added');
             btn.innerHTML = '<i class="fas fa-check"></i> ¡Agregado!';
@@ -77,3 +69,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existing = cart.find(item => item.id === productId);
+    if (existing) {
+        existing.quantity += 1;
+    } else {
+        cart.push({ ...product, quantity: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+}
+
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const count = cart.reduce((total, item) => total + item.quantity, 0);
+    const cartCountElement = document.querySelector('.cart-count');
+    if (cartCountElement) {
+        cartCountElement.textContent = count;
+    }
+}

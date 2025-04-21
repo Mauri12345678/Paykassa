@@ -2,6 +2,14 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     loadProducts();
+    updateCartCount();
+    
+    // Escuchar cambios en localStorage de otras pestañas
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'cartItems') {
+            updateCartCount();
+        }
+    });
 });
 
 function loadProducts() {
@@ -15,6 +23,8 @@ function loadProducts() {
 
 function displayProducts(products) {
     const productContainer = document.getElementById('product-list');
+    if (!productContainer) return; // Si no estamos en la página de productos, salimos
+    
     products.forEach(product => {
         const productElement = document.createElement('div');
         productElement.classList.add('product');
@@ -30,6 +40,44 @@ function displayProducts(products) {
 }
 
 function addToCart(productId) {
-    // Logic to add product to cart
-    console.log(`Product ${productId} added to cart`);
+    // Tu código para añadir al carrito
+    
+    // Después actualizar el contador
+    updateCartCount();
+}
+
+function updateCartCount() {
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const cartCountElements = document.querySelectorAll('.cart-count');
+    
+    // Actualizamos todos los elementos con clase .cart-count en la página
+    cartCountElements.forEach(cartCount => {
+        if (cartItems.length > 0) {
+            cartCount.textContent = cartItems.length;
+            cartCount.style.display = 'inline-flex';
+        } else {
+            cartCount.textContent = '0';
+            cartCount.style.display = 'none';
+        }
+    });
+}
+
+// Función para mostrar notificaciones
+function showNotification(message) {
+    // Crear la notificación si no existe
+    let notification = document.querySelector('.cart-notification');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.className = 'cart-notification';
+        document.body.appendChild(notification);
+    }
+    
+    // Establecer mensaje y mostrar
+    notification.textContent = message;
+    notification.classList.add('show');
+    
+    // Quitar después de 2 segundos
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 2000);
 }
