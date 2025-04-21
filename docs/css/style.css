@@ -135,6 +135,54 @@ nav ul li.dropdown {
     position: relative;
 }
 
+/* Mejorar el comportamiento del dropdown */
+.dropdown:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 20px; /* Espacio adicional entre elemento y dropdown */
+    z-index: 999;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px); /* Ajustado para tener en cuenta el área extra */
+    right: 0;
+    background-color: white;
+    min-width: 220px; /* Un poco más ancho */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1000;
+    padding: 0.75rem;
+    transition: opacity 0.2s, transform 0.2s;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none; /* Importante para evitar problemas de hover */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Mejorar comportamiento de los enlaces del dropdown */
+.dropdown-content a {
+    padding: 0.8rem 1rem;
+    margin-bottom: 2px;
+    border-radius: 6px;
+}
+
+/* Darle más espacio al hover */
+.dropdown-content a:hover {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: var(--primary-color);
+}
+
 .logged-in-only.dropdown {
     display: block;
 }
@@ -194,23 +242,12 @@ nav ul li.dropdown {
 }
 
 /* Control de visibilidad para navegación según autenticación */
-nav ul li.logged-in-only,
-nav ul li.logged-out-only {
-    display: none !important;
+html.user-logged-in .logged-out-only {
+    display: none !important;  
 }
 
-html.user-logged-in nav ul li.logged-in-only {
-    display: list-item !important;
-}
-html.user-logged-in nav ul li.logged-out-only {
+html.user-logged-out .logged-in-only {
     display: none !important;
-}
-
-html.user-logged-out nav ul li.logged-in-only {
-    display: none !important;
-}
-html.user-logged-out nav ul li.logged-out-only {
-    display: list-item !important;
 }
 
 /* Asegura que no haya superposición en las secciones */

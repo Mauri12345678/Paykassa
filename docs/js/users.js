@@ -40,9 +40,17 @@ const UserSystem = {
         if (loginForm) {
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const email = loginForm.querySelector('[name="email"]').value;
-                const password = loginForm.querySelector('[name="password"]').value;
-                this.login(email, password);
+                const emailElement = loginForm.querySelector('[name="email"]');
+                const passwordElement = loginForm.querySelector('[name="password"]');
+                
+                if (emailElement && passwordElement) {
+                    const email = emailElement.value;
+                    const password = passwordElement.value;
+                    this.login(email, password);
+                } else {
+                    console.warn('Elemento no encontrado en la página actual');
+                    return; // Salir si estamos en una página donde no existe este elemento
+                }
             });
         }
         
@@ -51,12 +59,22 @@ const UserSystem = {
         if (registerForm) {
             registerForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const name = registerForm.querySelector('[name="name"]').value;
-                const email = registerForm.querySelector('[name="email"]').value;
-                const password = registerForm.querySelector('[name="password"]').value;
-                const passwordConfirm = registerForm.querySelector('[name="password_confirm"]').value;
+                const nameElement = registerForm.querySelector('[name="name"]');
+                const emailElement = registerForm.querySelector('[name="email"]');
+                const passwordElement = registerForm.querySelector('[name="password"]');
+                const passwordConfirmElement = registerForm.querySelector('[name="password_confirm"]');
                 
-                this.register(name, email, password, passwordConfirm);
+                if (nameElement && emailElement && passwordElement && passwordConfirmElement) {
+                    const name = nameElement.value;
+                    const email = emailElement.value;
+                    const password = passwordElement.value;
+                    const passwordConfirm = passwordConfirmElement.value;
+                    
+                    this.register(name, email, password, passwordConfirm);
+                } else {
+                    console.warn('Elemento no encontrado en la página actual');
+                    return; // Salir si estamos en una página donde no existe este elemento
+                }
             });
         }
         

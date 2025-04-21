@@ -12,7 +12,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
-    <!-- Añadir estos estilos para corregir la navegación -->
+    <!-- Estilos específicos para el dropdown -->
     <style>
         /* Estilos específicos para arreglar el dropdown */
         .dropdown {
@@ -72,6 +72,15 @@
             font-weight: 500;
             padding: 0.7rem 1rem;
         }
+        
+        /* Control de visibilidad específico para elementos de navegación */
+        html.user-logged-in .logged-out-only {
+            display: none !important;  
+        }
+
+        html.user-logged-out .logged-in-only {
+            display: none !important;
+        }
     </style>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/15.png">
@@ -86,33 +95,23 @@
     <meta property="og:url" content="https://mauri12345678.github.io/Paykassa/">
     <meta property="og:type" content="website">
 
-    <!-- Script de prevención de parpadeo de autenticación -->
+    <!-- Script de autenticación inicial -->
     <script>
-        // Comprobar autenticación inmediatamente antes de que el DOM se cargue
+        // Ejecución inmediata para evitar parpadeo
         (function() {
-            // Intentar obtener el usuario actual
             try {
-                const currentUser = localStorage.getItem('currentUser') ? 
-                    JSON.parse(localStorage.getItem('currentUser')) : null;
+                // Verificar si hay usuario en localStorage
+                const userJSON = localStorage.getItem('currentUser');
+                const isLoggedIn = !!userJSON;
                 
-                // Aplicar clase al body según el estado de autenticación
-                document.documentElement.classList.add(currentUser ? 'user-logged-in' : 'user-logged-out');
+                // Aplicar clase al HTML
+                document.documentElement.className = isLoggedIn ? 'user-logged-in' : 'user-logged-out';
                 
-                // Si hay un usuario autenticado y es administrador
-                if (currentUser && currentUser.isAdmin) {
-                    document.documentElement.classList.add('user-admin');
-                }
-            } catch (e) {
-                console.error('Error verificando autenticación inicial', e);
-                document.documentElement.classList.add('user-logged-out');
+                console.log("Estado inicial:", isLoggedIn ? "USUARIO DETECTADO" : "SIN USUARIO");
+            } catch(e) {
+                console.error("Error en configuración inicial:", e);
+                document.documentElement.className = 'user-logged-out';
             }
-
-            console.log("Estado de autenticación:", {
-                isLoggedIn: !!localStorage.getItem('currentUser'),
-                htmlClasses: document.documentElement.className,
-                loggedInElements: document.querySelectorAll('.logged-in-only').length,
-                loggedOutElements: document.querySelectorAll('.logged-out-only').length
-            });
         })();
     </script>
 </head>
@@ -125,22 +124,26 @@
             <nav>
                 <ul>
                     <!-- Elementos siempre visibles -->
-                    <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Inicio</a></li>
                     <li><a href="product.html"><i class="fas fa-store"></i> Productos</a></li>
                     <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Carrito <span class="cart-count">0</span></a></li>
                     
-                    <!-- IMPORTANTE: Asegurarse que estas clases estén en el <li>, no en el <a> -->
-                    <li class="logged-out-only"><a href="login.html">Iniciar Sesión</a></li>
-                    <li class="logged-out-only"><a href="register.html">Registrarse</a></li>
+                    <!-- Solo para usuarios NO autenticados -->
+                    <li class="logged-out-only"><a href="login.html"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
+                    <li class="logged-out-only"><a href="register.html"><i class="fas fa-user-plus"></i> Registrarse</a></li>
                     
+                    <!-- Solo para usuarios autenticados -->
                     <li class="logged-in-only dropdown">
                         <a href="#"><i class="fas fa-user"></i> <span class="user-name">Usuario</span></a>
                         <div class="dropdown-content">
-                            <a href="profile.html"><i class="fas fa-user-circle"></i> Mi Perfil</a>
+                            <a href="profile.html"><i class="fas fa-id-card"></i> Mi Perfil</a>
                             <a href="orders.html"><i class="fas fa-shopping-bag"></i> Mis Pedidos</a>
                             <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
                         </div>
                     </li>
+                    
+                    <!-- Solo para administradores -->
+                    <li class="admin-only"><a href="admin/dashboard.html"><i class="fas fa-cog"></i> Admin</a></li>
                 </ul>
             </nav>
         </div>
@@ -205,7 +208,7 @@
                     <div class="category-content">
                         <h3>Moda</h3>
                         <span class="category-count">18 productos</span>
-                        <a href="pages/product.html?category=Moda" class="category-link">
+                        <a href="product.html?category=Moda" class="category-link">
                             Ver categoría <i class="fas fa-long-arrow-alt-right"></i>
                         </a>
                     </div>
@@ -218,7 +221,7 @@
                     <div class="category-content">
                         <h3>Hogar</h3>
                         <span class="category-count">32 productos</span>
-                        <a href="pages/product.html?category=Hogar" class="category-link">
+                        <a href="product.html?category=Hogar" class="category-link">
                             Ver categoría <i class="fas fa-long-arrow-alt-right"></i>
                         </a>
                     </div>
@@ -399,12 +402,6 @@
         </div>
     </section>
 
-    <main>
-        <div class="container">
-            <!-- Tu contenido específico aquí -->
-        </div>
-    </main>
-
     <footer>
         <div class="container">
             <div class="footer-columns">
@@ -416,12 +413,41 @@
                         <li><a href="#">Misión y Visión</a></li>
                     </ul>
                 </div>
-                <!-- Más columnas del footer -->
+                <div class="footer-column">
+                    <h3>Ayuda</h3>
+                    <ul>
+                        <li><a href="#">Preguntas Frecuentes</a></li>
+                        <li><a href="#">Envíos y Devoluciones</a></li>
+                        <li><a href="#">Política de Privacidad</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contacto</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-envelope"></i> info@luxmarket.com</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> +34 900 123 456</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Madrid</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Síguenos</h3>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <h3>Suscríbete</h3>
+                    <form class="subscribe-form">
+                        <input type="email" placeholder="Tu email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
             </div>
             <div class="footer-bottom">
-                © 2023 LuxMarket. Todos los derechos reservados.
+                © 2023-2025 LuxMarket. Todos los derechos reservados.
                 <div class="payment-methods">
-                    <img src="img/payment-methods.png" alt="Métodos de pago">
+                    <img src="images/payment-methods.png" alt="Métodos de pago">
                 </div>
             </div>
         </div>
@@ -429,8 +455,79 @@
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
-    <!-- Script común para el contador del carrito -->
     <script src="js/cart-counter.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/fix-auth.js"></script>
+    
+    <!-- Script para forzar actualización de UI -->
+    <script>
+        // Ejecutar inmediatamente y después de que la página cargue completamente
+        function updateNavVisibility() {
+            // Verificación de seguridad para asegurar que el estado es correcto
+            const userJSON = localStorage.getItem('currentUser');
+            const isLoggedIn = !!userJSON;
+            
+            console.group("🔧 FORZANDO VISIBILIDAD CORRECTA");
+            console.log("Estado:", isLoggedIn ? "LOGUEADO" : "NO LOGUEADO");
+            
+            if (isLoggedIn) {
+                // CRUCIAL: Esperar a que todos los elementos estén disponibles
+                const loggedOutElements = document.querySelectorAll('.logged-out-only');
+                const loggedInElements = document.querySelectorAll('.logged-in-only');
+                
+                console.log(`Encontrados: ${loggedOutElements.length} elementos logged-out, ${loggedInElements.length} elementos logged-in`);
+                
+                // Aplicar visibilidad de forma agresiva - usando display:none !important
+                loggedOutElements.forEach(el => {
+                    el.style.setProperty('display', 'none', 'important');
+                    console.log("Ocultando:", el.outerHTML.substring(0, 50) + "...");
+                });
+                
+                // IMPORTANTE: Para elementos <li> usar display:list-item
+                loggedInElements.forEach(el => {
+                    if (el.tagName === 'LI') {
+                        el.style.setProperty('display', 'list-item', 'important');
+                    } else {
+                        el.style.setProperty('display', 'block', 'important');
+                    }
+                    console.log("Mostrando:", el.outerHTML.substring(0, 50) + "...");
+                });
+                
+                // Actualizar nombre de usuario
+                try {
+                    const user = JSON.parse(userJSON);
+                    document.querySelectorAll('.user-name').forEach(el => {
+                        el.textContent = user.displayName || user.email.split('@')[0];
+                    });
+                    console.log("✅ Nombre actualizado:", user.displayName || user.email);
+                } catch (e) {
+                    console.error("❌ Error procesando usuario:", e);
+                }
+            } else {
+                // Mostrar solo elementos para usuarios no logueados
+                document.querySelectorAll('.logged-in-only').forEach(el => {
+                    el.style.setProperty('display', 'none', 'important');
+                });
+                
+                document.querySelectorAll('.logged-out-only').forEach(el => {
+                    if (el.tagName === 'LI') {
+                        el.style.setProperty('display', 'list-item', 'important');
+                    } else {
+                        el.style.setProperty('display', 'block', 'important');
+                    }
+                });
+            }
+            console.groupEnd();
+        }
+        
+        // Ejecutar inmediatamente
+        updateNavVisibility();
+        
+        // Y también cuando todo esté cargado
+        window.addEventListener('load', updateNavVisibility);
+        
+        // Y repetir después de un breve retraso para asegurarnos
+        setTimeout(updateNavVisibility, 500);
+    </script>
 </body>
 </html>

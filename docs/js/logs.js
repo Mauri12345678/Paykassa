@@ -177,6 +177,9 @@ function filterLogs() {
     const dateFilter = document.getElementById('log-date').value;
     const searchFilter = document.getElementById('log-search').value.toLowerCase();
     
+    const filterElement = document.getElementById('log-filter');
+    const filterValue = filterElement ? filterElement.value : '';
+    
     // Resetear a la primera página
     currentPage = 1;
     
