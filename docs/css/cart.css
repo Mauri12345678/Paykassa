@@ -1,18 +1,39 @@
+/* Variables actualizadas para asegurar proporciones consistentes */
+:root {
+  --primary-color: #1e88e5;
+  --primary-dark: #1976d2;
+  --primary-light: #bbdefb;
+  --text-color: #222;
+  --text-light: #555;
+  --border-color: #e3e8ee;
+  --bg-color: #f5f7fa;
+  --box-shadow: 0 2px 12px rgba(30,136,229,0.07);
+  --box-shadow-hover: 0 8px 32px rgba(30,136,229,0.13);
+  --border-radius: 16px;
+  --border-radius-sm: 8px;
+  --transition: all 0.2s ease;
+  --container-max-width: 1200px;
+  --card-width: 320px;
+  --secondary-color: #ff9800; /* Añadido porque lo usas en cart-count */
+}
+
 /* Estilos específicos para el carrito */
 
-/* Layout del carrito */
+/* Ajuste de las proporciones en el contenedor del carrito */
 .cart-container {
     display: grid;
     grid-template-columns: 1fr 350px;
     gap: 2rem;
-    margin: 2rem 0;
+    margin: 2rem auto;
+    max-width: var(--container-max-width);
+    width: 90%;
 }
 
 /* Contenedor de productos */
 .cart-items {
     background-color: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(30,136,229,0.07);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
     padding: 2rem;
 }
 
@@ -284,57 +305,117 @@
     font-weight: 600;
 }
 
-/* Nav igual que en productos */
+/* NAV Styles - líneas aproximadas a copiar del CSS global */
+header {
+  background-color: transparent;
+  position: relative;
+  z-index: 100;
+}
+
+header .container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  width: 90%;
+}
+
 header nav {
-    background: #fff !important; /* Asegura que no sea celeste */
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(30,136,229,0.07);
-    padding: 0.5rem 1.5rem;
-    margin: 1.5rem 0 2rem 0;
-    display: flex;
-    justify-content: center;
+  background: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: var(--container-max-width);
+  width: 90%;
 }
 
 header nav ul {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
 }
 
 header nav ul li {
-    display: flex;
-    align-items: center;
+  position: relative;
 }
 
 header nav ul li a {
-    color: #1e88e5;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 1.05rem;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: background 0.15s, color 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.7rem 1rem;
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-header nav ul li a.active,
-header nav ul li a:hover {
-    background: #e3f2fd;
-    color: #1565c0;
+header nav ul li a:hover,
+header nav ul li a.active {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+/* Dropdown para menú de navegación */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  min-width: 200px;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius-sm);
+  z-index: 1000;
+  padding: 0.5rem;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.dropdown-content a {
+  color: var(--text-color);
+  padding: 0.7rem 1rem;
+  text-decoration: none;
+  display: block;
+  transition: var(--transition);
+  border-radius: var(--border-radius-sm);
+}
+
+.dropdown-content a:hover {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Estilos responsivos */
 @media (max-width: 992px) {
     .cart-container {
         grid-template-columns: 1fr;
+        width: 95%;
     }
     
     .cart-summary {
         position: static;
+    }
+
+    header nav {
+        width: 95%;
     }
 
     .footer-columns, footer .container {
@@ -354,6 +435,10 @@ header nav ul li a:hover {
         padding: 1.5rem 0;
     }
     
+    .cart-container {
+        width: 95%;
+    }
+    
     .cart-item {
         flex-direction: column;
     }
@@ -363,6 +448,15 @@ header nav ul li a:hover {
         height: 180px;
         margin-right: 0;
         margin-bottom: 1rem;
+    }
+
+    header nav ul {
+        gap: 1rem;
+    }
+
+    header nav ul li a {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
     }
 
     nav ul {
@@ -380,6 +474,17 @@ header nav ul li a:hover {
         flex-direction: column;
     }
     
+    .cart-container {
+        width: 100%;
+        padding: 0 1rem;
+    }
+    
+    header nav {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        margin: 1rem 0;
+    }
+
     .cart-items,
     .cart-summary {
         padding: 1.5rem 1rem;
@@ -388,10 +493,14 @@ header nav ul li a:hover {
 
 /* Footer moderno y alineado */
 footer {
-    background: #1e88e5;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary-color) 100%);
     color: #fff;
     padding: 2.5rem 0 1.2rem 0;
     margin-top: 3rem;
+    box-shadow: 0 -2px 16px rgba(30,136,229,0.08);
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
 }
 
 footer .container {
@@ -399,8 +508,9 @@ footer .container {
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 2rem;
-    max-width: 1200px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
+    width: 90%;
 }
 
 .footer-columns {

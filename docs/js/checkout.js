@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     processBankTransferPayment();
                     break;
                 case 'paykassa':
-                    processPayKassaPayment();
+                    processPayKassaPayment(); // Añade esta línea
                     break;
                 default:
                     showError('Método de pago no válido');

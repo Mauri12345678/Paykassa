@@ -16,6 +16,14 @@ const products = [
     }
 ];
 
+// Eliminar completamente elementos product-filters vacíos
+document.addEventListener('DOMContentLoaded', function() {
+  const filters = document.querySelector('.product-filters');
+  if (filters && !filters.children.length) {
+    filters.remove();
+  }
+});
+
 // Renderizar productos en el contenedor existente de tu HTML
 document.addEventListener('DOMContentLoaded', function() {
     const mainContainer = document.querySelector('main .container');

@@ -1,21 +1,63 @@
+/* ==========================================================================
+   Table of Contents:
+   1. Variables & Base Styles
+   2. Layout Structure
+   3. Product Filters
+   4. Product Cards
+   5. Product Toolbar
+   6. Media Queries
+   7. Footer Styles
+   ========================================================================== */
+
+/* 1. Variables & Base Styles
+   ========================================================================== */
+:root {
+  --primary-color: #1e88e5;
+  --primary-dark: #1976d2;
+  --primary-light: #bbdefb;
+  --text-color: #222;
+  --text-light: #555;
+  --border-color: #e3e8ee;
+  --bg-color: #f5f7fa;
+  --box-shadow: 0 2px 12px rgba(30,136,229,0.07);
+  --box-shadow-hover: 0 8px 32px rgba(30,136,229,0.13);
+  --border-radius: 16px;
+  --border-radius-sm: 8px;
+  --transition: all 0.2s ease;
+  --container-max-width: 1200px;
+  --card-width: 320px;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg-color);
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+}
+
+main {
+  flex: 1 0 auto;
+  min-height: 70vh;
+  padding-bottom: 2rem;
+}
+
 /* Estilos específicos para la página de productos */
 
 /* Layout de la página de productos */
 main .container {
-    display: block;
-    /* o si quieres centrar: */
-    /* display: flex; flex-direction: column; align-items: center; */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 2rem;
 }
 
 /* Mejoras generales para productos */
-main {
-    min-height: 70vh;
-    background: #f5f7fa;
-    padding-bottom: 2rem;
-}
-
 .products-container {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
@@ -26,11 +68,11 @@ main {
 
 .product-card {
     background: #fff;
-    border-radius: 16px;
-    border: 1px solid #e3e8ee;
-    box-shadow: 0 2px 12px rgba(30,136,229,0.07);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow);
     padding: 1.5rem;
-    width: 320px;
+    width: var(--card-width);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -39,11 +81,11 @@ main {
 }
 
 .product-card:hover {
-    box-shadow: 0 8px 32px rgba(30,136,229,0.13);
+    box-shadow: var(--box-shadow-hover);
     transform: translateY(-4px) scale(1.02);
 }
 
-/* Filtros de producto */
+/* Filtros de producto - corregido */
 .product-filters {
     background-color: white;
     border-radius: var(--border-radius);
@@ -53,10 +95,21 @@ main {
     top: 100px;
     max-height: calc(100vh - 120px);
     overflow-y: auto;
+    z-index: 10;
+    transition: var(--transition);
+    min-height: 50px; /* Añadir altura mínima */
+    display: none; /* Ocultar por defecto si no tiene contenido útil */
 }
 
-.product-filters:empty {
-    display: none;
+/* Modificar esta regla para asegurar que solo se muestre cuando tiene contenido real */
+.product-filters:not(:empty) {
+    display: block;
+}
+
+/* Eliminar estas reglas que podrían estar causando problemas */
+.product-filters:empty::before,
+.product-filters:empty::after {
+    content: none; /* Eliminar el contenido generado */
 }
 
 /* Opcional: oculta filtros en móvil/tablet */
@@ -179,7 +232,7 @@ main {
 }
 
 .search-box button:hover {
-    background-color: #3a78c5;
+    background-color: var(--primary-dark);
 }
 
 .sort-box {
@@ -233,7 +286,7 @@ main {
 .product-name {
     font-size: 1.3rem;
     margin-bottom: 0.5rem;
-    color: #222;
+    color: var(--text-color);
     font-weight: 600;
 }
 
@@ -246,7 +299,7 @@ main {
 .product-price {
     font-size: 1.2rem;
     font-weight: 600;
-    color: #1e88e5;
+    color: var(--primary-color);
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
@@ -262,7 +315,7 @@ main {
 
 .product-description {
     font-size: 1rem;
-    color: #555;
+    color: var(--text-light);
     margin-bottom: 1.2rem;
     line-height: 1.4;
 }
@@ -279,7 +332,7 @@ main {
 }
 
 .add-to-cart {
-    background: #1e88e5;
+    background: var(--primary-color);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -381,20 +434,9 @@ main {
 }
 
 /* Footer siempre al fondo y bien visible */
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background: #f5f7fa;
-}
-
-main {
-    flex: 1 0 auto;
-}
-
 footer {
     flex-shrink: 0;
-    background: linear-gradient(90deg, #1976d2 0%, #1e88e5 100%);
+    background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary-color) 100%);
     color: #fff;
     padding: 2.5rem 0 1.2rem 0;
     margin-top: 3rem;
@@ -408,7 +450,7 @@ footer .container {
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 2rem;
-    max-width: 1200px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
 }
 
@@ -436,7 +478,7 @@ footer .container {
 }
 
 .footer-column ul li a {
-    color: #bbdefb;
+    color: var(--primary-light);
     text-decoration: none;
     transition: color 0.15s;
 }
@@ -456,7 +498,7 @@ footer .container {
 }
 
 .footer-column .social-icons a {
-    color: #bbdefb;
+    color: var(--primary-light);
     font-size: 1.3rem;
     transition: color 0.15s;
 }
@@ -468,9 +510,9 @@ footer .container {
 .footer-bottom {
     text-align: center;
     margin-top: 2rem;
-    color: #bbdefb;
+    color: var(--primary-light);
     font-size: 0.95rem;
-    border-top: 1px solid #2196f3;
+    border-top: 1px solid var(--primary-color);
     padding-top: 1rem;
     letter-spacing: 0.5px;
     background: transparent;
