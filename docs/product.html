@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="user-logged-out">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos | LuxMarket</title>
+    
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/checkout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Principal -->
+    <link rel="stylesheet" href="css/luxmarket.css">
     <link rel="stylesheet" href="css/product.css">
+    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/15.png">
 </head>
@@ -25,12 +25,16 @@
                 <i class="fas fa-shopping-bag"></i>
                 <span>LuxMarket</span>
             </a>
+            
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
             <nav>
                 <ul>
                     <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
                     <li><a href="product.html" class="active"><i class="fas fa-store"></i> Productos</a></li>
                     <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> Carrito <span class="cart-count">0</span></a></li>
-                    <li><a href="checkout.html"><i class="fas fa-credit-card"></i> Checkout</a></li>
                     
                     <!-- Para usuarios no autenticados -->
                     <li class="logged-out-only"><a href="login.html"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
@@ -38,9 +42,9 @@
 
                     <!-- Para usuarios autenticados -->
                     <li class="logged-in-only dropdown">
-                        <a href="#"><i class="fas fa-user"></i> <span class="user-name">Usuario</span></a>
+                        <a href="#"><i class="fas fa-user-circle"></i> <span class="user-name">Usuario</span></a>
                         <div class="dropdown-content">
-                            <a href="profile.html"><i class="fas fa-user-circle"></i> Mi Perfil</a>
+                            <a href="profile.html"><i class="fas fa-id-card"></i> Mi Perfil</a>
                             <a href="orders.html"><i class="fas fa-shopping-bag"></i> Mis Pedidos</a>
                             <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
                         </div>
@@ -55,55 +59,328 @@
         </div>
     </header>
 
+    <section class="product-hero">
+        <div class="container">
+            <div class="product-hero-content">
+                <h1>Descubre nuestros productos</h1>
+                <p>Explora nuestra amplia selección de artículos premium.</p>
+            </div>
+        </div>
+    </section>
+
     <main>
         <div class="container">
-            <aside class="product-filters">
-                <!-- filtros aquí -->
-            </aside>
-            <div class="products-container">
-                <!-- productos aquí -->
+            <div class="product-toolbar">
+                <div class="search-box">
+                    <input type="text" id="search-products" placeholder="Buscar productos...">
+                    <button type="button"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="sort-box">
+                    <label for="sort-select">Ordenar por:</label>
+                    <select id="sort-select">
+                        <option value="popular">Más popular</option>
+                        <option value="precio-asc">Precio: menor a mayor</option>
+                        <option value="precio-desc">Precio: mayor a menor</option>
+                        <option value="nuevo">Más reciente</option>
+                    </select>
+                </div>
+                <div class="view-toggle">
+                    <button class="active" data-view="grid"><i class="fas fa-th"></i></button>
+                    <button data-view="list"><i class="fas fa-list"></i></button>
+                </div>
+            </div>
+            
+            <div class="product-content">
+                <aside class="product-filters">
+                    <div class="filter-header">
+                        <h3>Filtros</h3>
+                        <button class="filter-close"><i class="fas fa-times"></i></button>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h4>Categorías</h4>
+                        <ul class="category-list">
+                            <li><a href="#" class="category-filter active" data-category="all">Todos los productos</a></li>
+                            <li><a href="#" class="category-filter" data-category="Electrónica">Electrónica</a></li>
+                            <li><a href="#" class="category-filter" data-category="Audio">Audio</a></li>
+                            <li><a href="#" class="category-filter" data-category="Relojes">Relojes</a></li>
+                            <li><a href="#" class="category-filter" data-category="Hogar">Hogar</a></li>
+                            <li><a href="#" class="category-filter" data-category="Deporte">Deporte</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h4>Precio</h4>
+                        <div class="price-inputs">
+                            <input type="number" id="min-price" placeholder="Min" min="0">
+                            <span class="price-separator">-</span>
+                            <input type="number" id="max-price" placeholder="Max" min="0">
+                            <button class="price-filter-btn"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                        <div class="price-range">
+                            <input type="range" id="price-range" min="0" max="1000" value="500">
+                            <div class="price-labels">
+                                <span>$0</span>
+                                <span>$1000</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h4>Valoración</h4>
+                        <div class="rating-filters">
+                            <label class="rating-filter">
+                                <input type="checkbox" value="5">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span>(5)</span>
+                            </label>
+                            <label class="rating-filter">
+                                <input type="checkbox" value="4">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span>& más (4+)</span>
+                            </label>
+                            <label class="rating-filter">
+                                <input type="checkbox" value="3">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <span>& más (3+)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button class="btn btn-primary apply-filters">Aplicar filtros</button>
+                        <button class="btn btn-light reset-filters">Reiniciar</button>
+                    </div>
+                </aside>
+                
+                <div class="products-wrapper">
+                    <button class="filter-toggle-mobile">
+                        <i class="fas fa-filter"></i> Filtros
+                    </button>
+                    
+                    <div class="products-container">
+                        <!-- Ejemplo de producto 1 -->
+                        <div class="product-card">
+                            <span class="product-badge new">Nuevo</span>
+                            <span class="stock-status in-stock">En stock</span>
+                            <div class="product-image">
+                                <img src="images/products/headphones.jpg" alt="Auriculares">
+                            </div>
+                            <div class="product-info">
+                                <span class="product-category"><i class="fas fa-headphones"></i> Audio</span>
+                                <h3 class="product-name"><a href="product-detail.html">Auriculares Bluetooth Sony WH-1000XM4</a></h3>
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <span class="rating-count">(120)</span>
+                                </div>
+                                <div class="product-price">
+                                    $299.99 <span class="original-price">$349.99</span>
+                                    <span class="discount-percentage">-14%</span>
+                                </div>
+                                <p class="product-description">Auriculares inalámbricos con cancelación de ruido líder en la industria, hasta 30 horas de duración de batería y sonido de alta resolución.</p>
+                                <div class="product-actions">
+                                    <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Añadir al carrito</button>
+                                    <button class="add-to-wishlist"><i class="far fa-heart"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ejemplo de producto 2 -->
+                        <div class="product-card">
+                            <span class="product-badge discount">-20%</span>
+                            <span class="stock-status low-stock">Pocas unidades</span>
+                            <div class="product-image">
+                                <img src="images/products/smartwatch.jpg" alt="Smartwatch">
+                            </div>
+                            <div class="product-info">
+                                <span class="product-category"><i class="fas fa-watch"></i> Relojes</span>
+                                <h3 class="product-name"><a href="product-detail.html">Smartwatch Galaxy Watch4 Classic</a></h3>
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <span class="rating-count">(86)</span>
+                                </div>
+                                <div class="product-price">
+                                    $199.99 <span class="original-price">$249.99</span>
+                                    <span class="discount-percentage">-20%</span>
+                                </div>
+                                <p class="product-description">Smartwatch con seguimiento de salud avanzado, monitoreo del sueño, ECG, y múltiples funciones de fitness.</p>
+                                <div class="product-actions">
+                                    <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Añadir al carrito</button>
+                                    <button class="add-to-wishlist"><i class="far fa-heart"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ejemplo de producto 3 -->
+                        <div class="product-card">
+                            <span class="product-badge featured">Destacado</span>
+                            <div class="product-image">
+                                <img src="images/products/camera.jpg" alt="Cámara">
+                            </div>
+                            <div class="product-info">
+                                <span class="product-category"><i class="fas fa-camera"></i> Electrónica</span>
+                                <h3 class="product-name"><a href="product-detail.html">Cámara Mirrorless Sony Alpha a7 III</a></h3>
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <span class="rating-count">(205)</span>
+                                </div>
+                                <div class="product-price">
+                                    $1,999.99
+                                </div>
+                                <p class="product-description">Cámara profesional mirrorless de fotograma completo, con estabilización de imagen, sensibilidad ISO excepcional y grabación de video 4K HDR.</p>
+                                <div class="product-actions">
+                                    <button class="add-to-cart"><i class="fas fa-shopping-cart"></i> Añadir al carrito</button>
+                                    <button class="add-to-wishlist"><i class="far fa-heart"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ejemplo de producto 4 (agotado) -->
+                        <div class="product-card">
+                            <span class="stock-status out-of-stock">Agotado</span>
+                            <div class="product-image">
+                                <img src="images/products/speaker.jpg" alt="Altavoz">
+                            </div>
+                            <div class="product-info">
+                                <span class="product-category"><i class="fas fa-volume-up"></i> Audio</span>
+                                <h3 class="product-name"><a href="product-detail.html">Altavoz Bluetooth Sonos Move</a></h3>
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <span class="rating-count">(78)</span>
+                                </div>
+                                <div class="product-price">
+                                    $399.99
+                                </div>
+                                <p class="product-description">Altavoz inteligente resistente a condiciones climáticas con potente sonido, integración con asistentes de voz y batería duradera.</p>
+                                <div class="product-actions">
+                                    <button class="add-to-cart" disabled><i class="fas fa-shopping-cart"></i> Agotado</button>
+                                    <button class="add-to-wishlist"><i class="far fa-heart"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="no-results" style="display: none;">
+                            <img src="images/no-results.svg" alt="No se encontraron resultados" width="120">
+                            <p>No se encontraron productos que coincidan con tu búsqueda.</p>
+                            <button class="btn btn-primary reset-search">Reiniciar búsqueda</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <h3>¡Suscríbete a nuestro boletín!</h3>
+                <p>Recibe las últimas novedades y ofertas exclusivas directamente en tu correo.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Tu correo electrónico" required>
+                    <button type="submit" class="btn btn-primary">Suscribirme</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
     <footer>
         <div class="container">
             <div class="footer-column">
-                <h3>Información</h3>
-                <ul>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Sobre nosotros</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Envíos</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Política de privacidad</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> Términos y condiciones</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Contacto</h3>
-                <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> Av. Corrientes 1234, CABA</li>
-                    <li><i class="fas fa-phone"></i> +54 11 1234-5678</li>
-                    <li><i class="fas fa-envelope"></i> info@luxmarket.com</li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Síguenos</h3>
+                <a href="index.html" class="logo">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>LuxMarket</span>
+                </a>
+                <p>Ofrecemos productos de alta calidad a precios competitivos. Tu satisfacción es nuestra prioridad.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 LuxMarket. Todos los derechos reservados.</p>
+            
+            <div class="footer-column">
+                <h3>Enlaces rápidos</h3>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+                    <li><a href="product.html"><i class="fas fa-chevron-right"></i> Productos</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Sobre nosotros</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Contacto</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Información</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Envíos y entregas</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Devoluciones</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Política de privacidad</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Términos y condiciones</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Av. Corrientes 1234, CABA</li>
+                    <li><i class="fas fa-phone-alt"></i> +54 11 1234-5678</li>
+                    <li><i class="fas fa-envelope"></i> info@luxmarket.com</li>
+                    <li><i class="fas fa-clock"></i> Lun-Vie: 9am - 6pm</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 LuxMarket. Todos los derechos reservados.</p>
+            <div class="payment-methods">
+                <img src="images/payment/visa.png" alt="Visa">
+                <img src="images/payment/mastercard.png" alt="Mastercard">
+                <img src="images/payment/paypal.png" alt="PayPal">
+                <img src="images/payment/amex.png" alt="American Express">
             </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
+    <script src="js/notifications.js"></script>
     <script src="js/products.js"></script>
-    <!-- Script común para el contador del carrito -->
     <script src="js/cart-counter.js"></script>
-    <script src="js/auth.js"></script> <!-- Añadir justo antes del cierre del body -->
+    <script src="js/auth-manager.js"></script>
     <script src="js/logout-fix.js"></script>
     <script src="js/main.js"></script>
 </body>

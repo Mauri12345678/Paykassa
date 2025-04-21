@@ -58,23 +58,7 @@ const UserSystem = {
         const registerForm = document.getElementById('register-form');
         if (registerForm) {
             registerForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const nameElement = registerForm.querySelector('[name="name"]');
-                const emailElement = registerForm.querySelector('[name="email"]');
-                const passwordElement = registerForm.querySelector('[name="password"]');
-                const passwordConfirmElement = registerForm.querySelector('[name="password_confirm"]');
-                
-                if (nameElement && emailElement && passwordElement && passwordConfirmElement) {
-                    const name = nameElement.value;
-                    const email = emailElement.value;
-                    const password = passwordElement.value;
-                    const passwordConfirm = passwordConfirmElement.value;
-                    
-                    this.register(name, email, password, passwordConfirm);
-                } else {
-                    console.warn('Elemento no encontrado en la página actual');
-                    return; // Salir si estamos en una página donde no existe este elemento
-                }
+                this.handleRegister(e);
             });
         }
         
@@ -110,63 +94,120 @@ const UserSystem = {
         return JSON.parse(localStorage.getItem('users'));
     },
     
-    // Registro de nuevo usuario
-    register(name, email, password, passwordConfirm) {
-        // Validar inputs
-        if (!name || !email || !password || !passwordConfirm) {
-            this.showError('Todos los campos son obligatorios');
-            return false;
-        }
-        
-        if (password !== passwordConfirm) {
-            this.showError('Las contraseñas no coinciden');
-            return false;
-        }
-        
-        if (password.length < 6) {
-            this.showError('La contraseña debe tener al menos 6 caracteres');
-            return false;
-        }
-        
-        // Validar formato de email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            this.showError('Email no válido');
-            return false;
-        }
-        
+    // Validar email
+    validateEmail(email) {
         // Obtener usuarios existentes
-        const users = this.initializeUsers();
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
         
-        // Comprobar si el email ya existe
-        if (users.some(user => user.email === email)) {
-            this.showError('Este email ya está registrado');
+        // Verificar si existe el correo
+        const emailExists = users.some(user => user.email === email);
+        
+        // Importante: sólo mostrar el mensaje de error si realmente existe
+        if (emailExists) {
+            this.showError("Este correo electrónico ya está registrado.");
             return false;
         }
-        
-        // Crear nuevo usuario (por defecto con rol 'user')
-        const newUser = {
-            id: 'user_' + Date.now(),
-            name,
-            email,
-            password: this.hashPassword(password),
-            role: 'user', // Solo el admin inicial tiene rol 'admin'
-            created: new Date().toISOString()
-        };
-        
-        // Guardar usuario
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        LogSystem.success('Nuevo usuario registrado', email);
-        this.showSuccess('¡Registro exitoso! Ahora puedes iniciar sesión.');
-        
-        // Redireccionar a login después de un breve retraso
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 2000);
         
         return true;
+    },
+    
+    // Registro de nuevo usuario
+    handleRegister(e) {
+        e.preventDefault();
+        
+        // Mostrar estado de carga
+        const submitButton = document.querySelector('#register-form button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        submitButton.disabled = true;
+        
+        // Ocultar errores previos
+        this.hideError();
+        
+        // Validar inputs
+        const registerForm = document.getElementById('register-form');
+        const nameElement = registerForm.querySelector('[name="name"]');
+        const emailElement = registerForm.querySelector('[name="email"]');
+        const passwordElement = registerForm.querySelector('[name="password"]');
+        const passwordConfirmElement = registerForm.querySelector('[name="password_confirm"]');
+        
+        if (nameElement && emailElement && passwordElement && passwordConfirmElement) {
+            const name = nameElement.value;
+            const email = emailElement.value;
+            const password = passwordElement.value;
+            const passwordConfirm = passwordConfirmElement.value;
+            
+            if (!name || !email || !password || !passwordConfirm) {
+                this.showError('Todos los campos son obligatorios');
+                restoreButton();
+                return false;
+            }
+            
+            if (password !== passwordConfirm) {
+                this.showError('Las contraseñas no coinciden');
+                restoreButton();
+                return false;
+            }
+            
+            if (password.length < 6) {
+                this.showError('La contraseña debe tener al menos 6 caracteres');
+                restoreButton();
+                return false;
+            }
+            
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                this.showError('Email no válido');
+                restoreButton();
+                return false;
+            }
+            
+            // Validar si el email ya existe
+            if (!this.validateEmail(email)) {
+                restoreButton();
+                return false;
+            }
+            
+            // Obtener usuarios existentes
+            const users = this.initializeUsers();
+            
+            // Crear nuevo usuario (por defecto con rol 'user')
+            const newUser = {
+                id: 'user_' + Date.now(),
+                name,
+                email,
+                password: this.hashPassword(password),
+                role: 'user', // Solo el admin inicial tiene rol 'admin'
+                created: new Date().toISOString()
+            };
+            
+            // Guardar usuario
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            LogSystem.success('Nuevo usuario registrado', email);
+            this.showSuccess('¡Registro exitoso! Ahora puedes iniciar sesión.');
+            
+            // Redireccionar a login después de un breve retraso
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        } else {
+            console.warn('Elemento no encontrado en la página actual');
+            restoreButton();
+            return false;
+        }
+        
+        // Al finalizar (sea éxito o error), restaurar el botón
+        function restoreButton() {
+            submitButton.innerHTML = originalText;
+            submitButton.disabled = false;
+        }
+        
+        // En caso de éxito:
+        this.showSuccess("Registro exitoso. Redirigiendo...");
+        // Y llamar a restoreButton() después de mostrar el éxito
     },
     
     // Login de usuario
@@ -227,6 +268,13 @@ const UserSystem = {
     
     // Logout
     logout() {
+        // Usar la función unificada de logout si existe
+        if (window.performLogout) {
+            window.performLogout();
+            return;
+        }
+        
+        // Código original como fallback
         const userEmail = this.currentUser?.email;
         
         this.currentUser = null;
@@ -242,7 +290,7 @@ const UserSystem = {
         // Actualizar UI
         this.updateUI();
         
-        // Redireccionar al inicio
+        // Redireccionar al inicio (sin alerta)
         window.location.href = 'index.html';
     },
     
@@ -320,6 +368,14 @@ const UserSystem = {
             }, 5000);
         } else {
             alert('Error: ' + message);
+        }
+    },
+    
+    // Ocultar mensaje de error
+    hideError() {
+        const errorContainer = document.querySelector('.auth-error');
+        if (errorContainer) {
+            errorContainer.style.display = 'none';
         }
     },
     

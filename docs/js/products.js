@@ -1,20 +1,4 @@
-// Base de datos de productos
-const products = [
-    {
-        id: 1,
-        name: "Producto A",
-        price: 1.00,
-        image: "images/5.jpeg",
-        description: "Producto de prueba A por solo $1."
-    },
-    {
-        id: 2,
-        name: "Producto B",
-        price: 1.00,
-        image: "images/15.png",
-        description: "Producto de prueba B por solo $1."
-    }
-];
+
 
 // Eliminar completamente elementos product-filters vacíos
 document.addEventListener('DOMContentLoaded', function() {
@@ -91,3 +75,48 @@ function updateCartCount() {
         cartCountElement.textContent = count;
     }
 }
+
+// Cambiar entre vista de cuadrícula y lista
+document.addEventListener('DOMContentLoaded', function() {
+    const viewToggleButtons = document.querySelectorAll('.view-toggle button');
+    const productsContainer = document.querySelector('.products-container');
+    
+    if (viewToggleButtons.length && productsContainer) {
+        viewToggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Quitar la clase active de todos los botones
+                viewToggleButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Añadir la clase active al botón clicado
+                this.classList.add('active');
+                
+                // Cambiar la vista según el botón
+                const viewType = this.dataset.view;
+                if (viewType === 'list') {
+                    productsContainer.classList.add('list-view');
+                } else {
+                    productsContainer.classList.remove('list-view');
+                }
+            });
+        });
+    }
+    
+    // Manejar el toggle de filtros en móvil
+    const filterToggle = document.querySelector('.filter-toggle-mobile');
+    const filters = document.querySelector('.product-filters');
+    const filterClose = document.querySelector('.filter-close');
+    
+    if (filterToggle && filters) {
+        filterToggle.addEventListener('click', function() {
+            filters.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevenir scroll
+        });
+    }
+    
+    if (filterClose && filters) {
+        filterClose.addEventListener('click', function() {
+            filters.classList.remove('active');
+            document.body.style.overflow = ''; // Restaurar scroll
+        });
+    }
+});

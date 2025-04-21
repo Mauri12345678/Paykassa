@@ -1,49 +1,6 @@
-/* Estilos modernos para LuxMarket */
+/* Estilos específicos para la navegación */
 
-:root {
-    /* Actualizar paleta de colores */
-    --primary-color: #4361ee;
-    --secondary-color: #f72585;
-    --accent-color: #4cc9f0;
-    --text-color: #2b2d42;
-    --text-light: #6c757d;
-    --background-light: #f8f9fa;
-    --background-dark: #212529;
-    --border-color: #e9ecef;
-    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    --box-shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.1);
-    --border-radius: 8px;
-    --border-radius-sm: 8px;
-    --transition: all 0.3s ease;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  overflow-y: scroll;
-}
-
-body {
-    /* Actualizar fuente a más ligera */
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
-    line-height: 1.6;
-    color: var(--text-color);
-    background-color: #ffffff;
-}
-
-.container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
-
-/* Nav 2025 - Diseño renovado */
+/* Barra de navegación mejorada */
 header {
     background-color: rgba(255, 255, 255, 0.95);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -52,7 +9,6 @@ header {
     z-index: 1000;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
 }
 
 header .container {
@@ -71,11 +27,6 @@ header .logo {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: transform 0.3s ease;
-}
-
-header .logo:hover {
-    transform: translateY(-2px);
 }
 
 header .logo i {
@@ -94,71 +45,6 @@ header .logo i {
     padding: 5px;
 }
 
-/* Menú de navegación moderno */
-nav {
-    position: relative;
-}
-
-nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 5px;
-    align-items: center;
-}
-
-nav ul li {
-    position: relative;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: var(--text-color);
-    font-size: 0.95rem;
-    font-weight: 500;
-    padding: 10px 16px;
-    border-radius: 8px;
-    transition: all 0.25s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    position: relative;
-}
-
-nav ul li a i {
-    font-size: 1rem;
-    transition: transform 0.2s ease;
-}
-
-nav ul li a:hover {
-    background-color: rgba(67, 97, 238, 0.08);
-    color: var(--primary-color);
-}
-
-nav ul li a:hover i {
-    transform: translateY(-2px);
-}
-
-nav ul li a.active {
-    background-color: rgba(67, 97, 238, 0.12);
-    color: var(--primary-color);
-    font-weight: 600;
-}
-
-/* Nuevo efecto para el elemento activo */
-nav ul li a.active::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 3px;
-    background-color: var(--primary-color);
-    border-radius: 10px;
-}
-
 /* Estilos para el dropdown mejorado */
 .dropdown {
     position: relative;
@@ -175,7 +61,7 @@ nav ul li a.active::after {
     transform: rotate(180deg);
 }
 
-/* Nuevo dropdown con animación mejorada */
+/* Dropdown con animación mejorada */
 .dropdown-content {
     position: absolute;
     top: calc(100% + 10px);
@@ -201,7 +87,6 @@ nav ul li a.active::after {
     pointer-events: auto;
 }
 
-/* Nuevo diseño para los elementos del dropdown */
 .dropdown-content a {
     color: var(--text-color);
     padding: 12px 16px;
@@ -239,7 +124,7 @@ nav ul li a.active::after {
     background-color: rgba(231, 76, 60, 0.08) !important;
 }
 
-/* Sistema de notificaciones elegante reemplazando los alerts */
+/* Sistema de notificaciones elegante */
 .notification-container {
     position: fixed;
     top: 20px;
@@ -267,57 +152,6 @@ nav ul li a.active::after {
     border-left: 4px solid var(--primary-color);
 }
 
-.notification.success {
-    border-left-color: #10b981;
-}
-
-.notification.error {
-    border-left-color: #ef4444;
-}
-
-.notification.info {
-    border-left-color: #3b82f6;
-}
-
-.notification-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.notification.success .notification-icon {
-    background-color: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-}
-
-.notification.error .notification-icon {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-}
-
-.notification.info .notification-icon {
-    background-color: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-}
-
-.notification-content {
-    flex: 1;
-}
-
-.notification-title {
-    font-weight: 600;
-    font-size: 0.95rem;
-    margin-bottom: 2px;
-}
-
-.notification-message {
-    font-size: 0.85rem;
-    color: var(--text-light);
-}
-
 @keyframes slideIn {
     from { transform: translateX(120%); }
     to { transform: translateX(0); }
@@ -328,7 +162,7 @@ nav ul li a.active::after {
     to { opacity: 0; transform: translateX(10px); }
 }
 
-/* Responsive para el nav */
+/* Responsive para móviles */
 @media (max-width: 768px) {
     header .container {
         position: relative;
@@ -381,10 +215,5 @@ nav ul li a.active::after {
         transform: none;
         padding-top: 0;
         padding-bottom: 0;
-    }
-    
-    .dropdown:hover .dropdown-content {
-        visibility: visible;
-        opacity: 1;
     }
 }

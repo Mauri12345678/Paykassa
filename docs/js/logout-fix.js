@@ -1,53 +1,87 @@
 (function() {
     console.log("🚪 Script de cierre de sesión reforzado cargado");
     
-    // Usar delegación de eventos para capturar cualquier clic en .logout-btn
-    document.addEventListener('click', function(e) {
-        // Buscar si el clic fue en el botón de logout o dentro de él
-        const logoutButton = e.target.closest('.logout-btn');
+    // Contador para evitar ejecuciones múltiples
+    let logoutInProgress = false;
+    
+    // Función unificada de cierre de sesión
+    function performLogout(e) {
+        // Prevenir ejecuciones múltiples
+        if (logoutInProgress) return;
+        logoutInProgress = true;
         
-        if (logoutButton) {
-            console.log("🔴 LOGOUT DETECTADO POR FIX SCRIPT");
+        if (e) {
             e.preventDefault();
             e.stopPropagation();
-            
-            // Limpiar todas las posibles claves de autenticación
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('userSession');
-            localStorage.removeItem('authToken');
-            
-            // Mensaje confirmando cierre
-            alert("Has cerrado sesión correctamente");
-            
-            // Forzar recarga completa
-            window.location.href = 'index.html';
-            
-            return false;
         }
+        
+        console.log("🔴 Cerrando sesión...");
+        
+        // Elemento para notificación visual
+        const notification = document.createElement('div');
+        notification.className = 'logout-notification';
+        notification.innerHTML = `
+            <div class="logout-notification-content">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrando sesión...</span>
+            </div>
+        `;
+        
+        // Estilos para la notificación
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            animation: fadeInOut 2s forwards;
+            display: flex;
+            align-items: center;
+        `;
+        
+        // Agregar keyframes para animación
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateY(-20px); }
+                20% { opacity: 1; transform: translateY(0); }
+                80% { opacity: 1; transform: translateY(0); }
+                100% { opacity: 0; transform: translateY(-20px); }
+            }
+            .logout-notification-content {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .logout-notification-content i {
+                font-size: 18px;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Mostrar notificación
+        document.body.appendChild(notification);
+        
+        // Limpiar localStorage
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('userSession');
+        localStorage.removeItem('authToken');
+        
+        // Redireccionar después de la animación
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1000);
+    }
+    
+    // Usar delegación de eventos para capturar clics en .logout-btn
+    document.addEventListener('click', function(e) {
+        const logoutButton = e.target.closest('.logout-btn');
+        if (logoutButton) performLogout(e);
     });
     
-    // Verificación adicional: agregar listener directo a todos los botones al cargar
-    window.addEventListener('load', function() {
-        const logoutButtons = document.querySelectorAll('.logout-btn, [href="logout.html"]');
-        console.log(`🔍 Detectados ${logoutButtons.length} botones de logout`);
-        
-        logoutButtons.forEach(btn => {
-            // Añadir atributo para depuración
-            btn.setAttribute('data-logout-fixed', 'true');
-            
-            // Agregar listener directo
-            btn.addEventListener('click', function(e) {
-                console.log("🔴 LOGOUT DIRECTO ACTIVADO");
-                e.preventDefault();
-                
-                // Limpiar localStorage
-                localStorage.removeItem('currentUser');
-                localStorage.removeItem('userSession');
-                
-                // Mensaje y redirección
-                alert("Sesión cerrada correctamente");
-                window.location.href = 'index.html';
-            });
-        });
-    });
+    // Exponer para uso global (permitiendo que otros scripts lo llamen)
+    window.performLogout = performLogout;
 })();
