@@ -39,11 +39,22 @@ function displayProducts(products) {
     });
 }
 
+// Actualiza la función addToCart
 function addToCart(productId) {
-    // Tu código para añadir al carrito
+    // Obtener los productos actuales del carrito
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
     
-    // Después actualizar el contador
+    // Agregar el nuevo producto
+    cartItems.push(productId);
+    
+    // Guardar en localStorage
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    
+    // La función updateCartCount() ahora viene desde cart-counter.js
     updateCartCount();
+    
+    // Mostrar notificación
+    showNotification('Producto añadido al carrito');
 }
 
 function updateCartCount() {

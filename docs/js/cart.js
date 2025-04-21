@@ -570,4 +570,30 @@ function addToCart(productId) {
     updateCartCount();
 }
 
+// Actualiza cuando eliminas un producto
+function removeFromCart(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Actualizar interfaz
+    loadCartItems();
+    
+    // Actualizar contador (viene de cart-counter.js)
+    updateCartCount();
+}
+
+// Actualiza cuando cambias cantidad
+function updateQuantity(index, newQuantity) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart[index].quantity = newQuantity;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Actualizar interfaz
+    loadCartItems();
+    
+    // Actualizar contador (viene de cart-counter.js)
+    updateCartCount();
+}
+
 // Resto de tu código cart.js...

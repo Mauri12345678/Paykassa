@@ -801,24 +801,43 @@ footer {
     margin-top: 2rem;
 }
 
-/* Estilos consistentes para el contador de carrito */
+/* Rediseño completo del contador del carrito */
 .cart-count {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--secondary-color);
+    background-color: var(--secondary-color); /* Color violeta */
     color: white;
     border-radius: 50%;
-    font-size: 0.75rem;
-    width: 18px;
-    height: 18px;
-    margin-left: 5px;
+    font-size: 0.7rem;
     font-weight: 600;
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+    position: relative;
+    top: -1px;
+    text-align: center;
+    line-height: 1;
+    padding: 0;
+    box-shadow: 0 2px 4px rgba(247, 37, 133, 0.3); /* Sombra sutíl */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Borde sutil para mejorar apariencia */
 }
 
-/* Ocultar el contador cuando está en cero */
-.cart-count:empty {
+/* Ocultar cuando está vacío */
+.cart-count:empty,
+.cart-count:contains("0") {
     display: none;
+}
+
+/* Animación sutil cuando cambia */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.cart-count.updated {
+    animation: pulse 0.3s ease-in-out;
 }
 
 /* Estilos para notificaciones del carrito */

@@ -886,11 +886,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar al cargar la página
     loadCartItems();
 
-    // Función para añadir al carrito
-    function addToCart(productId) {
-        // Tu código para añadir al carrito
+    // Cuando procesas un pago exitoso
+    function processSuccessfulPayment() {
+        // Limpia el carrito después de la compra
+        localStorage.removeItem('cart');
+        localStorage.removeItem('cartItems');
         
-        // Después actualizar el contador
+        // Actualizar contador (viene de cart-counter.js)
         updateCartCount();
+        
+        // Redirigir a página de éxito o mostrar mensaje
+        window.location.href = 'success.html';
     }
 });
