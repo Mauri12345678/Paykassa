@@ -146,4 +146,78 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar carrito
     updateCart();
     initEventHandlers();
+    
+    // Formatear fechas para impresión
+    const cartHeader = document.querySelector('.cart-header h2');
+    if (cartHeader) {
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString();
+        cartHeader.setAttribute('data-print-date', formattedDate);
+    }
+    
+    // Añadir indicadores de confianza
+    if (checkoutButton) {
+        const trustBadges = document.createElement('div');
+        trustBadges.className = 'trust-badges';
+        trustBadges.innerHTML = `
+            <div class="trust-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Pago Seguro</span>
+            </div>
+            <div class="trust-badge">
+                <i class="fas fa-truck"></i>
+                <span>Envío Rápido</span>
+            </div>
+            <div class="trust-badge">
+                <i class="fas fa-undo"></i>
+                <span>30 días para devolución</span>
+            </div>
+        `;
+        
+        checkoutButton.parentNode.insertBefore(trustBadges, checkoutButton.nextSibling);
+    }
+    
+    // Implementar shortcuts de teclado
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'b') {
+            const back = document.querySelector('a[href="product.html"]');
+            if (back) {
+                e.preventDefault();
+                back.click();
+            }
+        }
+        
+        if (e.ctrlKey && e.key === 'p') {
+            e.preventDefault();
+            window.print();
+        }
+    });
+    
+    // Ayuda para shortcuts
+    const mainContainer = document.querySelector('main .container');
+    if (mainContainer) {
+        const helpSection = document.createElement('div');
+        helpSection.className = 'help-section';
+        helpSection.innerHTML = `
+            <p>Atajos de teclado: 
+                <span class="keyboard-shortcut">Ctrl + B</span> Volver a productos,
+                <span class="keyboard-shortcut">Ctrl + P</span> Imprimir carrito
+            </p>
+        `;
+        mainContainer.appendChild(helpSection);
+    }
+    
+    // Actualizar contadores instantáneamente
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('input', updateCartCounter);
+    });
 });
+
+// Detectar dispositivos táctiles para optimizaciones
+function isTouchDevice() {
+    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+}
+
+if (isTouchDevice()) {
+    document.body.classList.add('touch-device');
+}

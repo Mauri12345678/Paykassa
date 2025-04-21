@@ -55,13 +55,12 @@
    8. Empty Cart State
    9. Recommended Products
    10. Responsive Styles
+   11. Improvements
    ========================================================================== */
 
 /* 1. Variables & Base Styles
    ========================================================================== */
-:root {
-  /* Variables ya están definidas en luxmarket.css */
-}
+/* Variables ya están definidas en luxmarket.css */
 
 /* 2. Cart Hero Section
    ========================================================================== */
@@ -169,6 +168,7 @@ main .container {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--border);
+    position: relative;
 }
 
 .cart-header h2 {
@@ -176,6 +176,18 @@ main .container {
     font-weight: 600;
     color: var(--text);
     margin: 0;
+}
+
+.cart-header:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 3px;
 }
 
 .btn-text {
@@ -220,10 +232,28 @@ main .container {
     border: 1px solid var(--border);
     align-items: center;
     position: relative;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                border-color 0.3s ease;
 }
 
 .cart-item:hover {
     border-color: var(--primary);
+}
+
+.cart-item.loading .item-image,
+.cart-item.loading .item-name,
+.cart-item.loading .item-meta,
+.cart-item.loading .item-price,
+.cart-item.loading .item-quantity,
+.cart-item.loading .item-total {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    border-radius: var(--radius-sm);
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    color: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 .item-image {
@@ -341,6 +371,10 @@ main .container {
     color: #2ecc71;
 }
 
+.quantity-btn:active {
+    transform: scale(0.95);
+}
+
 .quantity-input {
     width: 60px;
     height: 40px;
@@ -362,6 +396,7 @@ main .container {
     font-weight: 600;
     color: var(--text);
     text-align: right;
+    min-width: 80px;
 }
 
 .item-total span {
@@ -450,10 +485,25 @@ main .container {
     color: var(--text);
     margin-top: 0.5rem;
     margin-bottom: 1.5rem;
+    position: relative;
+    padding-top: 10px;
+}
+
+.summary-row.total:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 3px;
 }
 
 .discount {
     color: #e74c3c;
+    display: inline-block;
+    animation: pulse 2s infinite;
 }
 
 .summary-divider {
@@ -498,6 +548,11 @@ main .container {
     top: 50%;
     transform: translate(-50%, -50%);
     animation: spin 0.8s linear infinite;
+}
+
+.btn-primary:focus {
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+    outline: none;
 }
 
 @keyframes spin {
@@ -578,6 +633,25 @@ main .container {
 .btn-outline:hover {
     background-color: var(--primary);
     color: white;
+}
+
+.promo-success-message {
+    color: #2ecc71;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.promo-success-message i {
+    font-size: 1rem;
 }
 
 .payment-methods-accepted {
@@ -902,7 +976,33 @@ main .container {
     }
     
     .products-slider {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        gap: 1rem;
+        padding-bottom: 1rem;
+    }
+    
+    .products-slider::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    .products-slider::-webkit-scrollbar-thumb {
+        background: var(--primary-light);
+        border-radius: 10px;
+    }
+    
+    .products-slider::-webkit-scrollbar-track {
+        background: #f0f0f0;
+        border-radius: 10px;
+    }
+    
+    .products-slider .product-card {
+        min-width: 230px;
+        width: 230px;
+        scroll-snap-align: start;
     }
 }
 
@@ -955,4 +1055,233 @@ main .container {
     .products-slider {
         grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
     }
+}
+
+/* 11. Improvements
+   ========================================================================== */
+
+/* Mejoras de compatibilidad con modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .cart-item, .order-summary, .promo-code-section, 
+    .payment-methods-accepted, .need-help {
+        background-color: #1a202c;
+        border-color: #2d3748;
+    }
+    
+    .cart-hero {
+        background: linear-gradient(120deg, #2c5282 0%, #1a365d 100%);
+    }
+    
+    .item-name, .cart-header h2, .order-summary h2, 
+    .promo-code-section h3, .need-help h3 {
+        color: #e2e8f0;
+    }
+    
+    .item-meta, .item-category, .item-sku, 
+    .cart-empty p, .need-help p, .checkout-secure {
+        color: #a0aec0;
+    }
+    
+    .quantity-btn, .quantity-input {
+        background-color: #2d3748;
+        color: #e2e8f0;
+        border-color: #4a5568;
+    }
+    
+    .quantity-btn:hover {
+        background-color: #4a5568;
+    }
+    
+    .summary-divider {
+        background-color: #4a5568;
+    }
+    
+    .promo-input {
+        background-color: #2d3748;
+        color: #e2e8f0;
+        border-color: #4a5568;
+    }
+    
+    .cart-empty-icon {
+        background-color: rgba(66, 153, 225, 0.2);
+    }
+}
+
+/* Optimizaciones para impresión */
+@media print {
+    header, footer, .cart-hero, .cart-sidebar, 
+    .recommended-products, .item-actions {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .cart-container {
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
+    }
+    
+    .cart-items {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        padding: 0 !important;
+    }
+    
+    .cart-item {
+        page-break-inside: avoid;
+        border: none !important;
+        border-bottom: 1px solid #ddd !important;
+        box-shadow: none !important;
+        padding: 1rem 0 !important;
+    }
+    
+    .cart-header h2:after {
+        content: " - Impreso el " attr(data-print-date);
+        font-size: 0.8rem;
+        font-weight: normal;
+    }
+}
+
+/* Mejoras para dispositivos táctiles */
+@media (pointer: coarse) {
+    .quantity-btn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .item-actions button {
+        padding: 8px;
+    }
+    
+    .btn-primary, .btn-outline {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+    
+    /* Aumentar el área táctil */
+    .item-actions.mobile button {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* Mejoras de rendimiento */
+@supports (content-visibility: auto) {
+    .recommended-products {
+        content-visibility: auto;
+        contain-intrinsic-size: 100px 500px;
+    }
+}
+
+/* Mejoras de scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Estado activo para botones de cantidad */
+.quantity-btn:active {
+    transform: scale(0.95);
+}
+
+/* Indicadores de descuento destacados */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+/* Efecto skeleton para carga de items */
+@keyframes skeleton-loading {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+}
+
+/* Mejora de accesibilidad: focus visible */
+:focus-visible {
+    outline: 3px solid rgba(67, 97, 238, 0.5);
+    outline-offset: 2px;
+}
+
+/* Resaltar productos recomendados con scroll lateral en móvil */
+@media (max-width: 768px) {
+    .products-slider {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        gap: 1rem;
+        padding-bottom: 1rem;
+    }
+    
+    .products-slider::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    .products-slider::-webkit-scrollbar-thumb {
+        background: var(--primary-light);
+        border-radius: 10px;
+    }
+    
+    .products-slider::-webkit-scrollbar-track {
+        background: #f0f0f0;
+        border-radius: 10px;
+    }
+    
+    .products-slider .product-card {
+        min-width: 230px;
+        width: 230px;
+        scroll-snap-align: start;
+    }
+}
+
+/* Atajos de teclado para accesibilidad */
+.keyboard-shortcut {
+    display: inline-block;
+    background: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0 6px;
+    margin-left: 5px;
+    font-size: 0.8rem;
+    color: #555;
+    box-shadow: 0 2px 0 #ddd;
+    vertical-align: middle;
+}
+
+.help-section {
+    margin-top: 3rem;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.help-section p {
+    margin-bottom: 0.5rem;
+}
+
+/* Confianza en el checkout */
+.trust-badges {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.trust-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.trust-badge i {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 0.3rem;
 }
