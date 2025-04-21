@@ -110,6 +110,76 @@ nav ul li a.active {
   color: var(--primary-color);
 }
 
+/* Mejorar el comportamiento del dropdown */
+.dropdown {
+    position: relative;
+}
+
+/* Agregar un espacio invisible para mantener el hover */
+.dropdown::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 20px; /* Espacio invisible debajo del enlace */
+    bottom: -20px;
+    left: 0;
+    z-index: 5;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px); /* Un poco más abajo del enlace */
+    right: 0;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius-sm);
+    z-index: 1000;
+    padding: 0.5rem;
+    /* Conectamos visualmente con el enlace superior */
+    border-top: 3px solid var(--primary-color);
+}
+
+/* Esta regla es clave para que funcione correctamente */
+.dropdown:hover .dropdown-content {
+    display: block;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Agregar animación de aparición */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilos para cada elemento del dropdown */
+.dropdown-content a {
+    color: var(--text-color);
+    padding: 0.7rem 1rem;
+    text-decoration: none;
+    display: block;
+    transition: var(--transition);
+    border-radius: var(--border-radius-sm);
+    font-weight: normal;
+}
+
+.dropdown-content a:hover {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: var(--primary-color);
+}
+
+/* Añadir un pequeño triángulo al dropdown */
+.dropdown-content::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    right: 20px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid var(--primary-color);
+}
+
 /* Asegura que no haya superposición en las secciones */
 section {
   position: relative;

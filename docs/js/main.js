@@ -1,5 +1,17 @@
 // main.js
 
+// Código para integrar el sistema de logs
+
+// Asegurarnos de que LogSystem existe
+if (typeof window.LogSystem === 'undefined') {
+    window.LogSystem = {
+        info: (msg) => console.log('INFO:', msg),
+        warning: (msg) => console.warn('WARNING:', msg),
+        error: (msg) => console.error('ERROR:', msg),
+        success: (msg) => console.log('SUCCESS:', msg)
+    };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     loadProducts();
     updateCartCount();
@@ -10,6 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCartCount();
         }
     });
+
+    // Registrar log de visita a la página
+    LogSystem.info('Usuario visitó la página principal', 'visitante');
 });
 
 function loadProducts() {
@@ -52,6 +67,9 @@ function addToCart(productId) {
     
     // La función updateCartCount() ahora viene desde cart-counter.js
     updateCartCount();
+    
+    // Registrar log
+    LogSystem.success(`Producto ID:${productId} añadido al carrito`, 'cliente');
     
     // Mostrar notificación
     showNotification('Producto añadido al carrito');
